@@ -1,0 +1,28 @@
+# --- DIRECTORY SPECIFIC (Based on your file list) ---
+# Ignore the specific keystore file in your root
+velora.keystore
+
+# Android / Gradle build folders
+.gradle/
+.kotlin/
+.idea/
+build/
+app/build/
+
+# Local configuration (Contains your local SDK path)
+local.properties
+
+# --- SIGNING & BINARIES ---
+# Ignore all signing files and build outputs
+*.keystore
+*.jks
+*.apk
+*.aab
+app/release/
+
+# --- IDE & OS ---
+*.iml
+.DS_Store
+
+# --- LOGS ---
+*.log

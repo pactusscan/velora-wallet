@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Velora Wallet</string>
+
+    <!-- Widget -->
+    <string name="widget_description">Memaparkan baki PAC anda di skrin utama</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_wallet">Dompet</string>
+    <string name="nav_activity">Aktiviti</string>
+    <string name="nav_browser">Pelayar</string>
+    <string name="nav_settings">Tetapan</string>
+
+    <!-- Common actions -->
+    <string name="action_back">Kembali</string>
+    <string name="action_copy">Salin</string>
+    <string name="action_share">Kongsi</string>
+    <string name="action_confirm">Sahkan</string>
+    <string name="action_continue">Teruskan</string>
+    <string name="action_reject">Tolak</string>
+    <string name="action_save">Simpan Perubahan</string>
+    <string name="action_clear">Padam</string>
+    <string name="action_hide">Sembunyi</string>
+    <string name="action_add">Tambah</string>
+
+    <!-- Home screen -->
+    <string name="home_accounts_header">Akaun</string>
+    <string name="home_add_account">Tambah</string>
+    <string name="home_address_copied">Alamat disalin</string>
+    <string name="home_receive">Terima</string>
+    <string name="home_send">Hantar</string>
+    <string name="home_stake">Stake</string>
+    <string name="home_my_wallets">Dompet Saya</string>
+    <string name="home_add_new">Tambah Baru</string>
+    <string name="home_reset_wallet_title">Set Semula Dompet?</string>
+    <string name="home_reset_wallet_message">Ini akan memadamkan dompet anda secara kekal dari peranti ini. Pastikan anda telah membuat sandaran frasa seed sebelum meneruskan.</string>
+    <string name="error_offline_reconnecting">Anda sedang luar talian. Menyambung semula…</string>
+
+    <!-- Send screen -->
+    <string name="send_title">Hantar PAC</string>
+    <string name="send_to_label">Ke alamat</string>
+    <string name="send_to_placeholder">pc1z…</string>
+    <string name="send_scan_qr">Imbas QR</string>
+    <string name="send_amount_label">Jumlah</string>
+    <string name="send_amount_nanopac">Jumlah dalam NanoPAC</string>
+    <string name="send_amount_pac">Jumlah dalam PAC</string>
+    <string name="send_memo_label">Memo (pilihan)</string>
+    <string name="send_memo_placeholder">Tambah nota…</string>
+    <string name="send_fee_label">Yuran rangkaian</string>
+    <string name="send_preview">Pratonton</string>
+    <string name="send_from_label">Daripada akaun</string>
+    <string name="send_success">Transaksi dihantar! ID: %1$s…</string>
+    <string name="send_unit_pac">PAC</string>
+    <string name="send_unit_npac">nPAC</string>
+
+    <!-- Receive screen -->
+    <string name="receive_title">Terima PAC</string>
+    <string name="receive_instruction">Kongsi alamat ini untuk menerima PAC</string>
+    <string name="receive_qr_desc">Kod QR</string>
+    <string name="receive_address_copied">Alamat disalin ke papan keratan</string>
+
+    <!-- Transaction history -->
+    <string name="history_title">Sejarah Transaksi</string>
+    <string name="history_filter_all">Semua</string>
+    <string name="history_filter_transfers">Pindahan</string>
+    <string name="history_filter_bonds">Bond</string>
+    <string name="history_status_pending">Menunggu</string>
+    <string name="history_status_failed">Gagal</string>
+    <string name="history_status_confirmed">Disahkan</string>
+    <string name="history_empty_title">Belum ada transaksi</string>
+    <string name="history_empty_subtitle">Sejarah transaksi anda akan muncul di sini</string>
+
+    <!-- Browser -->
+    <string name="browser_close">Tutup pelayar</string>
+    <string name="browser_bookmark">Penanda buku</string>
+    <string name="browser_menu">Menu</string>
+    <string name="browser_go_back">Kembali</string>
+    <string name="browser_go_forward">Maju</string>
+    <string name="browser_stop">Berhenti</string>
+    <string name="browser_reload">Muat semula</string>
+    <string name="browser_sign_title">Sahkan Transaksi</string>
+    <string name="browser_sign_from">Daripada</string>
+    <string name="browser_sign_to">Kepada</string>
+    <string name="browser_sign_amount">Jumlah</string>
+    <string name="browser_sign_fee">Yuran</string>
+    <string name="browser_sign_memo">Memo</string>
+    <string name="browser_bookmarks_header">Penanda Buku</string>
+    <string name="browser_bookmarks_empty">Tiada penanda buku lagi</string>
+    <string name="browser_history_header">Sejarah</string>
+    <string name="browser_history_empty">Tiada sejarah lagi</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Tetapan</string>
+    <string name="settings_section_security">Keselamatan</string>
+    <string name="settings_change_password">Tukar Kata Laluan</string>
+    <string name="settings_change_password_subtitle">Kemas kini kata laluan dompet anda</string>
+    <string name="settings_biometric">Nyahkunci Biometrik</string>
+    <string name="settings_biometric_subtitle">Gunakan cap jari atau wajah untuk nyahkunci</string>
+    <string name="settings_language">Bahasa</string>
+    <string name="settings_language_subtitle">Pilih bahasa pilihan anda</string>
+    <string name="settings_section_network">Rangkaian</string>
+    <string name="settings_section_backup">Sandaran</string>
+    <string name="settings_backup_phrase">Frasa Sandaran</string>
+    <string name="settings_backup_phrase_subtitle">Lihat frasa pemulihan 12 perkataan anda</string>
+    <string name="settings_section_about">Perihal</string>
+    <string name="settings_about">Perihal Velora Wallet</string>
+    <string name="settings_about_subtitle">Versi, pautan, dan perundangan</string>
+
+    <!-- Security settings -->
+    <string name="security_title">Keselamatan</string>
+    <string name="security_change_password_header">Tukar Kata Laluan</string>
+    <string name="security_current_password">Kata Laluan Semasa</string>
+    <string name="security_new_password">Kata Laluan Baru</string>
+    <string name="security_confirm_password">Sahkan Kata Laluan Baru</string>
+    <string name="security_strength_strong">Kuat</string>
+    <string name="security_strength_medium">Sederhana</string>
+    <string name="security_strength_weak">Lemah</string>
+    <string name="security_strength_too_short">Terlalu pendek</string>
+
+    <!-- Network settings -->
+    <string name="network_title">Rangkaian</string>
+    <string name="network_select">Pilih Rangkaian</string>
+    <string name="network_coin_type">Jenis syiling: %1$d</string>
+    <string name="network_selected">Dipilih</string>
+    <string name="network_switch_warning">Menukar rangkaian akan menjana semula alamat akaun anda daripada mnemonik. Dompet anda mestilah dinyahkunci.</string>
+
+    <!-- Backup settings -->
+    <string name="backup_title">Frasa Sandaran</string>
+    <string name="backup_keep_secret">Simpan frasa anda secara rahsia</string>
+    <string name="backup_warning">Sesiapa sahaja yang mempunyai frasa ini boleh mengakses dompet dan dana anda. Jangan sekali-kali berkongsi dan jangan menyimpannya secara digital.</string>
+    <string name="backup_enter_password">Masukkan kata laluan untuk melihat frasa</string>
+    <string name="backup_password_label">Kata Laluan</string>
+    <string name="backup_reveal">Lihat Frasa</string>
+    <string name="backup_your_phrase">Frasa pemulihan anda</string>
+    <string name="backup_copied">Disalin — simpan dengan selamat dan kosongkan papan keratan</string>
+
+    <!-- About settings -->
+    <string name="about_title">Perihal</string>
+    <string name="about_tagline">Dompet light-client untuk blockchain Pactus</string>
+    <string name="about_website">Laman Web Pactus</string>
+    <string name="about_website_subtitle">pactus.org</string>
+    <string name="about_docs">Dokumentasi</string>
+    <string name="about_docs_subtitle">docs.pactus.org</string>
+    <string name="about_github">Lihat di GitHub</string>
+    <string name="about_github_subtitle">Sumber terbuka — Lesen MIT</string>
+    <string name="about_explorer">Peneroka Blok</string>
+    <string name="about_explorer_subtitle">pactusscan.com</string>
+
+    <!-- Language selection -->
+    <string name="language_select">Pilih Bahasa</string>
+    <string name="language_english">Bahasa Inggeris (English)</string>
+    <string name="language_indonesian">Bahasa Indonesia</string>
+    <string name="language_malay">Bahasa Malaysia</string>
+    <string name="language_vietnamese">Bahasa Vietnam (Tiếng Việt)</string>
+    <string name="language_french">Bahasa Perancis (Français)</string>
+
+    <!-- Onboarding — Welcome -->
+    <string name="welcome_tagline">Kunci anda. Syiling anda.\nKawalan penuh, tiada node diperlukan.</string>
+    <string name="welcome_create">Cipta Dompet Baru</string>
+    <string name="welcome_restore">Pulihkan daripada Frasa Seed</string>
+    <string name="welcome_import">Import daripada Kunci Peribadi</string>
+
+    <!-- Onboarding — Create wallet -->
+    <string name="create_wallet_name_title">Berikan nama dompet anda</string>
+    <string name="create_wallet_name_subtitle">Anda boleh menukar ini pada bila-bila masa di tetapan.</string>
+    <string name="create_wallet_name_label">Nama dompet</string>
+    <string name="create_wallet_name_placeholder">cth. Dompet Velora Saya</string>
+    <string name="create_wallet_generate">Jana Frasa Seed</string>
+
+    <!-- Onboarding — Mnemonic backup -->
+    <string name="mnemonic_title">Frasa Seed</string>
+    <string name="mnemonic_backup_title">Catat frasa seed anda</string>
+    <string name="mnemonic_backup_subtitle">12 perkataan ini adalah satu-satunya cara untuk memulihkan dompet anda.\nSimpan di tempat yang selamat — jangan sekali-kali berkongsi dengan sesiapa pun.</string>
+    <string name="mnemonic_security_warning">Jangan sekali-kali masukkan frasa seed anda pada mana-mana laman web atau berkongsi secara digital. Sesiapa yang mempunyai perkataan ini mengawal dana anda.</string>
+    <string name="mnemonic_confirm_checkbox">Saya telah mencatat frasa seed saya dan menyimpannya dengan selamat.</string>
+    <string name="mnemonic_verify_button">Sahkan Frasa Seed</string>
+    <string name="mnemonic_tap_to_reveal">Ketik untuk lihat</string>
+
+    <!-- Onboarding — Mnemonic verify -->
+    <string name="verify_title">Sahkan Sandaran</string>
+    <string name="verify_confirm_title">Sahkan frasa seed anda</string>
+    <string name="verify_confirm_subtitle">Masukkan perkataan yang hilang untuk mengesahkan anda telah menyimpan frasa seed anda dengan betul.</string>
+
+    <!-- Onboarding — Restore wallet -->
+    <string name="restore_title">Pulihkan Dompet</string>
+    <string name="restore_enter_seed">Masukkan frasa seed anda</string>
+    <string name="restore_seed_subtitle">Taip perkataan anda mengikut urutan. Huruf kecil sahaja.</string>
+    <string name="restore_wallet_name_label">Nama dompet</string>
+    <string name="restore_wallet_name_placeholder">cth. Dompet Dipulihkan</string>
+    <string name="restore_12_words">12 perkataan</string>
+    <string name="restore_24_words">24 perkataan</string>
+    <string name="restore_button">Pulihkan Dompet</string>
+
+    <!-- Onboarding — Setup security -->
+    <string name="security_setup_title">Lindungi Dompet Anda</string>
+    <string name="security_setup_header">Tetapkan kata laluan</string>
+    <string name="security_setup_subtitle">Kata laluan ini menyulitkan dompet anda pada peranti ini.\nAnda memerlukannya untuk meluluskan transaksi.</string>
+    <string name="security_setup_password_label">Kata Laluan</string>
+    <string name="security_setup_confirm_label">Sahkan kata laluan</string>
+    <string name="security_setup_passwords_mismatch">Kata laluan tidak sepadan</string>
+    <string name="security_setup_biometric_title">Dayakan nyahkunci biometrik</string>
+    <string name="security_setup_biometric_subtitle">Gunakan cap jari atau wajah untuk nyahkunci tanpa kata laluan</string>
+    <string name="security_setup_create">Cipta Dompet</string>
+</resources>

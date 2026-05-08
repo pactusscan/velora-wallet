@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Velora Wallet</string>
+
+    <!-- Widget -->
+    <string name="widget_description">Hiển thị số dư PAC của bạn trên màn hình chính</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_wallet">Ví</string>
+    <string name="nav_activity">Hoạt động</string>
+    <string name="nav_browser">Trình duyệt</string>
+    <string name="nav_settings">Cài đặt</string>
+
+    <!-- Common actions -->
+    <string name="action_back">Quay lại</string>
+    <string name="action_copy">Sao chép</string>
+    <string name="action_share">Chia sẻ</string>
+    <string name="action_confirm">Xác nhận</string>
+    <string name="action_continue">Tiếp tục</string>
+    <string name="action_reject">Từ chối</string>
+    <string name="action_save">Lưu thay đổi</string>
+    <string name="action_clear">Xóa</string>
+    <string name="action_hide">Ẩn</string>
+    <string name="action_add">Thêm</string>
+
+    <!-- Home screen -->
+    <string name="home_accounts_header">Tài khoản</string>
+    <string name="home_add_account">Thêm</string>
+    <string name="home_address_copied">Đã sao chép địa chỉ</string>
+    <string name="home_receive">Nhận</string>
+    <string name="home_send">Gửi</string>
+    <string name="home_stake">Stake</string>
+    <string name="home_my_wallets">Ví của tôi</string>
+    <string name="home_add_new">Thêm mới</string>
+    <string name="home_reset_wallet_title">Đặt lại ví?</string>
+    <string name="home_reset_wallet_message">Thao tác này sẽ xóa vĩnh viễn ví của bạn khỏi thiết bị này. Hãy đảm bảo bạn đã sao lưu cụm từ seed trước khi tiếp tục.</string>
+    <string name="error_offline_reconnecting">Bạn đang ngoại tuyến. Đang kết nối lại…</string>
+
+    <!-- Send screen -->
+    <string name="send_title">Gửi PAC</string>
+    <string name="send_to_label">Đến địa chỉ</string>
+    <string name="send_to_placeholder">pc1z…</string>
+    <string name="send_scan_qr">Quét QR</string>
+    <string name="send_amount_label">Số lượng</string>
+    <string name="send_amount_nanopac">Số lượng tính bằng NanoPAC</string>
+    <string name="send_amount_pac">Số lượng tính bằng PAC</string>
+    <string name="send_memo_label">Ghi chú (tùy chọn)</string>
+    <string name="send_memo_placeholder">Thêm ghi chú…</string>
+    <string name="send_fee_label">Phí mạng</string>
+    <string name="send_preview">Xem trước</string>
+    <string name="send_from_label">Từ tài khoản</string>
+    <string name="send_success">Giao dịch đã gửi! ID: %1$s…</string>
+    <string name="send_unit_pac">PAC</string>
+    <string name="send_unit_npac">nPAC</string>
+
+    <!-- Receive screen -->
+    <string name="receive_title">Nhận PAC</string>
+    <string name="receive_instruction">Chia sẻ địa chỉ này để nhận PAC</string>
+    <string name="receive_qr_desc">Mã QR</string>
+    <string name="receive_address_copied">Đã sao chép địa chỉ vào bộ nhớ tạm</string>
+
+    <!-- Transaction history -->
+    <string name="history_title">Lịch sử giao dịch</string>
+    <string name="history_filter_all">Tất cả</string>
+    <string name="history_filter_transfers">Chuyển tiền</string>
+    <string name="history_filter_bonds">Bond</string>
+    <string name="history_status_pending">Đang chờ</string>
+    <string name="history_status_failed">Thất bại</string>
+    <string name="history_status_confirmed">Đã xác nhận</string>
+    <string name="history_empty_title">Chưa có giao dịch</string>
+    <string name="history_empty_subtitle">Lịch sử giao dịch của bạn sẽ xuất hiện tại đây</string>
+
+    <!-- Browser -->
+    <string name="browser_close">Đóng trình duyệt</string>
+    <string name="browser_bookmark">Dấu trang</string>
+    <string name="browser_menu">Menu</string>
+    <string name="browser_go_back">Quay lại</string>
+    <string name="browser_go_forward">Tiếp theo</string>
+    <string name="browser_stop">Dừng</string>
+    <string name="browser_reload">Tải lại</string>
+    <string name="browser_sign_title">Ký giao dịch</string>
+    <string name="browser_sign_from">Từ</string>
+    <string name="browser_sign_to">Đến</string>
+    <string name="browser_sign_amount">Số lượng</string>
+    <string name="browser_sign_fee">Phí</string>
+    <string name="browser_sign_memo">Ghi chú</string>
+    <string name="browser_bookmarks_header">Dấu trang</string>
+    <string name="browser_bookmarks_empty">Chưa có dấu trang</string>
+    <string name="browser_history_header">Lịch sử</string>
+    <string name="browser_history_empty">Chưa có lịch sử</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Cài đặt</string>
+    <string name="settings_section_security">Bảo mật</string>
+    <string name="settings_change_password">Đổi mật khẩu</string>
+    <string name="settings_change_password_subtitle">Cập nhật mật khẩu ví của bạn</string>
+    <string name="settings_biometric">Mở khóa sinh trắc học</string>
+    <string name="settings_biometric_subtitle">Sử dụng vân tay hoặc khuôn mặt để mở khóa</string>
+    <string name="settings_language">Ngôn ngữ</string>
+    <string name="settings_language_subtitle">Chọn ngôn ngữ ưu tiên của bạn</string>
+    <string name="settings_section_network">Mạng</string>
+    <string name="settings_section_backup">Sao lưu</string>
+    <string name="settings_backup_phrase">Cụm từ sao lưu</string>
+    <string name="settings_backup_phrase_subtitle">Xem cụm từ khôi phục 12 từ của bạn</string>
+    <string name="settings_section_about">Giới thiệu</string>
+    <string name="settings_about">Về Velora Wallet</string>
+    <string name="settings_about_subtitle">Phiên bản, liên kết và pháp lý</string>
+
+    <!-- Security settings -->
+    <string name="security_title">Bảo mật</string>
+    <string name="security_change_password_header">Đổi mật khẩu</string>
+    <string name="security_current_password">Mật khẩu hiện tại</string>
+    <string name="security_new_password">Mật khẩu mới</string>
+    <string name="security_confirm_password">Xác nhận mật khẩu mới</string>
+    <string name="security_strength_strong">Mạnh</string>
+    <string name="security_strength_medium">Trung bình</string>
+    <string name="security_strength_weak">Yếu</string>
+    <string name="security_strength_too_short">Quá ngắn</string>
+
+    <!-- Network settings -->
+    <string name="network_title">Mạng</string>
+    <string name="network_select">Chọn mạng</string>
+    <string name="network_coin_type">Loại coin: %1$d</string>
+    <string name="network_selected">Đã chọn</string>
+    <string name="network_switch_warning">Chuyển mạng sẽ tạo lại địa chỉ tài khoản của bạn từ cụm từ mnemonic. Ví phải được mở khóa.</string>
+
+    <!-- Backup settings -->
+    <string name="backup_title">Cụm từ sao lưu</string>
+    <string name="backup_keep_secret">Giữ bí mật cụm từ của bạn</string>
+    <string name="backup_warning">Bất kỳ ai có cụm từ này đều có thể truy cập ví và tiền của bạn. Không bao giờ chia sẻ và không lưu trữ kỹ thuật số.</string>
+    <string name="backup_enter_password">Nhập mật khẩu để xem cụm từ</string>
+    <string name="backup_password_label">Mật khẩu</string>
+    <string name="backup_reveal">Hiện cụm từ</string>
+    <string name="backup_your_phrase">Cụm từ khôi phục của bạn</string>
+    <string name="backup_copied">Đã sao chép — hãy lưu trữ an toàn và xóa bộ nhớ tạm</string>
+
+    <!-- About settings -->
+    <string name="about_title">Giới thiệu</string>
+    <string name="about_tagline">Ví light-client cho blockchain Pactus</string>
+    <string name="about_website">Trang web Pactus</string>
+    <string name="about_website_subtitle">pactus.org</string>
+    <string name="about_docs">Tài liệu</string>
+    <string name="about_docs_subtitle">docs.pactus.org</string>
+    <string name="about_github">Xem trên GitHub</string>
+    <string name="about_github_subtitle">Mã nguồn mở — Giấy phép MIT</string>
+    <string name="about_explorer">Trình khám phá khối</string>
+    <string name="about_explorer_subtitle">pactusscan.com</string>
+
+    <!-- Language selection -->
+    <string name="language_select">Chọn Ngôn Ngữ</string>
+    <string name="language_english">Tiếng Anh (English)</string>
+    <string name="language_indonesian">Tiếng Indonesia (Bahasa Indonesia)</string>
+    <string name="language_malay">Tiếng Malaysia (Bahasa Malaysia)</string>
+    <string name="language_vietnamese">Tiếng Việt</string>
+    <string name="language_french">Tiếng Pháp (Français)</string>
+
+    <!-- Onboarding — Welcome -->
+    <string name="welcome_tagline">Khóa của bạn. Tiền của bạn.\nKiểm soát hoàn toàn, không cần node.</string>
+    <string name="welcome_create">Tạo ví mới</string>
+    <string name="welcome_restore">Khôi phục từ cụm từ seed</string>
+    <string name="welcome_import">Nhập từ khóa bí mật</string>
+
+    <!-- Onboarding — Create wallet -->
+    <string name="create_wallet_name_title">Đặt tên cho ví</string>
+    <string name="create_wallet_name_subtitle">Bạn có thể thay đổi điều này bất cứ lúc nào trong cài đặt.</string>
+    <string name="create_wallet_name_label">Tên ví</string>
+    <string name="create_wallet_name_placeholder">ví dụ: Ví Velora của tôi</string>
+    <string name="create_wallet_generate">Tạo cụm từ seed</string>
+
+    <!-- Onboarding — Mnemonic backup -->
+    <string name="mnemonic_title">Cụm từ seed</string>
+    <string name="mnemonic_backup_title">Ghi lại cụm từ seed của bạn</string>
+    <string name="mnemonic_backup_subtitle">12 từ này là cách duy nhất để khôi phục ví của bạn.\nHãy lưu trữ chúng ở nơi an toàn — không bao giờ chia sẻ với bất kỳ ai.</string>
+    <string name="mnemonic_security_warning">Không bao giờ nhập cụm từ seed trên bất kỳ trang web nào hoặc chia sẻ kỹ thuật số. Bất kỳ ai có những từ này đều kiểm soát tiền của bạn.</string>
+    <string name="mnemonic_confirm_checkbox">Tôi đã ghi lại cụm từ seed và lưu trữ an toàn.</string>
+    <string name="mnemonic_verify_button">Xác minh cụm từ seed</string>
+    <string name="mnemonic_tap_to_reveal">Chạm để hiển thị</string>
+
+    <!-- Onboarding — Mnemonic verify -->
+    <string name="verify_title">Xác minh sao lưu</string>
+    <string name="verify_confirm_title">Xác nhận cụm từ seed của bạn</string>
+    <string name="verify_confirm_subtitle">Nhập các từ còn thiếu để xác nhận bạn đã lưu cụm từ seed chính xác.</string>
+
+    <!-- Onboarding — Restore wallet -->
+    <string name="restore_title">Khôi phục ví</string>
+    <string name="restore_enter_seed">Nhập cụm từ seed của bạn</string>
+    <string name="restore_seed_subtitle">Nhập các từ của bạn theo thứ tự. Chỉ viết thường.</string>
+    <string name="restore_wallet_name_label">Tên ví</string>
+    <string name="restore_wallet_name_placeholder">ví dụ: Ví đã khôi phục</string>
+    <string name="restore_12_words">12 từ</string>
+    <string name="restore_24_words">24 từ</string>
+    <string name="restore_button">Khôi phục ví</string>
+
+    <!-- Onboarding — Setup security -->
+    <string name="security_setup_title">Bảo mật ví của bạn</string>
+    <string name="security_setup_header">Thiết lập mật khẩu</string>
+    <string name="security_setup_subtitle">Mật khẩu này mã hóa ví của bạn trên thiết bị này.\nBạn sẽ cần nó để phê duyệt các giao dịch.</string>
+    <string name="security_setup_password_label">Mật khẩu</string>
+    <string name="security_setup_confirm_label">Xác nhận mật khẩu</string>
+    <string name="security_setup_passwords_mismatch">Mật khẩu không khớp</string>
+    <string name="security_setup_biometric_title">Bật mở khóa sinh trắc học</string>
+    <string name="security_setup_biometric_subtitle">Sử dụng vân tay hoặc khuôn mặt để mở khóa không cần mật khẩu</string>
+    <string name="security_setup_create">Tạo ví</string>
+</resources>

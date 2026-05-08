@@ -1,0 +1,44 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+  <path
+      android:pathData="M153.57,-0.31L358.37,-0.31A153.6,153.6 0,0 1,511.97 153.29L511.97,358.09A153.6,153.6 0,0 1,358.37 511.69L153.57,511.69A153.6,153.6 0,0 1,-0.03 358.09L-0.03,153.29A153.6,153.6 0,0 1,153.57 -0.31z">
+    <aapt:attr name="android:fillColor">
+      <gradient
+          android:startX="91.4"
+          android:startY="11.16"
+          android:endX="427.4"
+          android:endY="511.16"
+          android:type="linear">
+        <item android:offset="0" android:color="#FF11B9A5"/>
+        <item android:offset="1" android:color="#FF6E6CF2"/>
+      </gradient>
+    </aapt:attr>
+  </path>
+  <path
+      android:pathData="M146.63,160.47c39.99,-55.85 198.37,-85.64 218.8,11.67 -6.16,-3.16 -12.71,-5.49 -19.48,-6.91 -10.47,-2.15 -21.15,-3.08 -31.84,-2.77 -5.16,0.09 -10.33,0.4 -15.5,0.85 -38.12,-18.56 -115.98,9.74 -149.98,60.2 -2.82,4.19 -2.33,4.56 -2.33,-0.77v-61.21c0,-0.65 -0.04,-0.53 0.34,-1.06h0ZM361.23,246.96c-33.04,87.99 -186.67,32.33 -214.94,156.37 0,-165.91 154.92,-98.72 171.55,-172.29 12.75,-1.44 32.34,-2.14 39.96,6.56 2.18,2.64 3.38,5.94 3.43,9.36h0Z"
+      android:fillColor="#fff"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="M150.62,250.93c32.74,-52.65 91.17,-78.07 151.14,-82.76 41.61,-3.26 68.91,6.11 79.3,25.79 9.58,18.15 4.79,47.43 -16.39,68.09 -1.27,1.24 -1.23,1.43 -0.7,-0.26 10.87,-34.6 -17.17,-39.17 -46.64,-35.83 -67.43,7.63 -171.04,31.71 -171.04,116.28v-66.1c0,-9.98 -1.02,-16.62 4.33,-25.21h0Z"
+      android:fillColor="#fff"
+      android:fillType="evenOdd"/>
+</vector>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Memberikan akses ke folder cache internal -->
+    <cache-path name="my_cache" path="." />
+    <!-- Memberikan akses ke folder cache eksternal (lebih kompatibel untuk share ke WA/Telegram) -->
+    <external-cache-path name="my_external_cache" path="." />
+</paths>

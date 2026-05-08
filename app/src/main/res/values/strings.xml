@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Velora Wallet</string>
+
+    <!-- Widget -->
+    <string name="widget_description">Displays your PAC balance on the home screen</string>
+    <string name="widget_tap_to_open">Tap to open wallet</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_wallet">Wallet</string>
+    <string name="nav_activity">Activity</string>
+    <string name="nav_browser">Browser</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Common actions -->
+    <string name="action_back">Back</string>
+    <string name="action_copy">Copy</string>
+    <string name="action_share">Share</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_continue">Continue</string>
+    <string name="action_reject">Reject</string>
+    <string name="action_save">Save Changes</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_hide">Hide</string>
+    <string name="action_add">Add</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_switch_wallet">Switch wallet</string>
+    <string name="common_balance">Balance: %1$s</string>
+    <string name="common_amount_placeholder">0.00</string>
+    <string name="common_fee_placeholder">0.01</string>
+
+    <!-- Home screen -->
+    <string name="home_accounts_header">Accounts</string>
+    <string name="home_add_account">Add</string>
+    <string name="home_add_account_description">Generate a new address within this wallet. Funds are separate but share the same recovery phrase.</string>
+    <string name="home_address_copied">Address copied</string>
+
+    <!-- Balance Alert -->
+    <string name="alert_title">Balance Alert</string>
+    <string name="alert_description">Get notified based on the account balance threshold.</string>
+    <string name="alert_lower_than">Lower Than</string>
+    <string name="alert_higher_than">Higher Than</string>
+    <string name="alert_threshold_label">Threshold (PAC)</string>
+    <string name="alert_threshold_placeholder">e.g. 10.0</string>
+    <string name="alert_enable">Enable Alert</string>
+    <string name="alert_save">Save Alert</string>
+    <string name="alert_remove">Remove Alert</string>
+
+    <string name="home_receive">Receive</string>
+    <string name="home_send">Send</string>
+    <string name="home_stake">Stake</string>
+    <string name="stake_title">Bond / Stake</string>
+    <string name="stake_validator_label">Validator address</string>
+    <string name="stake_validator_placeholder">pc1p...</string>
+    <string name="stake_validator_pubkey_label">Validator Public Key (Optional)</string>
+    <string name="stake_validator_pubkey_placeholder">Only if it\'s not your validator</string>
+    <string name="stake_amount_label">Stake amount</string>
+    <string name="stake_fee_label">Network fee</string>
+    <string name="stake_memo_label">Memo (Optional)</string>
+    <string name="stake_memo_placeholder">Optional message</string>
+    <string name="stake_preview_button">Review Bond/Stake</string>
+    <string name="stake_confirm_title">Confirm Bond/Stake</string>
+    <string name="stake_confirm_total">Total</string>
+    <string name="stake_confirm_biometric">Confirm with Biometric</string>
+    <string name="stake_confirm_button">Confirm and Stake</string>
+    <string name="stake_success_title">Bond/Stake Successful</string>
+    <string name="stake_success_message">Your staking transaction has been broadcast to the Pactus network.</string>
+    <string name="stake_tx_id_copied">Transaction ID copied</string>
+    <string name="stake_sender_label">Sender</string>
+    <string name="home_my_wallets">My Wallets</string>
+    <string name="home_add_new">Add New</string>
+    <string name="home_add_new_wallet">Add New Wallet</string>
+    <string name="home_accounts_count">%1$d account</string>
+    <string name="home_accounts_count_plural">%1$d accounts</string>
+    <string name="home_reset_wallet_title">Reset Wallet?</string>
+    <string name="home_reset_wallet_message">This will permanently delete your wallet from this device. Make sure you have backed up your seed phrase before proceeding.</string>
+    <string name="home_delete_account_title">Delete account?</string>
+    <string name="home_delete_account_message">This account will be removed from this wallet. The funds remain accessible from your recovery phrase.</string>
+    <string name="home_delete_wallet_title">Delete \"%1$s\"?</string>
+    <string name="home_delete_wallet_message">Removing this wallet erases its encrypted vault from this device. Make sure you have the recovery phrase backed up.</string>
+    <string name="home_rename_account_title">Rename Account</string>
+    <string name="home_rename_account_label">Label</string>
+    <string name="home_rename_wallet_title">Rename Wallet</string>
+    <string name="home_add_wallet_title">Add Wallet</string>
+    <string name="home_add_wallet_create_subtitle">Generate a new recovery phrase</string>
+    <string name="home_add_wallet_restore_subtitle">Use your existing recovery phrase</string>
+    <string name="home_add_wallet_import_title">Import Private Key</string>
+    <string name="home_add_wallet_import_subtitle">Import a single Pactus account</string>
+    <string name="home_add_wallet_watch_title">Watch Address</string>
+    <string name="home_add_wallet_watch_subtitle">Track any Pactus address (read-only)</string>
+    <string name="add_wallet_title">Add new wallet</string>
+    <string name="add_wallet_description">A 12-word recovery phrase will be generated. Reveal it later from Settings before transferring funds.</string>
+    <string name="add_wallet_name_placeholder">e.g. Savings</string>
+    <string name="add_wallet_password_hint">At least 8 characters</string>
+    <string name="add_wallet_button">Create wallet</string>
+    <string name="watch_wallet_header">Track any address</string>
+    <string name="watch_wallet_description">Watch the balance and activity of any Pactus address. You won\'t be able to send funds from this wallet.</string>
+    <string name="watch_wallet_button">Add Watch Wallet</string>
+    <string name="error_offline_reconnecting">You are offline. Reconnecting…</string>
+
+    <!-- Send screen -->
+    <string name="send_title">Send PAC</string>
+    <string name="send_to_label">To address</string>
+    <string name="send_to_placeholder">pc1z…</string>
+    <string name="send_scan_qr">Scan QR</string>
+    <string name="send_scan_prompt">Scan Pactus Address</string>
+    <string name="send_amount_label">Amount</string>
+    <string name="send_amount_nanopac">Amount in NanoPAC</string>
+    <string name="send_amount_pac">Amount in PAC</string>
+    <string name="send_max">MAX</string>
+    <string name="send_memo_label">Memo (Optional)</string>
+    <string name="send_memo_placeholder">What is this for?</string>
+    <string name="send_fee_label">Network fee</string>
+    <string name="send_confirm_title">Confirm Transaction</string>
+    <string name="send_confirm_recipient">Recipient</string>
+    <string name="send_confirm_biometric">Confirm with Biometric</string>
+    <string name="send_confirm_button">Confirm and Send</string>
+    <string name="send_preview">Preview</string>
+    <string name="send_preview_button">Review Transaction</string>
+    <string name="send_from_label">Send From</string>
+    <string name="send_success_title">Transfer Successful</string>
+    <string name="send_success_message">Your PAC has been sent to the network and is being processed.</string>
+    <string name="send_tx_id_copied">Transaction ID copied</string>
+    <string name="send_success">Transaction sent! ID: %1$s…</string>
+    <string name="send_unit_pac">PAC</string>
+    <string name="send_unit_npac">nPAC</string>
+
+    <!-- Receive screen -->
+    <string name="receive_title">Receive PAC</string>
+    <string name="receive_your_address">Your Wallet Address</string>
+    <string name="receive_instruction">Share this address to receive PAC</string>
+    <string name="receive_security_warning">Send only PAC or tokens on Pactus network to this address. Sending other assets will result in permanent loss.</string>
+    <string name="receive_qr_desc">QR code</string>
+    <string name="receive_address_copied">Address copied to clipboard</string>
+
+    <!-- Transaction history -->
+    <string name="history_title">Transaction History</string>
+    <string name="history_filter_all">All</string>
+    <string name="history_filter_transfers">Transfers</string>
+    <string name="history_filter_bonds">Bonds</string>
+    <string name="history_status_pending">Pending</string>
+    <string name="history_status_failed">Failed</string>
+    <string name="history_status_confirmed">Confirmed</string>
+    <string name="history_transaction_detail">Transaction Detail</string>
+    <string name="history_tx_id">TX ID</string>
+    <string name="history_empty_title">No transactions yet</string>
+    <string name="history_empty_subtitle">Your transaction history will appear here</string>
+
+    <!-- Browser -->
+    <string name="browser_close">Close browser</string>
+    <string name="browser_bookmark">Bookmark</string>
+    <string name="browser_menu">Menu</string>
+    <string name="browser_go_back">Back</string>
+    <string name="browser_go_forward">Forward</string>
+    <string name="browser_stop">Stop</string>
+    <string name="browser_reload">Reload</string>
+    <string name="browser_search_placeholder">Search or enter URL</string>
+    <string name="browser_ecosystem_title">Pactus Ecosystem</string>
+    <string name="browser_ecosystem_subtitle">Discover decentralized world of Pactus</string>
+    <string name="browser_sign_title">Sign Transaction</string>
+    <string name="browser_sign_from">From</string>
+    <string name="browser_sign_to">To</string>
+    <string name="browser_sign_amount">Amount</string>
+    <string name="browser_sign_fee">Fee</string>
+    <string name="browser_sign_memo">Memo</string>
+    <string name="browser_bookmarks_header">Bookmarks</string>
+    <string name="browser_bookmarks_empty">No bookmarks yet</string>
+    <string name="browser_history_header">History</string>
+    <string name="browser_history_empty">No history yet</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_security">Security</string>
+    <string name="settings_change_password">Change Password</string>
+    <string name="settings_change_password_subtitle">Update your wallet password</string>
+    <string name="settings_biometric">Biometric Unlock</string>
+    <string name="settings_biometric_subtitle">Use fingerprint or face to unlock</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_subtitle">Choose your preferred language</string>
+    <string name="settings_section_network">Network</string>
+    <string name="settings_section_backup">Backup</string>
+    <string name="settings_backup_phrase">Backup Phrase</string>
+    <string name="settings_backup_phrase_subtitle">View your 12-word recovery phrase</string>
+    <string name="settings_section_about">About</string>
+    <string name="settings_about">About Velora Wallet</string>
+    <string name="settings_about_subtitle">Version, links, and legal</string>
+
+    <!-- Security settings -->
+    <string name="security_title">Security</string>
+    <string name="security_change_password_header">Change Password</string>
+    <string name="security_current_password">Current Password</string>
+    <string name="security_new_password">New Password</string>
+    <string name="security_confirm_password">Confirm New Password</string>
+    <string name="security_strength_strong">Strong</string>
+    <string name="security_strength_medium">Medium</string>
+    <string name="security_strength_weak">Weak</string>
+    <string name="security_strength_too_short">Too short</string>
+
+    <!-- Network settings -->
+    <string name="network_title">Network Settings</string>
+    <string name="network_mainnet">Mainnet</string>
+    <string name="network_mainnet_desc">Secure production network</string>
+    <string name="network_testnet">Testnet</string>
+    <string name="network_testnet_desc">Experimental network for testing</string>
+    <string name="network_select">Select Network</string>
+    <string name="network_mainnet_rpc">Mainnet RPC</string>
+    <string name="network_testnet_rpc">Testnet RPC</string>
+    <string name="network_coin_type">Coin type: %1$d</string>
+    <string name="network_selected">Selected</string>
+    <string name="network_switch_warning">Switching networks will automatically update your account addresses to match the selected network.</string>
+
+    <!-- Backup settings -->
+    <string name="backup_title">Backup Phrase</string>
+    <string name="backup_keep_secret">Keep your phrase secret</string>
+    <string name="backup_warning">Anyone with this phrase can access your wallet and funds. Never share it and never store it digitally.</string>
+    <string name="backup_reveal_description">Enter your password to reveal the phrase</string>
+    <string name="backup_reveal_description_biometric">Authenticate with biometric or enter your password to reveal the phrase</string>
+    <string name="backup_password_label">Password</string>
+    <string name="backup_reveal">Reveal Phrase</string>
+    <string name="backup_reveal_biometric">Reveal with Biometric</string>
+    <string name="backup_your_phrase">Your recovery phrase</string>
+    <string name="backup_your_private_key">Your private key</string>
+    <string name="backup_copied">Copied — store it safely and clear clipboard</string>
+    <string name="backup_copied_toast">Copied to clipboard</string>
+    <string name="backup_label_mnemonic">Mnemonic</string>
+    <string name="backup_label_private_key">Private Key</string>
+
+    <!-- Unlock dialog -->
+    <string name="unlock_title">Unlock Wallet</string>
+    <string name="unlock_description">Enter your password to continue.</string>
+    <string name="unlock_biometric">Unlock with Biometric</string>
+    <string name="unlock_button">Unlock</string>
+
+    <!-- About settings -->
+    <string name="about_title">About</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_tagline">Light-client wallet for the Pactus blockchain</string>
+    <string name="about_website">Pactus Website</string>
+    <string name="about_website_subtitle">pactus.org</string>
+    <string name="about_docs">Documentation</string>
+    <string name="about_docs_subtitle">docs.pactus.org</string>
+    <string name="about_github">View on GitHub</string>
+    <string name="about_github_subtitle">Open source — MIT License</string>
+    <string name="about_explorer">Block Explorer</string>
+    <string name="about_explorer_subtitle">pactusscan.com</string>
+
+    <!-- Language selection -->
+    <string name="language_select">Select Language</string>
+    <string name="language_english">English</string>
+    <string name="language_indonesian">Indonesian (Bahasa Indonesia)</string>
+    <string name="language_malay">Malay (Bahasa Malaysia)</string>
+    <string name="language_vietnamese">Vietnamese (Tiếng Việt)</string>
+    <string name="language_french">French (Français)</string>
+
+    <!-- Onboarding — Welcome -->
+    <string name="welcome_tagline">Your keys. Your coins.\nFull control, no node required.</string>
+    <string name="welcome_create">Create New Wallet</string>
+    <string name="welcome_restore">Restore from Seed Phrase</string>
+
+    <string name="welcome_import">Import from Private Key</string>
+    <string name="welcome_add_options_subtitle">Choose how you want to add a wallet to Velora.</string>
+
+    <!-- Onboarding — Create wallet -->
+    <string name="create_wallet_name_title">Name your wallet</string>
+    <string name="create_wallet_name_subtitle">You can change this anytime in settings.</string>
+    <string name="create_wallet_name_label">Wallet name</string>
+    <string name="create_wallet_name_placeholder">e.g. My Velora Wallet</string>
+    <string name="create_wallet_generate">Generate Seed Phrase</string>
+
+    <!-- Onboarding — Mnemonic backup -->
+    <string name="mnemonic_title">Seed Phrase</string>
+    <string name="mnemonic_backup_title">Write down your seed phrase</string>
+    <string name="mnemonic_backup_subtitle">These 12 words are the only way to recover your wallet.\nStore them somewhere safe — never share them with anyone.</string>
+    <string name="mnemonic_security_warning">Never enter your seed phrase on any website or share it digitally. Anyone with these words controls your funds.</string>
+    <string name="mnemonic_confirm_checkbox">I have written down my seed phrase and stored it safely.</string>
+    <string name="mnemonic_verify_button">Verify Seed Phrase</string>
+    <!-- Onboarding — Backup -->
+    <string name="mnemonic_restore_subtitle">Enter your secret words in the correct order.</string>
+    <string name="mnemonic_tap_to_reveal">Tap to reveal</string>
+    <string name="mnemonic_copied">Seed phrase copied to clipboard</string>
+
+    <!-- Onboarding — SplashScreen -->
+    <string name="splash_powered_by">Powered by Pactus Blockchain</string>
+    <string name="splash_dedicated_to">Dedicated to the Pactus Ecosystem</string>
+
+    <!-- Onboarding — Mnemonic verify -->
+    <string name="verify_title">Verify Backup</string>
+    <string name="verify_confirm_title">Confirm your seed phrase</string>
+    <string name="verify_confirm_subtitle">Enter the missing words to confirm you\'ve saved your seed phrase correctly.</string>
+
+    <!-- Onboarding — Restore wallet -->
+    <string name="restore_title">Restore Wallet</string>
+    <string name="restore_enter_seed">Enter your seed phrase</string>
+    <string name="restore_seed_subtitle">Type your words in order. Lowercase only.</string>
+    <string name="restore_wallet_name_label">Wallet name</string>
+    <string name="restore_wallet_name_placeholder">e.g. Restored Wallet</string>
+    <string name="restore_12_words">12 words</string>
+    <string name="restore_24_words">24 words</string>
+    <string name="restore_button">Restore Wallet</string>
+
+    <!-- Onboarding — Import -->
+    <string name="import_title">Import Account</string>
+    <string name="import_description">Enter your private key to import an existing account. A private key is a secret code that gives you access to your funds.</string>
+    <string name="import_pk_label">Private key</string>
+    <string name="import_pk_placeholder">Enter your secret key…</string>
+    <string name="import_security_warning">Make sure no one is watching your screen when entering the key.</string>
+    <string name="import_wallet_name_placeholder">My Imported Wallet</string>
+
+    <!-- Onboarding — Setup security -->
+    <string name="security_setup_title">Secure Your Wallet</string>
+    <string name="security_setup_header">Set a password</string>
+    <string name="security_setup_subtitle">This password encrypts your wallet on this device.\nYou\'ll need it to approve transactions.</string>
+    <string name="security_setup_password_label">Password</string>
+    <string name="security_setup_confirm_label">Confirm password</string>
+    <string name="security_setup_passwords_mismatch">Passwords do not match</string>
+    <string name="security_setup_biometric_title">Enable biometric unlock</string>
+    <string name="security_setup_biometric_subtitle">Use fingerprint or face to unlock without password</string>
+    <string name="security_setup_create">Create Wallet</string>
+</resources>
