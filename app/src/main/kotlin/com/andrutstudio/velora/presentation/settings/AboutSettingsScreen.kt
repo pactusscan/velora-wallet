@@ -117,6 +117,18 @@ fun AboutSettingsScreen(
                 subtitle = stringResource(R.string.about_explorer_subtitle),
                 onClick = { openUrl("https://pactusscan.com") },
             )
+            AboutLinkItem(
+                icon = Icons.Rounded.Gavel,
+                title = stringResource(R.string.about_terms),
+                subtitle = stringResource(R.string.about_terms_subtitle),
+                onClick = { openUrl("https://velora.pactusscan.com/terms-of-service") },
+            )
+            AboutLinkItem(
+                icon = Icons.Rounded.PrivacyTip,
+                title = stringResource(R.string.about_privacy),
+                subtitle = stringResource(R.string.about_privacy_subtitle),
+                onClick = { openUrl("https://velora.pactusscan.com/privacy-policy") },
+            )
         }
     }
 }

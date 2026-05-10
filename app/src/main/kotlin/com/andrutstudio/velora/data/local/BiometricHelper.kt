@@ -15,6 +15,7 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.andrutstudio.velora.R
 
 @Singleton
 class BiometricHelper @Inject constructor(
@@ -101,9 +102,9 @@ class BiometricHelper @Inject constructor(
         }
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Enable Biometric")
-            .setSubtitle("Authenticate to securely store your password")
-            .setNegativeButtonText("Cancel")
+            .setTitle(context.getString(R.string.biometric_enable_title))
+            .setSubtitle(context.getString(R.string.biometric_enable_subtitle))
+            .setNegativeButtonText(context.getString(R.string.action_cancel))
             .setAllowedAuthenticators(androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG)
             .build()
 
@@ -131,25 +132,25 @@ class BiometricHelper @Inject constructor(
 
     fun showBiometricPromptForDecryption(
         activity: FragmentActivity,
-        title: String = "Unlock Wallet",
-        subtitle: String = "Authenticate to proceed",
+        title: String = context.getString(R.string.unlock_title),
+        subtitle: String = context.getString(R.string.biometric_unlock_subtitle),
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
     ) {
         val cipher = try {
             getDecryptCipher() ?: run {
-                onError("Biometric unlock not set up")
+                onError(context.getString(R.string.biometric_error_not_setup))
                 return
             }
         } catch (e: Exception) {
-            onError("Biometric session expired or changed")
+            onError(context.getString(R.string.biometric_error_expired))
             return
         }
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle(title)
             .setSubtitle(subtitle)
-            .setNegativeButtonText("Cancel")
+            .setNegativeButtonText(context.getString(R.string.action_cancel))
             .setAllowedAuthenticators(androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG)
             .build()
 

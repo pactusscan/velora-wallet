@@ -33,18 +33,18 @@ class NotificationHelper @Inject constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val txChannel = NotificationChannel(
                 CHANNEL_TRANSACTIONS,
-                "Transactions",
+                context.getString(R.string.notification_channel_transactions),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Notifications for incoming transfers"
+                description = context.getString(R.string.notification_channel_transactions_desc)
             }
 
             val alertChannel = NotificationChannel(
                 CHANNEL_ALERTS,
-                "Wallet Alerts",
+                context.getString(R.string.notification_channel_alerts),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Alerts for low balance or other wallet events"
+                description = context.getString(R.string.notification_channel_alerts_desc)
             }
 
             val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -64,8 +64,8 @@ class NotificationHelper @Inject constructor(
 
         val builder = NotificationCompat.Builder(context, CHANNEL_TRANSACTIONS)
             .setSmallIcon(R.drawable.ic_velora_logo)
-            .setContentTitle("Incoming Transfer")
-            .setContentText("Received $amount from $address")
+            .setContentTitle(context.getString(R.string.notification_incoming_transfer_title))
+            .setContentText(context.getString(R.string.notification_incoming_transfer_text, amount, address))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setContentIntent(pendingIntent)
@@ -83,13 +83,15 @@ class NotificationHelper @Inject constructor(
             PendingIntent.FLAG_IMMUTABLE
         )
 
-        val title = if (isLowerThan) "Low Balance Alert" else "High Balance Alert"
-        val condition = if (isLowerThan) "below" else "above"
+        val title = if (isLowerThan) context.getString(R.string.notification_low_balance_title) 
+                    else context.getString(R.string.notification_high_balance_title)
+        val condition = if (isLowerThan) context.getString(R.string.notification_condition_below) 
+                        else context.getString(R.string.notification_condition_above)
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ALERTS)
             .setSmallIcon(R.drawable.ic_velora_logo)
             .setContentTitle(title)
-            .setContentText("Wallet '$walletName' balance is $balance, which is $condition your threshold of $threshold")
+            .setContentText(context.getString(R.string.notification_balance_alert_text, walletName, balance, condition, threshold))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setContentIntent(pendingIntent)

@@ -209,7 +209,9 @@ class RpcCaller @Inject constructor(
         val payload = obj.getAsJsonObject("payload")
         val sender = payload?.get("sender")?.asStringSafe()
         val receiver = payload?.get("receiver")?.asStringSafe()
-        val amount = payload?.get("amount")?.asLongSafe() ?: 0L
+        val amount = payload?.get("amount")?.asLongSafe() 
+            ?: payload?.get("stake")?.asLongSafe() 
+            ?: 0L
         return TxRpcData(
             id = id,
             typeStr = typeStr,

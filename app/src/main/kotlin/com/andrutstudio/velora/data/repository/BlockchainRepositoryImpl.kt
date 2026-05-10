@@ -191,7 +191,7 @@ class BlockchainRepositoryImpl @Inject constructor(
             .build()
         WorkManager.getInstance(context).enqueueUniqueWork(
             "one_time_tx_sync",
-            ExistingWorkPolicy.REPLACE,
+            ExistingWorkPolicy.KEEP,
             request
         )
     }

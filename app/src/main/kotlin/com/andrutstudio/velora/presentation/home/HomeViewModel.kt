@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.andrutstudio.velora.data.local.db.AlertType
+import com.andrutstudio.velora.domain.model.Account
 import com.andrutstudio.velora.domain.model.AccountType
 import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.domain.model.Wallet
@@ -23,7 +25,9 @@ import com.andrutstudio.velora.domain.repository.BlockchainRepository
 import com.andrutstudio.velora.domain.repository.MarketRepository
 import com.andrutstudio.velora.domain.repository.WalletRepository
 import com.andrutstudio.velora.domain.usecase.RefreshBalancesUseCase
+import com.andrutstudio.velora.presentation.components.formatPac
 import com.andrutstudio.velora.presentation.navigation.Screen
+import com.andrutstudio.velora.presentation.notification.NotificationHelper
 import com.andrutstudio.velora.presentation.widget.WidgetUpdater
 import javax.inject.Inject
 
@@ -37,6 +41,7 @@ class HomeViewModel @Inject constructor(
     private val rpcService: com.andrutstudio.velora.data.rpc.PactusRpcService,
     private val widgetUpdater: WidgetUpdater,
     private val balanceAlertDao: com.andrutstudio.velora.data.local.db.BalanceAlertDao,
+    private val notificationHelper: NotificationHelper,
 ) : ViewModel() {
 
     data class State(
@@ -106,12 +111,17 @@ class HomeViewModel @Inject constructor(
     private fun startBalancePolling() {
         viewModelScope.launch {
             while (true) {
-                val wallet = _state.value.wallet
-                if (wallet != null) {
-                    fetchBalances(wallet, isRefreshing = false)
-                    fetchMarketPrice()
-                }
-                delay(30_000) // Poll every 30 seconds while in foreground
+                delay(30_000)
+                val wallet = _state.value.wallet ?: continue
+                fetchBalances(wallet, isRefreshing = false)
+                fetchMarketPrice()
+            }
+        }
+        // TX sync every 2 minutes while in foreground
+        viewModelScope.launch {
+            while (true) {
+                delay(120_000)
+                if (_state.value.wallet != null) blockchainRepository.triggerSync()
             }
         }
     }
@@ -440,6 +450,7 @@ class HomeViewModel @Inject constructor(
                 walletName = wallet.name,
                 networkName = wallet.network.displayName,
             )
+            checkAndNotifyAlerts(wallet.accounts, balances)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -449,6 +460,33 @@ class HomeViewModel @Inject constructor(
                 _effect.send(Effect.ShowMessage("You are offline. Reconnecting..."))
             } else {
                 _state.update { it.copy(isRefreshing = false, error = e.message) }
+            }
+        }
+    }
+
+    private suspend fun checkAndNotifyAlerts(accounts: List<Account>, balances: Map<String, Amount>) {
+        val alerts = balanceAlertDao.getAllAlerts().first()
+        if (alerts.isEmpty()) return
+        for (alert in alerts) {
+            if (!alert.isEnabled) continue
+            val currentNanoPac = balances[alert.address]?.nanoPac ?: continue
+            val conditionMet = when (alert.type) {
+                AlertType.LOWER_THAN -> currentNanoPac < alert.thresholdNanoPac
+                AlertType.HIGHER_THAN -> currentNanoPac > alert.thresholdNanoPac
+            }
+            if (conditionMet && alert.lastTriggeredValue == null) {
+                val label = accounts.find { it.address == alert.address }
+                    ?.label?.ifBlank { null }
+                    ?: (alert.address.take(8) + "…")
+                notificationHelper.showLowBalanceAlert(
+                    walletName = label,
+                    balance = formatPac(Amount.fromNanoPac(currentNanoPac)),
+                    threshold = formatPac(Amount.fromNanoPac(alert.thresholdNanoPac)),
+                    isLowerThan = alert.type == AlertType.LOWER_THAN,
+                )
+                balanceAlertDao.insertAlert(alert.copy(lastTriggeredValue = currentNanoPac))
+            } else if (!conditionMet && alert.lastTriggeredValue != null) {
+                balanceAlertDao.insertAlert(alert.copy(lastTriggeredValue = null))
             }
         }
     }

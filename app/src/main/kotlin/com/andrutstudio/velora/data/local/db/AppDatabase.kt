@@ -10,17 +10,29 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         TransactionEntity::class,
         BrowserHistoryEntity::class,
         BookmarkEntity::class,
-        BalanceAlertEntity::class
+        BalanceAlertEntity::class,
+        MonitoredNodeEntity::class,
     ],
-    version = 4,
+    version = 5,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun browserDao(): BrowserDao
     abstract fun balanceAlertDao(): BalanceAlertDao
+    abstract fun monitoredNodeDao(): MonitoredNodeDao
 
     companion object {
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """CREATE TABLE IF NOT EXISTS monitored_nodes (
+                        validatorAddress TEXT PRIMARY KEY NOT NULL,
+                        addedAt INTEGER NOT NULL
+                    )"""
+                )
+            }
+        }
         val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(

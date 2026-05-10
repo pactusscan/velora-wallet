@@ -28,6 +28,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.shape.RoundedCornerShape
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import com.andrutstudio.velora.R
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -76,6 +80,21 @@ fun HomeScreen(
     
     val biometricHelper = remember {
         EntryPointAccessors.fromApplication(context.applicationContext, BiometricEntryPoint::class.java).biometricHelper()
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                // Permission granted
+            }
+        }
+    )
+
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     val renamingAddress = state.renamingAddress
@@ -201,31 +220,43 @@ fun HomeScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        bottomBar = {
-            MainBottomNavigation(
-                navController = navController,
-                currentRoute = Screen.Home.route
-            )
-        },
     ) { padding ->
-        WalletTab(
-            state = state,
-            onRefresh = viewModel::refresh,
-            onCopyAddress = viewModel::onAddressCopied,
-            onRenameAccount = { address, label -> viewModel.onShowRename(address, label) },
-            onDeleteAccount = viewModel::onDeleteAccount,
-            onShowAddAccount = viewModel::onShowAddAccountSheet,
-            onSelectWallet = viewModel::onWalletSelectorClick,
-            onAddWallet = viewModel::onAddWalletClick,
-            onReceive = {
-                val address = state.wallet?.accounts?.firstOrNull()?.address ?: ""
-                navController.navigate(Screen.Receive.withAddress(address))
-            },
-            onSend = { navController.navigate(Screen.Send.withArgs()) },
-            onStake = { navController.navigate(Screen.Stake.route) },
-            onShowAlert = viewModel::onShowAlertSheet,
-            modifier = Modifier.padding(padding),
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = padding.calculateTopPadding())
+        ) {
+            WalletTab(
+                state = state,
+                onRefresh = viewModel::refresh,
+                onCopyAddress = viewModel::onAddressCopied,
+                onRenameAccount = { address, label -> viewModel.onShowRename(address, label) },
+                onDeleteAccount = viewModel::onDeleteAccount,
+                onShowAddAccount = viewModel::onShowAddAccountSheet,
+                onSelectWallet = viewModel::onWalletSelectorClick,
+                onAddWallet = viewModel::onAddWalletClick,
+                onReceive = {
+                    val address = state.wallet?.accounts?.firstOrNull()?.address ?: ""
+                    navController.navigate(Screen.Receive.withAddress(address))
+                },
+                onSend = { navController.navigate(Screen.Send.withArgs()) },
+                onStake = { navController.navigate(Screen.Stake.route) },
+                onShowAlert = viewModel::onShowAlertSheet,
+                modifier = Modifier.fillMaxSize(),
+            )
+
+            // Floating Navigation Dock
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+            ) {
+                MainBottomNavigation(
+                    navController = navController,
+                    currentRoute = Screen.Home.route
+                )
+            }
+        }
     }
 }
 
@@ -257,7 +288,7 @@ private fun WalletTab(
                 start = 16.dp,
                 end = 16.dp,
                 top = 8.dp,
-                bottom = 24.dp,
+                bottom = 100.dp, // Increased for floating dock
             ),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -416,25 +447,36 @@ fun HomeScreenPreview() {
         ),
     )
     VeloraTheme {
-        Scaffold(
-            bottomBar = {
-                MainBottomNavigation(
-                    navController = rememberNavController(),
-                    currentRoute = Screen.Home.route
+        Scaffold { padding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = padding.calculateTopPadding())
+            ) {
+                WalletTab(
+                    state = HomeViewModel.State(
+                        wallet = wallet,
+                        balances = mapOf(wallet.accounts[0].address to Amount.fromPac(42.5)),
+                        isLoading = false,
+                    ),
+                    onRefresh = {},
+                    onCopyAddress = {},
+                    onStake = {},
+                    modifier = Modifier.fillMaxSize(),
                 )
+
+                // Floating Navigation Dock
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .navigationBarsPadding()
+                ) {
+                    MainBottomNavigation(
+                        navController = rememberNavController(),
+                        currentRoute = Screen.Home.route
+                    )
+                }
             }
-        ) { padding ->
-            WalletTab(
-                state = HomeViewModel.State(
-                    wallet = wallet,
-                    balances = mapOf(wallet.accounts[0].address to Amount.fromPac(42.5)),
-                    isLoading = false,
-                ),
-                onRefresh = {},
-                onCopyAddress = {},
-                onStake = {},
-                modifier = Modifier.padding(padding),
-            )
         }
     }
 }
@@ -443,12 +485,33 @@ fun HomeScreenPreview() {
 @Composable
 fun HomeScreenLoadingPreview() {
     VeloraTheme {
-        WalletTab(
-            state = HomeViewModel.State(isLoading = true),
-            onRefresh = {},
-            onCopyAddress = {},
-            onStake = {},
-        )
+        Scaffold { padding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = padding.calculateTopPadding())
+            ) {
+                WalletTab(
+                    state = HomeViewModel.State(isLoading = true),
+                    onRefresh = {},
+                    onCopyAddress = {},
+                    onStake = {},
+                    modifier = Modifier.fillMaxSize(),
+                )
+
+                // Floating Navigation Dock
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .navigationBarsPadding()
+                ) {
+                    MainBottomNavigation(
+                        navController = rememberNavController(),
+                        currentRoute = Screen.Home.route
+                    )
+                }
+            }
+        }
     }
 }
 

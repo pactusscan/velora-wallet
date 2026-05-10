@@ -100,10 +100,13 @@ fun BrowserScreen(
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT,
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT
             )
-            
-            // Aktifkan akselerasi hardware
+
+            // CRITICAL: Set background to transparent to eliminate the white canvas flicker
+            setBackgroundColor(android.graphics.Color.TRANSPARENT)
+
+            // Enable hardware acceleration for smoother rendering
             setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null)
-            
+
             settings.apply {
                 javaScriptEnabled = true
                 domStorageEnabled = true
@@ -114,27 +117,29 @@ fun BrowserScreen(
                 setSupportZoom(true)
                 builtInZoomControls = true
                 displayZoomControls = false
-                
-                // Chrome Android features
+
                 javaScriptCanOpenWindowsAutomatically = true
                 allowFileAccess = true
                 allowContentAccess = true
                 mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                 cacheMode = WebSettings.LOAD_DEFAULT
-                
-                // Mimic Chrome Android User Agent
+
+                // Force dark mode implementation for Android 10+ devices
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    forceDark = WebSettings.FORCE_DARK_ON
+                }
+
+                // Set custom User Agent to mimic modern mobile Chrome
                 val defaultUa = WebSettings.getDefaultUserAgent(context)
                 userAgentString = "$defaultUa VeloraWallet/1.0"
             }
-            
-            // Cookies
+
+            // Manage cookies for sessions and third-party integrations
             android.webkit.CookieManager.getInstance().setAcceptCookie(true)
             android.webkit.CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
-            
+
             isVerticalScrollBarEnabled = true
             isHorizontalScrollBarEnabled = true
-            
-            // Critical for touch interaction
             isFocusable = true
             isFocusableInTouchMode = true
             requestFocus()
@@ -151,9 +156,10 @@ fun BrowserScreen(
         )
     }
 
+    // Handle WebView lifecycle and JS interfaces
     DisposableEffect(webView) {
         webView.addJavascriptInterface(bridge, "PactusAndroid")
-        
+
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 viewModel.onProgressChanged(newProgress)
@@ -178,7 +184,8 @@ fun BrowserScreen(
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 val url = request?.url?.toString() ?: return false
                 val scheme = request.url.scheme ?: return false
-                
+
+                // Redirect non-http links to external browser or apps
                 if (scheme != "http" && scheme != "https") {
                     viewModel.onExternalLinkRequested(url)
                     return true
@@ -192,6 +199,7 @@ fun BrowserScreen(
         }
     }
 
+    // Sync WebView state with Activity lifecycle events
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     DisposableEffect(lifecycle) {
         val observer = LifecycleEventObserver { _, event ->
@@ -205,6 +213,7 @@ fun BrowserScreen(
         onDispose { lifecycle.removeObserver(observer) }
     }
 
+    // Collect effects from ViewModel to trigger WebView actions
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
@@ -229,6 +238,7 @@ fun BrowserScreen(
         }
     }
 
+    // Display transaction signing request sheet
     if (state.pendingSignRequest != null) {
         SignRequestSheet(
             request = state.pendingSignRequest!!,
@@ -257,26 +267,36 @@ fun BrowserScreen(
                 onToggleBookmark = viewModel::onToggleBookmark,
                 onFocusChange = { /* No-op */ }
             )
-        },
-        bottomBar = {
-            MainBottomNavigation(
-                navController = navController,
-                currentRoute = Screen.Browser.withUrl(state.urlBarText)
-            )
         }
+        // NOTE: bottomBar is removed from Scaffold to let the content flow beneath the navigation
     ) { padding ->
+        // Box stack: WebView stays at the bottom layer, Dock stays on top
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(top = padding.calculateTopPadding()) // Only apply top padding from Scaffold
         ) {
+            // LAYER 1: The WebView component filling the entire available space
             AndroidView(
                 factory = { webView },
                 modifier = Modifier.fillMaxSize(),
             )
 
+            // LAYER 2: Browser home overlay (displays when no URL is loaded)
             if (state.url == "about:blank") {
                 BrowserHome(onUrlSubmit = viewModel::onUrlSubmitted)
+            }
+
+            // LAYER 3: The custom Navigation Dock floating at the bottom
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding() // Adapts to system navigation bars (gestures/buttons)
+            ) {
+                MainBottomNavigation(
+                    navController = navController,
+                    currentRoute = Screen.Browser.route
+                )
             }
         }
     }

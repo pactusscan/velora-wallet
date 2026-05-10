@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -137,7 +138,7 @@ private fun TransactionList(
     onItemClick: (String) -> Unit,
 ) {
     LazyColumn(
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(transactions, key = { it.id }) { tx ->
@@ -398,31 +399,43 @@ private fun TransactionHistoryContent(
                 ),
             )
         },
-        bottomBar = {
-            MainBottomNavigation(
-                navController = navController,
-                currentRoute = Screen.TransactionHistory.route
-            )
-        }
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(top = padding.calculateTopPadding())
         ) {
-            FilterRow(
-                selected = state.filter,
-                onSelect = onFilterSelect,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            )
+            Column(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                FilterRow(
+                    selected = state.filter,
+                    onSelect = onFilterSelect,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
 
-            when {
-                state.isLoading -> LoadingList()
-                state.filtered.isEmpty() -> EmptyState()
-                else -> TransactionList(
-                    transactions = state.filtered,
-                    myAddresses = myAddresses,
-                    onItemClick = onTransactionClick,
+                Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                    when {
+                        state.isLoading -> LoadingList()
+                        state.filtered.isEmpty() -> EmptyState()
+                        else -> TransactionList(
+                            transactions = state.filtered,
+                            myAddresses = myAddresses,
+                            onItemClick = onTransactionClick,
+                        )
+                    }
+                }
+            }
+
+            // Floating Navigation Dock
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+            ) {
+                MainBottomNavigation(
+                    navController = navController,
+                    currentRoute = Screen.TransactionHistory.route
                 )
             }
         }

@@ -241,7 +241,7 @@ fun ReceiveScreen(
                 ) {
                     Icon(Icons.Rounded.ContentCopy, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Copy")
+                    Text(stringResource(R.string.action_copy))
                 }
                 
                 Button(
@@ -251,7 +251,7 @@ fun ReceiveScreen(
                 ) {
                     Icon(Icons.Rounded.Share, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Share")
+                    Text(stringResource(R.string.action_share))
                 }
             }
         }

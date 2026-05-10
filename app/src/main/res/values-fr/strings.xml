@@ -4,6 +4,7 @@
 
     <!-- Widget -->
     <string name="widget_description">Affiche votre solde PAC sur l\'écran d\'accueil</string>
+    <string name="widget_tap_to_open">Appuyez pour ouvrir le portefeuille</string>
 
     <!-- Bottom navigation -->
     <string name="nav_wallet">Portefeuille</string>
@@ -19,21 +20,63 @@
     <string name="action_continue">Continuer</string>
     <string name="action_reject">Rejeter</string>
     <string name="action_save">Enregistrer</string>
+    <string name="action_cancel">Annuler</string>
     <string name="action_clear">Effacer</string>
-    <string name="action_hide">Masquer</string>
-    <string name="action_add">Ajouter</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="action_switch_wallet">Changer de portefeuille</string>
+    <string name="common_balance">Solde : %1$s</string>
+    <string name="common_amount_placeholder">0.00</string>
+    <string name="common_fee_placeholder">0.01</string>
 
     <!-- Home screen -->
     <string name="home_accounts_header">Comptes</string>
     <string name="home_add_account">Ajouter</string>
+    <string name="home_add_account_description">Générez une nouvelle adresse. Les fonds sont séparés mais partagent la même phrase de récupération.</string>
     <string name="home_address_copied">Adresse copiée</string>
     <string name="home_receive">Recevoir</string>
     <string name="home_send">Envoyer</string>
     <string name="home_stake">Staker</string>
     <string name="home_my_wallets">Mes Portefeuilles</string>
     <string name="home_add_new">Nouveau</string>
+    <string name="home_add_new_wallet">Nouveau Portefeuille</string>
     <string name="home_reset_wallet_title">Réinitialiser ?</string>
     <string name="home_reset_wallet_message">Ceci supprimera définitivement votre portefeuille de cet appareil. Assurez-vous d\'avoir sauvegardé votre phrase secrète.</string>
+    <string name="home_delete_account_title">Supprimer le compte ?</string>
+    <string name="home_delete_account_message">Ce compte sera supprimé de ce portefeuille. Les fonds restent accessibles via votre phrase de récupération.</string>
+    <string name="home_delete_wallet_title">Supprimer \"%1$s\" ?</string>
+    <string name="home_delete_wallet_message">La suppression effacera le coffre-fort de cet appareil. Assurez-vous d\'avoir sauvegardé la phrase de récupération.</string>
+    <string name="home_rename_account_title">Renommer le compte</string>
+    <string name="home_rename_account_label">Étiquette</string>
+    <string name="home_rename_wallet_title">Renommer le portefeuille</string>
+    <string name="home_add_wallet_title">Ajouter Portefeuille</string>
+    <string name="home_add_wallet_create_subtitle">Générer une nouvelle phrase</string>
+    <string name="home_add_wallet_restore_subtitle">Utiliser une phrase existante</string>
+    <string name="home_add_wallet_import_title">Importer Clé Privée</string>
+    <string name="home_add_wallet_import_subtitle">Importer un compte Pactus unique</string>
+    <string name="home_add_wallet_watch_title">Surveiller Adresse</string>
+    <string name="home_add_wallet_watch_subtitle">Suivre une adresse Pactus (lecture seule)</string>
+    <string name="add_wallet_title">Nouveau portefeuille</string>
+    <string name="add_wallet_description">Une phrase de 12 mots sera générée. Affichez-la plus tard dans les Paramètres avant de transférer des fonds.</string>
+    <string name="add_wallet_name_placeholder">ex : Épargne</string>
+    <string name="add_wallet_password_hint">Au moins 8 caractères</string>
+    <string name="add_wallet_button">Créer portefeuille</string>
+    <string name="watch_wallet_header">Suivre une adresse</string>
+    <string name="watch_wallet_description">Suivez le solde et l\'activité de n\'importe quelle adresse Pactus. Vous ne pourrez pas envoyer de fonds.</string>
+    <string name="watch_wallet_button">Ajouter surveillance</string>
+    <string name="home_accounts_count">%1$d compte</string>
+    <string name="home_accounts_count_plural">%1$d comptes</string>
+
+    <!-- Balance Alert -->
+    <string name="alert_title">Alerte de Solde</string>
+    <string name="alert_description">Soyez notifié en fonction d\'un seuil de solde.</string>
+    <string name="alert_lower_than">Inférieur à</string>
+    <string name="alert_higher_than">Supérieur à</string>
+    <string name="alert_threshold_label">Seuil (PAC)</string>
+    <string name="alert_threshold_placeholder">ex : 10.0</string>
+    <string name="alert_enable">Activer l\'alerte</string>
+    <string name="alert_save">Enregistrer</string>
+    <string name="alert_remove">Supprimer</string>
+
     <string name="error_offline_reconnecting">Hors ligne. Reconnexion…</string>
 
     <!-- Send screen -->
@@ -41,32 +84,46 @@
     <string name="send_to_label">À l\'adresse</string>
     <string name="send_to_placeholder">pc1z…</string>
     <string name="send_scan_qr">Scanner QR</string>
+    <string name="send_scan_prompt">Scanner Adresse Pactus</string>
     <string name="send_amount_label">Montant</string>
     <string name="send_amount_nanopac">Montant en NanoPAC</string>
     <string name="send_amount_pac">Montant en PAC</string>
+    <string name="send_max">MAX</string>
     <string name="send_memo_label">Note (optionnel)</string>
-    <string name="send_memo_placeholder">Ajouter une note…</string>
+    <string name="send_memo_placeholder">De quoi s\'agit-il ?</string>
     <string name="send_fee_label">Frais de réseau</string>
     <string name="send_preview">Aperçu</string>
-    <string name="send_from_label">Depuis le compte</string>
+    <string name="send_preview_button">Vérifier Transaction</string>
+    <string name="send_confirm_title">Confirmer Transaction</string>
+    <string name="send_confirm_recipient">Destinataire</string>
+    <string name="send_confirm_biometric">Confirmer par Biométrie</string>
+    <string name="send_confirm_button">Confirmer et Envoyer</string>
+    <string name="send_from_label">Envoyer de</string>
+    <string name="send_success_title">Transfert Réussi</string>
+    <string name="send_success_message">Vos PAC ont été envoyés au réseau et sont en cours de traitement.</string>
+    <string name="send_tx_id_copied">ID Transaction copié</string>
     <string name="send_success">Transaction envoyée ! ID : %1$s…</string>
     <string name="send_unit_pac">PAC</string>
     <string name="send_unit_npac">nPAC</string>
 
     <!-- Receive screen -->
     <string name="receive_title">Recevoir PAC</string>
+    <string name="receive_your_address">Votre Adresse</string>
     <string name="receive_instruction">Partagez cette adresse pour recevoir des PAC</string>
+    <string name="receive_security_warning">Envoyez uniquement des PAC ou tokens Pactus à cette adresse. Les autres actifs seront perdus.</string>
     <string name="receive_qr_desc">Code QR</string>
-    <string name="receive_address_copied">Adresse copiée dans le presse-papier</string>
+    <string name="receive_address_copied">Adresse copiée</string>
 
     <!-- Transaction history -->
-    <string name="history_title">Historique des Transactions</string>
+    <string name="history_title">Historique</string>
     <string name="history_filter_all">Tout</string>
     <string name="history_filter_transfers">Transferts</string>
     <string name="history_filter_bonds">Bonds</string>
     <string name="history_status_pending">En attente</string>
     <string name="history_status_failed">Échoué</string>
     <string name="history_status_confirmed">Confirmé</string>
+    <string name="history_transaction_detail">Détails de Transaction</string>
+    <string name="history_tx_id">ID Transaction</string>
     <string name="history_empty_title">Aucune transaction</string>
     <string name="history_empty_subtitle">Votre historique apparaîtra ici</string>
 
@@ -78,6 +135,9 @@
     <string name="browser_go_forward">Suivant</string>
     <string name="browser_stop">Arrêter</string>
     <string name="browser_reload">Actualiser</string>
+    <string name="browser_search_placeholder">Rechercher ou URL</string>
+    <string name="browser_ecosystem_title">Écosystème Pactus</string>
+    <string name="browser_ecosystem_subtitle">Découvrez le monde décentralisé de Pactus</string>
     <string name="browser_sign_title">Signer Transaction</string>
     <string name="browser_sign_from">De</string>
     <string name="browser_sign_to">À</string>
@@ -97,7 +157,7 @@
     <string name="settings_biometric">Déverrouillage biométrique</string>
     <string name="settings_biometric_subtitle">Utiliser l\'empreinte ou le visage</string>
     <string name="settings_language">Langue</string>
-    <string name="settings_language_subtitle">Choisissez votre langue préférée</string>
+    <string name="settings_language_subtitle">Choisissez votre langue</string>
     <string name="settings_section_network">Réseau</string>
     <string name="settings_section_backup">Sauvegarde</string>
     <string name="settings_backup_phrase">Phrase de sauvegarde</string>
@@ -108,7 +168,7 @@
 
     <!-- Security settings -->
     <string name="security_title">Sécurité</string>
-    <string name="security_change_password_header">Changer le mot de passe</string>
+    <string name="security_change_password_header">Changer mot de passe</string>
     <string name="security_current_password">Mot de passe actuel</string>
     <string name="security_new_password">Nouveau mot de passe</string>
     <string name="security_confirm_password">Confirmer le mot de passe</string>
@@ -118,33 +178,63 @@
     <string name="security_strength_too_short">Trop court</string>
 
     <!-- Network settings -->
-    <string name="network_title">Réseau</string>
-    <string name="network_select">Choisir le réseau</string>
-    <string name="network_coin_type">Type de pièce : %1$d</string>
+    <string name="network_title">Paramètres Réseau</string>
+    <string name="network_mainnet">Mainnet</string>
+    <string name="network_mainnet_desc">Réseau de production sécurisé</string>
+    <string name="network_testnet">Testnet</string>
+    <string name="network_testnet_desc">Réseau expérimental de test</string>
+    <string name="network_select">Choisir le Réseau</string>
+    <string name="network_mainnet_rpc">RPC Mainnet</string>
+    <string name="network_testnet_rpc">RPC Testnet</string>
+    <string name="network_coin_type">Type : %1$d</string>
     <string name="network_selected">Sélectionné</string>
-    <string name="network_switch_warning">Changer de réseau génère de nouvelles adresses à partir du mnémonique. Le portefeuille doit être déverrouillé.</string>
+    <string name="network_switch_warning">Le changement de réseau mettra à jour vos adresses de compte.</string>
 
     <!-- Backup settings -->
     <string name="backup_title">Phrase de sauvegarde</string>
     <string name="backup_keep_secret">Gardez votre phrase secrète</string>
-    <string name="backup_warning">Quiconque possède cette phrase peut accéder à vos fonds. Ne la partagez jamais et ne la stockez pas numériquement.</string>
-    <string name="backup_enter_password">Entrez votre mot de passe pour voir la phrase</string>
+    <string name="backup_warning">Quiconque possède cette phrase peut accéder à vos fonds. Ne la partagez jamais.</string>
+    <string name="backup_reveal_description">Entrez votre mot de passe pour voir la phrase</string>
+    <string name="backup_reveal_description_biometric">Authentification biométrique requise pour voir la phrase</string>
     <string name="backup_password_label">Mot de passe</string>
     <string name="backup_reveal">Révéler la phrase</string>
+    <string name="backup_reveal_biometric">Révéler par Biométrie</string>
     <string name="backup_your_phrase">Votre phrase de récupération</string>
-    <string name="backup_copied">Copiée — stockez-la en sécurité et videz le presse-papier</string>
+    <string name="backup_your_private_key">Votre clé privée</string>
+    <string name="backup_copied">Copiée — stockez-la en sécurité</string>
+    <string name="backup_copied_toast">Copié dans le presse-papier</string>
+    <string name="backup_label_mnemonic">Mnémonique</string>
+    <string name="backup_label_private_key">Clé Privée</string>
+
+    <!-- Unlock dialog -->
+    <string name="unlock_title">Déverrouiller</string>
+    <string name="unlock_description">Entrez votre mot de passe.</string>
+    <string name="unlock_biometric">Déverrouiller par Biométrie</string>
+    <string name="unlock_button">Déverrouiller</string>
+
+    <!-- Biometric -->
+    <string name="biometric_enable_title">Activer Biométrie</string>
+    <string name="biometric_enable_subtitle">Authentifiez-vous pour stocker votre mot de passe</string>
+    <string name="biometric_unlock_subtitle">Authentifiez-vous pour continuer</string>
+    <string name="biometric_error_not_setup">Biométrie non configurée</string>
+    <string name="biometric_error_expired">Session biométrique expirée</string>
 
     <!-- About settings -->
     <string name="about_title">À propos</string>
-    <string name="about_tagline">Portefeuille light-client pour la blockchain Pactus</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_tagline">Portefeuille light-client pour Pactus</string>
     <string name="about_website">Site Web Pactus</string>
     <string name="about_website_subtitle">pactus.org</string>
     <string name="about_docs">Documentation</string>
     <string name="about_docs_subtitle">docs.pactus.org</string>
     <string name="about_github">Voir sur GitHub</string>
     <string name="about_github_subtitle">Open source — Licence MIT</string>
-    <string name="about_explorer">Explorateur de blocs</string>
+    <string name="about_explorer">Explorateur</string>
     <string name="about_explorer_subtitle">pactusscan.com</string>
+    <string name="about_terms">Conditions d\'utilisation</string>
+    <string name="about_terms_subtitle">velora.pactusscan.com/terms-of-service</string>
+    <string name="about_privacy">Politique de confidentialité</string>
+    <string name="about_privacy_subtitle">velora.pactusscan.com/privacy-policy</string>
 
     <!-- Language selection -->
     <string name="language_select">Choisir la langue</string>
@@ -157,48 +247,77 @@
     <!-- Onboarding — Welcome -->
     <string name="welcome_tagline">Vos clés. Vos coins.\nContrôle total, aucun nœud requis.</string>
     <string name="welcome_create">Créer un portefeuille</string>
-    <string name="welcome_restore">Restaurer avec la phrase seed</string>
+    <string name="welcome_restore">Restaurer avec la phrase</string>
     <string name="welcome_import">Importer une clé privée</string>
+    <string name="welcome_add_options_subtitle">Comment voulez-vous ajouter un portefeuille ?</string>
 
     <!-- Onboarding — Create wallet -->
     <string name="create_wallet_name_title">Nommez votre portefeuille</string>
-    <string name="create_wallet_name_subtitle">Vous pouvez changer cela à tout moment.</string>
+    <string name="create_wallet_name_subtitle">Vous pouvez changer cela plus tard.</string>
     <string name="create_wallet_name_label">Nom du portefeuille</string>
-    <string name="create_wallet_name_placeholder">ex: Mon Portefeuille Velora</string>
-    <string name="create_wallet_generate">Générer la phrase seed</string>
+    <string name="create_wallet_name_placeholder">ex : Mon Portefeuille</string>
+    <string name="create_wallet_generate">Générer la phrase</string>
 
     <!-- Onboarding — Mnemonic backup -->
     <string name="mnemonic_title">Phrase Seed</string>
-    <string name="mnemonic_backup_title">Notez votre phrase seed</string>
-    <string name="mnemonic_backup_subtitle">Ces 12 mots sont le seul moyen de récupérer votre portefeuille.\nGardez-les en sécurité — ne les partagez jamais.</string>
-    <string name="mnemonic_security_warning">Ne saisissez jamais votre phrase seed sur un site web. Quiconque possède ces mots contrôle vos fonds.</string>
-    <string name="mnemonic_confirm_checkbox">J\'ai noté ma phrase seed et je l\'ai rangée en sécurité.</string>
-    <string name="mnemonic_verify_button">Vérifier la phrase seed</string>
+    <string name="mnemonic_backup_title">Notez votre phrase</string>
+    <string name="mnemonic_backup_subtitle">Ces 12 mots sont le seul moyen de récupérer votre portefeuille.</string>
+    <string name="mnemonic_security_warning">Ne partagez jamais votre phrase.</string>
+    <string name="mnemonic_confirm_checkbox">J\'ai noté ma phrase en sécurité.</string>
+    <string name="mnemonic_verify_button">Vérifier la phrase</string>
+    <!-- Onboarding — Backup -->
+    <string name="mnemonic_restore_subtitle">Entrez vos mots secrets dans l\'ordre.</string>
     <string name="mnemonic_tap_to_reveal">Appuyer pour révéler</string>
+    <string name="mnemonic_copied">Phrase copiée</string>
+
+    <!-- Onboarding — SplashScreen -->
+    <string name="splash_powered_by">Propulsé par Pactus</string>
+    <string name="splash_dedicated_to">Dédié à l\'écosystème Pactus</string>
 
     <!-- Onboarding — Mnemonic verify -->
-    <string name="verify_title">Vérifier la sauvegarde</string>
-    <string name="verify_confirm_title">Confirmez votre phrase seed</string>
-    <string name="verify_confirm_subtitle">Entrez les mots manquants pour confirmer la sauvegarde.</string>
+    <string name="verify_title">Vérifier sauvegarde</string>
+    <string name="verify_confirm_title">Confirmez votre phrase</string>
+    <string name="verify_confirm_subtitle">Entrez les mots manquants.</string>
 
     <!-- Onboarding — Restore wallet -->
-    <string name="restore_title">Restaurer le portefeuille</string>
-    <string name="restore_enter_seed">Entrez votre phrase seed</string>
-    <string name="restore_seed_subtitle">Tapez les mots dans l\'ordre. Minuscules uniquement.</string>
+    <string name="restore_title">Restaurer</string>
+    <string name="restore_enter_seed">Entrez votre phrase</string>
+    <string name="restore_seed_subtitle">Minuscules uniquement.</string>
     <string name="restore_wallet_name_label">Nom du portefeuille</string>
-    <string name="restore_wallet_name_placeholder">ex: Portefeuille Restauré</string>
+    <string name="restore_wallet_name_placeholder">ex : Portefeuille Restauré</string>
     <string name="restore_12_words">12 mots</string>
     <string name="restore_24_words">24 mots</string>
-    <string name="restore_button">Restaurer le portefeuille</string>
+    <string name="restore_button">Restaurer</string>
+
+    <!-- Onboarding — Import -->
+    <string name="import_title">Importer</string>
+    <string name="import_description">Entrez votre clé privée.</string>
+    <string name="import_pk_label">Clé privée</string>
+    <string name="import_pk_placeholder">Entrez votre clé…</string>
+    <string name="import_security_warning">Attention aux regards indiscrets.</string>
+    <string name="import_wallet_name_placeholder">Mon Portefeuille Importé</string>
 
     <!-- Onboarding — Setup security -->
     <string name="security_setup_title">Sécurisez votre portefeuille</string>
     <string name="security_setup_header">Définir un mot de passe</string>
-    <string name="security_setup_subtitle">Ce mot de passe chiffre votre portefeuille sur cet appareil.\nIl sera requis pour approuver les transactions.</string>
+    <string name="security_setup_subtitle">Nécessaire pour approuver les transactions.</string>
     <string name="security_setup_password_label">Mot de passe</string>
     <string name="security_setup_confirm_label">Confirmer le mot de passe</string>
-    <string name="security_setup_passwords_mismatch">Les mots de passe ne correspondent pas</string>
+    <string name="security_setup_passwords_mismatch">Mots de passe non identiques</string>
     <string name="security_setup_biometric_title">Activer la biométrie</string>
-    <string name="security_setup_biometric_subtitle">Utiliser l\'empreinte ou le visage pour déverrouiller</string>
+    <string name="security_setup_biometric_subtitle">Utiliser l\'empreinte ou le visage</string>
     <string name="security_setup_create">Créer le portefeuille</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_transactions">Transactions</string>
+    <string name="notification_channel_transactions_desc">Notifications de transferts</string>
+    <string name="notification_channel_alerts">Alertes</string>
+    <string name="notification_channel_alerts_desc">Alertes de solde</string>
+    <string name="notification_incoming_transfer_title">Transfert Entrant</string>
+    <string name="notification_incoming_transfer_text">Reçu %1$s de %2$s</string>
+    <string name="notification_low_balance_title">Alerte Solde Faible</string>
+    <string name="notification_high_balance_title">Alerte Solde Élevé</string>
+    <string name="notification_balance_alert_text">Solde \'%1$s\' est %2$s (%3$s le seuil %4$s)</string>
+    <string name="notification_condition_below">sous</string>
+    <string name="notification_condition_above">au-dessus de</string>
 </resources>

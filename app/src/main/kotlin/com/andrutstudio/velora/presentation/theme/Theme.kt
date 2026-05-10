@@ -1,20 +1,16 @@
 package com.andrutstudio.velora.presentation.theme
 
 import android.app.Activity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-/**
- * App-wide palette — derived from the Home screen design.
- * The whole app uses this single dark scheme; system theme and Material You
- * dynamic colors are intentionally ignored so the brand identity stays
- * consistent across screens.
- */
-private val PactusColorScheme = darkColorScheme(
+private val DarkColorScheme = darkColorScheme(
     primary = BrandTeal,
     onPrimary = OnPrimary,
     primaryContainer = BrandTealDim,
@@ -35,22 +31,45 @@ private val PactusColorScheme = darkColorScheme(
     error = DangerRed,
 )
 
+private val LightColorScheme = lightColorScheme(
+    primary = BrandTeal,
+    onPrimary = OnPrimary,
+    primaryContainer = BrandTealDim,
+    secondary = BrandPurple,
+    onSecondary = OnPrimary,
+    secondaryContainer = BrandPurpleDim,
+    tertiary = DangerRed,
+    background = BackgroundLight,
+    onBackground = OnBackgroundLight,
+    surface = SurfaceLight,
+    onSurface = OnSurfaceLight,
+    surfaceVariant = SurfaceVariantLight,
+    onSurfaceVariant = OnSurfaceVariantLight,
+    surfaceContainer = SurfaceContainerLight,
+    surfaceContainerLowest = SurfaceContainerLowestLight,
+    outline = OutlineLight,
+    outlineVariant = OutlineVariantLight,
+    error = DangerRed,
+)
+
 @Composable
 fun VeloraTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             WindowCompat.setDecorFitsSystemWindows(window, false)
-            // Light icons on dark background — matches the dark palette.
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 
     MaterialTheme(
-        colorScheme = PactusColorScheme,
+        colorScheme = colorScheme,
         typography = PactusTypography,
         content = content,
     )

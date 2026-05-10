@@ -27,10 +27,13 @@ sealed class Screen(val route: String) {
         fun withId(txId: String) = "tx/$txId"
     }
 
-    // Browser
+    // Browser / Discover
     data object Browser : Screen("browser?url={url}") {
         fun withUrl(url: String = "") = "browser?url=$url"
     }
+
+    // Node dashboard
+    data object Node : Screen("node")
 
     // Settings
     data object Settings : Screen("settings")

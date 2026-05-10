@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Ganti parent ke Material3 -->
     <style name="Theme.VeloraWallet" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -9,6 +9,9 @@
         <!-- Atribut ini tetap diperlukan untuk memastikan mode full screen -->
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+
+        <!-- Memastikan area notch tetap bisa digunakan -->
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">

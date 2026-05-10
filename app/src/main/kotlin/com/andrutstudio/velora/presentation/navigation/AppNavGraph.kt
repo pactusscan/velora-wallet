@@ -1,10 +1,14 @@
 package com.andrutstudio.velora.presentation.navigation
 
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +32,7 @@ import com.andrutstudio.velora.presentation.settings.SettingsScreen
 import com.andrutstudio.velora.presentation.settings.SettingsViewModel
 import com.andrutstudio.velora.presentation.history.TransactionHistoryScreen
 import com.andrutstudio.velora.presentation.home.HomeScreen
+import com.andrutstudio.velora.presentation.node.NodeScreen
 import com.andrutstudio.velora.presentation.home.AddWalletOptionsScreen
 import com.andrutstudio.velora.presentation.onboarding.OnboardingViewModel
 import com.andrutstudio.velora.presentation.onboarding.backup.MnemonicBackupScreen
@@ -53,10 +58,10 @@ fun AppNavGraph(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        enterTransition = { slideInHorizontally { it } + fadeIn() },
-        exitTransition = { slideOutHorizontally { -it / 3 } + fadeOut() },
-        popEnterTransition = { slideInHorizontally { -it } + fadeIn() },
-        popExitTransition = { slideOutHorizontally { it } + fadeOut() },
+        enterTransition = { fadeIn(animationSpec = tween(250)) },
+        exitTransition = { fadeOut(animationSpec = tween(250)) },
+        popEnterTransition = { fadeIn(animationSpec = tween(250)) },
+        popExitTransition = { fadeOut(animationSpec = tween(250)) },
     ) {
 
         // ── Onboarding (nested graph — shares one OnboardingViewModel instance) ──
@@ -263,6 +268,10 @@ fun AppNavGraph(
 
         composable(Screen.Home.route) {
             HomeScreen(navController = navController)
+        }
+
+        composable(Screen.Node.route) {
+            NodeScreen(navController = navController)
         }
 
         composable(Screen.AddWalletOptions.route) {

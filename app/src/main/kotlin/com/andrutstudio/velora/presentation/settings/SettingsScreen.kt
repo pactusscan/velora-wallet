@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import androidx.fragment.app.FragmentActivity
 import com.andrutstudio.velora.R
 import com.andrutstudio.velora.data.local.BiometricHelper
+import com.andrutstudio.velora.data.local.ThemePreference
 import com.andrutstudio.velora.domain.model.Network
 import com.andrutstudio.velora.domain.model.Wallet
 import com.andrutstudio.velora.presentation.components.MainBottomNavigation
@@ -128,6 +129,14 @@ fun SettingsScreen(
         )
     }
 
+    if (state.showThemeSelector) {
+        ThemeSelectorDialog(
+            currentTheme = state.themePreference,
+            onThemeChange = viewModel::onThemeChange,
+            onDismiss = viewModel::onDismissThemeSelector,
+        )
+    }
+
     if (state.showUnlockForBiometric) {
         UnlockWalletDialog(
             isLoading = state.isUnlocking,
@@ -152,165 +161,192 @@ fun SettingsScreen(
                 ),
             )
         },
-        bottomBar = {
-            MainBottomNavigation(
-                navController = navController,
-                currentRoute = Screen.Settings.route
-            )
-        }
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(padding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(top = padding.calculateTopPadding())
         ) {
-            Spacer(Modifier.height(4.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Spacer(Modifier.height(4.dp))
 
-            // Wallet info card
-            state.wallet?.let { wallet ->
+                // Wallet info card
+                state.wallet?.let { wallet ->
+                    Card(
+                        onClick = viewModel::onShowRenameWallet,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
+                        ),
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            Icon(
+                                Icons.Rounded.AccountBalanceWallet,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.size(32.dp),
+                            )
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = wallet.name,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                                )
+                                Text(
+                                    text = stringResource(R.string.create_wallet_name_subtitle),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                                )
+                            }
+                            NetworkBadge(network = wallet.network)
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(8.dp))
+
+                // Security section
+                SettingsSectionHeader(stringResource(R.string.settings_section_security))
+                SettingsItem(
+                    icon = Icons.Rounded.Lock,
+                    title = stringResource(R.string.settings_change_password),
+                    subtitle = stringResource(R.string.settings_change_password_subtitle),
+                    onClick = onSecuritySettings,
+                )
+                if (biometricAvailable) {
+                    SettingsToggleItem(
+                        icon = Icons.Rounded.Fingerprint,
+                        title = stringResource(R.string.settings_biometric),
+                        subtitle = stringResource(R.string.settings_biometric_subtitle),
+                        checked = state.isBiometricEnabled,
+                        onCheckedChange = viewModel::onToggleBiometric,
+                    )
+                }
+
+                SettingsItem(
+                    icon = Icons.Rounded.Translate,
+                    title = stringResource(R.string.settings_language),
+                    subtitle = when (state.currentLanguage) {
+                        "in" -> stringResource(R.string.language_indonesian)
+                        "ms" -> stringResource(R.string.language_malay)
+                        "vi" -> stringResource(R.string.language_vietnamese)
+                        "fr" -> stringResource(R.string.language_french)
+                        "es" -> stringResource(R.string.language_spanish)
+                        else -> stringResource(R.string.language_english)
+                    },
+                    onClick = viewModel::onShowLanguageSelector,
+                )
+
+                Spacer(Modifier.height(4.dp))
+
+                // Appearance section
+                SettingsSectionHeader(stringResource(R.string.settings_section_appearance))
+                SettingsItem(
+                    icon = Icons.Rounded.DarkMode,
+                    title = stringResource(R.string.settings_theme),
+                    subtitle = when (state.themePreference) {
+                        ThemePreference.DARK -> stringResource(R.string.theme_dark)
+                        ThemePreference.LIGHT -> stringResource(R.string.theme_light)
+                        ThemePreference.SYSTEM -> stringResource(R.string.theme_system)
+                    },
+                    onClick = viewModel::onShowThemeSelector,
+                )
+
+                Spacer(Modifier.height(4.dp))
+
+                // Network section
+                SettingsSectionHeader(stringResource(R.string.settings_section_network))
+                SettingsItem(
+                    icon = Icons.Rounded.Language,
+                    title = stringResource(R.string.network_title),
+                    subtitle = state.wallet?.network?.displayName ?: "Mainnet",
+                    trailingContent = {
+                        NetworkBadge(network = state.wallet?.network ?: Network.MAINNET)
+                    },
+                    onClick = onNetworkSettings,
+                )
+
+                Spacer(Modifier.height(4.dp))
+
+                // Backup section
+                SettingsSectionHeader(stringResource(R.string.settings_section_backup))
+                SettingsItem(
+                    icon = Icons.Rounded.Shield,
+                    title = stringResource(R.string.settings_backup_phrase),
+                    subtitle = stringResource(R.string.settings_backup_phrase_subtitle),
+                    onClick = onBackupSettings,
+                )
+
+                Spacer(Modifier.height(4.dp))
+
+                // About section
+                SettingsSectionHeader(stringResource(R.string.settings_section_about))
+                SettingsItem(
+                    icon = Icons.Rounded.Info,
+                    title = stringResource(R.string.settings_about),
+                    subtitle = stringResource(R.string.settings_about_subtitle),
+                    onClick = onAboutSettings,
+                )
+
+                Spacer(Modifier.height(4.dp))
+
+                // Danger zone
+                SettingsSectionHeader(stringResource(R.string.nav_wallet))
                 Card(
-                    onClick = viewModel::onShowRenameWallet,
+                    onClick = { showResetConfirm = true },
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
+                        containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f),
                     ),
                 ) {
                     Row(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         Icon(
-                            Icons.Rounded.AccountBalanceWallet,
+                            Icons.Rounded.DeleteForever,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.size(32.dp),
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(24.dp),
                         )
                         Column(modifier = Modifier.weight(1f)) {
+                            Text(stringResource(R.string.home_reset_wallet_title).replace("?", ""), style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.error)
                             Text(
-                                text = wallet.name,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
-                            )
-                            Text(
-                                text = stringResource(R.string.create_wallet_name_subtitle),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                                stringResource(R.string.home_reset_wallet_message).take(40) + "...",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
-                        NetworkBadge(network = wallet.network)
                     }
                 }
+
+                Spacer(Modifier.height(100.dp)) // Extra space for floating dock
             }
 
-            Spacer(Modifier.height(8.dp))
-
-            // Security section
-            SettingsSectionHeader(stringResource(R.string.settings_section_security))
-            SettingsItem(
-                icon = Icons.Rounded.Lock,
-                title = stringResource(R.string.settings_change_password),
-                subtitle = stringResource(R.string.settings_change_password_subtitle),
-                onClick = onSecuritySettings,
-            )
-            if (biometricAvailable) {
-                SettingsToggleItem(
-                    icon = Icons.Rounded.Fingerprint,
-                    title = stringResource(R.string.settings_biometric),
-                    subtitle = stringResource(R.string.settings_biometric_subtitle),
-                    checked = state.isBiometricEnabled,
-                    onCheckedChange = viewModel::onToggleBiometric,
+            // Floating Navigation Dock
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+            ) {
+                MainBottomNavigation(
+                    navController = navController,
+                    currentRoute = Screen.Settings.route
                 )
             }
-
-            SettingsItem(
-                icon = Icons.Rounded.Translate,
-                title = stringResource(R.string.settings_language),
-                subtitle = when (state.currentLanguage) {
-                    "in" -> stringResource(R.string.language_indonesian)
-                    "ms" -> stringResource(R.string.language_malay)
-                    "vi" -> stringResource(R.string.language_vietnamese)
-                    "fr" -> stringResource(R.string.language_french)
-                    else -> stringResource(R.string.language_english)
-                },
-                onClick = viewModel::onShowLanguageSelector,
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            // Network section
-            SettingsSectionHeader(stringResource(R.string.settings_section_network))
-            SettingsItem(
-                icon = Icons.Rounded.Language,
-                title = stringResource(R.string.network_title),
-                subtitle = state.wallet?.network?.displayName ?: "Mainnet",
-                trailingContent = {
-                    NetworkBadge(network = state.wallet?.network ?: Network.MAINNET)
-                },
-                onClick = onNetworkSettings,
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            // Backup section
-            SettingsSectionHeader(stringResource(R.string.settings_section_backup))
-            SettingsItem(
-                icon = Icons.Rounded.Shield,
-                title = stringResource(R.string.settings_backup_phrase),
-                subtitle = stringResource(R.string.settings_backup_phrase_subtitle),
-                onClick = onBackupSettings,
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            // About section
-            SettingsSectionHeader(stringResource(R.string.settings_section_about))
-            SettingsItem(
-                icon = Icons.Rounded.Info,
-                title = stringResource(R.string.settings_about),
-                subtitle = stringResource(R.string.settings_about_subtitle),
-                onClick = onAboutSettings,
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            // Danger zone
-            SettingsSectionHeader(stringResource(R.string.nav_wallet))
-            Card(
-                onClick = { showResetConfirm = true },
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f),
-                ),
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    Icon(
-                        Icons.Rounded.DeleteForever,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.size(24.dp),
-                    )
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(stringResource(R.string.home_reset_wallet_title).replace("?", ""), style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.error)
-                        Text(
-                            stringResource(R.string.home_reset_wallet_message).take(40) + "...",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(24.dp))
         }
     }
 }
@@ -437,6 +473,7 @@ private fun LanguageSelectorDialog(
 ) {
     val languages = listOf(
         "en" to stringResource(R.string.language_english),
+        "es" to stringResource(R.string.language_spanish),
         "fr" to stringResource(R.string.language_french),
         "in" to stringResource(R.string.language_indonesian),
         "ms" to stringResource(R.string.language_malay),
@@ -458,9 +495,6 @@ private fun LanguageSelectorDialog(
             }
         },
         confirmButton = {},
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_reject)) }
-        },
     )
 }
 
@@ -481,6 +515,41 @@ private fun LanguageOption(
         RadioButton(selected = selected, onClick = onClick)
         Text(text = title, style = MaterialTheme.typography.bodyLarge)
     }
+}
+
+@Composable
+private fun ThemeSelectorDialog(
+    currentTheme: ThemePreference,
+    onThemeChange: (ThemePreference) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val options = listOf(
+        ThemePreference.SYSTEM to stringResource(R.string.theme_system),
+        ThemePreference.LIGHT  to stringResource(R.string.theme_light),
+        ThemePreference.DARK   to stringResource(R.string.theme_dark),
+    )
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.theme_select)) },
+        text = {
+            Column {
+                options.forEach { (preference, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onThemeChange(preference) }
+                            .padding(vertical = 12.dp, horizontal = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        RadioButton(selected = currentTheme == preference, onClick = { onThemeChange(preference) })
+                        Text(text = label, style = MaterialTheme.typography.bodyLarge)
+                    }
+                }
+            }
+        },
+        confirmButton = {},
+    )
 }
 
 @Composable
@@ -543,7 +612,6 @@ private fun RenameWalletDialog(
 private fun SettingsScreenPreview() {
     VeloraTheme {
         val navController = androidx.navigation.compose.rememberNavController()
-        // Simple UI-only preview setup
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -554,111 +622,132 @@ private fun SettingsScreenPreview() {
                         }
                     }
                 )
-            },
-            bottomBar = {
-                MainBottomNavigation(
-                    navController = navController,
-                    currentRoute = Screen.Settings.route
-                )
             }
         ) { padding ->
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(padding)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                    .padding(top = padding.calculateTopPadding())
             ) {
-                Spacer(Modifier.height(4.dp))
-
-                // Wallet info card mock
-                Card(
-                    onClick = {},
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
-                    ),
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    Spacer(Modifier.height(4.dp))
+
+                    // Wallet info card mock
+                    Card(
+                        onClick = {},
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
+                        ),
                     ) {
-                        Icon(
-                            Icons.Rounded.AccountBalanceWallet,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.size(32.dp),
-                        )
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "Preview Wallet",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            Icon(
+                                Icons.Rounded.AccountBalanceWallet,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.size(32.dp),
                             )
-                            Text(
-                                text = "Tap to rename",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                            )
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = "Preview Wallet",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                                )
+                                Text(
+                                    text = "Tap to rename",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                                )
+                            }
+                            NetworkBadge(network = Network.MAINNET)
                         }
-                        NetworkBadge(network = Network.MAINNET)
                     }
+
+                    Spacer(Modifier.height(8.dp))
+
+                    SettingsSectionHeader("Security")
+                    SettingsItem(
+                        icon = Icons.Rounded.Lock,
+                        title = "Change Password",
+                        subtitle = "Update your wallet password",
+                        onClick = {},
+                    )
+                    SettingsToggleItem(
+                        icon = Icons.Rounded.Fingerprint,
+                        title = "Biometric Unlock",
+                        subtitle = "Use fingerprint or face to unlock",
+                        checked = true,
+                        onCheckedChange = {},
+                    )
+
+                    Spacer(Modifier.height(4.dp))
+
+                    SettingsSectionHeader("Appearance")
+                    SettingsItem(
+                        icon = Icons.Rounded.DarkMode,
+                        title = "Theme",
+                        subtitle = "System Default",
+                        onClick = {},
+                    )
+
+                    Spacer(Modifier.height(4.dp))
+
+                    SettingsSectionHeader("Network")
+                    SettingsItem(
+                        icon = Icons.Rounded.Language,
+                        title = "Network",
+                        subtitle = "Mainnet",
+                        trailingContent = {
+                            NetworkBadge(network = Network.MAINNET)
+                        },
+                        onClick = {},
+                    )
+
+                    Spacer(Modifier.height(4.dp))
+
+                    SettingsSectionHeader("Backup")
+                    SettingsItem(
+                        icon = Icons.Rounded.Shield,
+                        title = "Backup Phrase",
+                        subtitle = "View your 12-word recovery phrase",
+                        onClick = {},
+                    )
+
+                    Spacer(Modifier.height(4.dp))
+
+                    SettingsSectionHeader("About")
+                    SettingsItem(
+                        icon = Icons.Rounded.Info,
+                        title = "About Velora Wallet",
+                        subtitle = "Version, links, and legal",
+                        onClick = {},
+                    )
+
+                    Spacer(Modifier.height(100.dp))
                 }
 
-                Spacer(Modifier.height(8.dp))
-
-                SettingsSectionHeader("Security")
-                SettingsItem(
-                    icon = Icons.Rounded.Lock,
-                    title = "Change Password",
-                    subtitle = "Update your wallet password",
-                    onClick = {},
-                )
-                SettingsToggleItem(
-                    icon = Icons.Rounded.Fingerprint,
-                    title = "Biometric Unlock",
-                    subtitle = "Use fingerprint or face to unlock",
-                    checked = true,
-                    onCheckedChange = {},
-                )
-
-                Spacer(Modifier.height(4.dp))
-
-                SettingsSectionHeader("Network")
-                SettingsItem(
-                    icon = Icons.Rounded.Language,
-                    title = "Network",
-                    subtitle = "Mainnet",
-                    trailingContent = {
-                        NetworkBadge(network = Network.MAINNET)
-                    },
-                    onClick = {},
-                )
-
-                Spacer(Modifier.height(4.dp))
-
-                SettingsSectionHeader("Backup")
-                SettingsItem(
-                    icon = Icons.Rounded.Shield,
-                    title = "Backup Phrase",
-                    subtitle = "View your 12-word recovery phrase",
-                    onClick = {},
-                )
-
-                Spacer(Modifier.height(4.dp))
-
-                SettingsSectionHeader("About")
-                SettingsItem(
-                    icon = Icons.Rounded.Info,
-                    title = "About Velora Wallet",
-                    subtitle = "Version, links, and legal",
-                    onClick = {},
-                )
-
-                Spacer(Modifier.height(24.dp))
+                // Floating Navigation Dock
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .navigationBarsPadding()
+                ) {
+                    MainBottomNavigation(
+                        navController = navController,
+                        currentRoute = Screen.Settings.route
+                    )
+                }
             }
         }
     }

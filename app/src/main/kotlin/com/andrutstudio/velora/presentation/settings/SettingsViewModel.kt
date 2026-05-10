@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import com.andrutstudio.velora.data.crypto.Bech32m
+import com.andrutstudio.velora.data.local.AppPreferences
+import com.andrutstudio.velora.data.local.ThemePreference
 import com.andrutstudio.velora.data.local.WrongPasswordException
 import com.andrutstudio.velora.data.rpc.NetworkProvider
 import com.andrutstudio.velora.domain.model.AccountType
@@ -28,6 +30,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val walletRepository: WalletRepository,
     private val networkProvider: NetworkProvider,
+    private val appPreferences: AppPreferences,
 ) : ViewModel() {
 
     data class State(
@@ -62,6 +65,9 @@ class SettingsViewModel @Inject constructor(
         // Language
         val currentLanguage: String = "en",
         val showLanguageSelector: Boolean = false,
+        // Theme
+        val themePreference: ThemePreference = ThemePreference.SYSTEM,
+        val showThemeSelector: Boolean = false,
     )
 
     enum class BiometricAction { REVEAL_MNEMONIC, SWITCH_NETWORK }
@@ -109,6 +115,12 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             networkProvider.customRpcFlow(Network.TESTNET).collect { url ->
                 _state.update { it.copy(customRpcTestnet = url ?: "") }
+            }
+        }
+
+        viewModelScope.launch {
+            appPreferences.themeFlow.collect { theme ->
+                _state.update { it.copy(themePreference = theme) }
             }
         }
     }
@@ -420,5 +432,22 @@ class SettingsViewModel @Inject constructor(
         val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
         AppCompatDelegate.setApplicationLocales(appLocale)
         _state.update { it.copy(currentLanguage = languageCode, showLanguageSelector = false) }
+    }
+
+    // ── Theme ─────────────────────────────────────────────────────────────────
+
+    fun onShowThemeSelector() {
+        _state.update { it.copy(showThemeSelector = true) }
+    }
+
+    fun onDismissThemeSelector() {
+        _state.update { it.copy(showThemeSelector = false) }
+    }
+
+    fun onThemeChange(theme: ThemePreference) {
+        viewModelScope.launch {
+            appPreferences.setTheme(theme)
+            _state.update { it.copy(themePreference = theme, showThemeSelector = false) }
+        }
     }
 }

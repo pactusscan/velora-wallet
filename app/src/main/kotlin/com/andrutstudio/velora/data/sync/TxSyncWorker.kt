@@ -1,14 +1,9 @@
 package com.andrutstudio.velora.data.sync
 
 import android.content.Context
-import android.content.pm.ServiceInfo
-import android.os.Build
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
-import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import androidx.core.app.NotificationCompat
-import com.andrutstudio.velora.R
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.filterNotNull
@@ -37,25 +32,34 @@ class TxSyncWorker @AssistedInject constructor(
     companion object {
         const val WORK_NAME = "tx_sync_periodic"
         const val NOTIFICATION_CHANNEL_ID = "transactions"
-        private const val MAX_BLOCKS_PER_SYNC = 50L
+        private const val MAX_BLOCKS_PER_SYNC = 500L
     }
 
     override suspend fun doWork(): Result {
+        android.util.Log.d("TxSyncWorker", "Sync worker started")
         return runCatching {
-            // Check for notifications permission if needed, but the helper handles the actual notification.
-            // Foreground support to stay alive longer
-            setForeground(createForegroundInfo())
-            
+            // Ensure wallet is loaded if it's not already (e.g. after app kill)
+            if (walletRepository.hasWallet() && walletRepository.observeWallet().first() == null) {
+                android.util.Log.d("TxSyncWorker", "Wallet not loaded, calling loadLockedWallet")
+                walletRepository.loadLockedWallet()
+            }
+
             val wallet = walletRepository.observeWallet().filterNotNull().first()
             val addresses = wallet.accounts.map { it.address }
-            if (addresses.isEmpty()) return Result.success()
+            if (addresses.isEmpty()) {
+                android.util.Log.d("TxSyncWorker", "No addresses found, stopping")
+                return Result.success()
+            }
 
             // 1. Check for incoming transactions
             val currentHeight = rpcCaller.getBlockHeight()
+            android.util.Log.d("TxSyncWorker", "Current height: $currentHeight")
+            
             val lastSynced = transactionDao.getLastSyncedHeight(addresses)
-                ?: (currentHeight - MAX_BLOCKS_PER_SYNC)
+                ?: (currentHeight - 20) // For new wallets, only check last 20 blocks for notifications
 
             val startHeight = maxOf(lastSynced + 1, currentHeight - MAX_BLOCKS_PER_SYNC)
+            android.util.Log.d("TxSyncWorker", "Syncing from $startHeight to $currentHeight")
             
             val addressSet = addresses.toSet()
             
@@ -83,9 +87,12 @@ class TxSyncWorker @AssistedInject constructor(
                             involvedAddress = involvedAddress,
                         )
                         val inserted = transactionDao.insertIfNew(entity)
+                        
+                        // Notify for incoming transfers from external addresses
                         if (inserted != -1L && tx.receiver != null && addressSet.contains(tx.receiver)
                             && (tx.sender == null || !addressSet.contains(tx.sender))) {
                             
+                            android.util.Log.d("TxSyncWorker", "New incoming TX found: ${tx.id}")
                             val amount = Amount.fromNanoPac(tx.amountNanoPac)
                             notificationHelper.showIncomingTransferNotification(
                                 address = tx.sender ?: "Unknown",
@@ -109,8 +116,12 @@ class TxSyncWorker @AssistedInject constructor(
                 networkName = wallet.network.displayName,
             )
 
+            android.util.Log.d("TxSyncWorker", "Sync worker completed successfully")
             Result.success()
-        }.getOrElse { Result.retry() }
+        }.getOrElse { e -> 
+            android.util.Log.e("TxSyncWorker", "Sync worker failed", e)
+            Result.retry() 
+        }
     }
 
     private suspend fun checkBalanceAlerts(accounts: List<com.andrutstudio.velora.domain.model.Account>) {
@@ -122,51 +133,38 @@ class TxSyncWorker @AssistedInject constructor(
             
             val account = accounts.find { it.address == alert.address } ?: continue
             
-            // We need to fetch the LATEST balance from RPC because account balance in model might be stale
             val balanceInfo = runCatching { rpcCaller.getAccount(account.address) }.getOrNull() ?: continue
             val currentBalance = balanceInfo.balance.nanoPac
 
-            val shouldAlert = when (alert.type) {
+            val isConditionMet = when (alert.type) {
                 com.andrutstudio.velora.data.local.db.AlertType.LOWER_THAN -> currentBalance < alert.thresholdNanoPac
                 com.andrutstudio.velora.data.local.db.AlertType.HIGHER_THAN -> currentBalance > alert.thresholdNanoPac
             }
 
-            if (shouldAlert) {
-                // Prevent duplicate alerts for the same value crossing
-                if (alert.lastTriggeredValue == currentBalance) continue
+            if (isConditionMet) {
+                // If we haven't triggered for this condition yet, show notification
+                if (alert.lastTriggeredValue == null) {
+                    android.util.Log.d("TxSyncWorker", "Balance alert triggered for ${account.address}")
+                    val balance = Amount.fromNanoPac(currentBalance)
+                    val threshold = Amount.fromNanoPac(alert.thresholdNanoPac)
+                    
+                    notificationHelper.showLowBalanceAlert(
+                        walletName = account.label.ifBlank { account.address.take(8) + "..." },
+                        balance = formatPac(balance),
+                        threshold = formatPac(threshold),
+                        isLowerThan = alert.type == com.andrutstudio.velora.data.local.db.AlertType.LOWER_THAN
+                    )
 
-                val balance = Amount.fromNanoPac(currentBalance)
-                val threshold = Amount.fromNanoPac(alert.thresholdNanoPac)
-                
-                notificationHelper.showLowBalanceAlert(
-                    walletName = account.label.ifBlank { account.address.take(8) + "..." },
-                    balance = formatPac(balance),
-                    threshold = formatPac(threshold),
-                    isLowerThan = alert.type == com.andrutstudio.velora.data.local.db.AlertType.LOWER_THAN
-                )
-
-                // Save last triggered to avoid spamming
-                balanceAlertDao.insertAlert(alert.copy(lastTriggeredValue = currentBalance))
-            } else if (alert.lastTriggeredValue != null) {
-                // Reset triggered value if condition is no longer met
-                balanceAlertDao.insertAlert(alert.copy(lastTriggeredValue = null))
+                    // Mark as triggered so we don't spam
+                    balanceAlertDao.insertAlert(alert.copy(lastTriggeredValue = currentBalance))
+                }
+            } else {
+                // Condition no longer met, reset triggered state so it can trigger again next time it crosses
+                if (alert.lastTriggeredValue != null) {
+                    android.util.Log.d("TxSyncWorker", "Balance alert reset for ${account.address}")
+                    balanceAlertDao.insertAlert(alert.copy(lastTriggeredValue = null))
+                }
             }
-        }
-    }
-
-    private fun createForegroundInfo(): ForegroundInfo {
-        val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_velora_logo)
-            .setContentTitle("Velora Sync")
-            .setContentText("Checking for new transactions...")
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setOngoing(true)
-            .build()
-        
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ForegroundInfo(999, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
-        } else {
-            ForegroundInfo(999, notification)
         }
     }
 

@@ -57,6 +57,13 @@
 # Biometric
 -keep class androidx.biometric.** { *; }
 
+# WorkManager
+-keep class * extends androidx.work.ListenableWorker { *; }
+-keep class * extends androidx.work.Worker { *; }
+-keepclassmembers class * extends androidx.work.ListenableWorker {
+    public <init>(android.content.Context, androidx.work.WorkerParameters);
+}
+
 # Prevent stripping of enum entries used in domain model
 -keepclassmembers enum com.andrutstudio.velora.domain.model.** { *; }
 

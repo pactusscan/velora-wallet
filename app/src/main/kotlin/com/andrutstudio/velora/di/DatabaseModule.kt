@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import com.andrutstudio.velora.data.local.db.AppDatabase
 import com.andrutstudio.velora.data.local.db.BalanceAlertDao
 import com.andrutstudio.velora.data.local.db.BrowserDao
+import com.andrutstudio.velora.data.local.db.MonitoredNodeDao
 import com.andrutstudio.velora.data.local.db.TransactionDao
 import javax.inject.Singleton
 
@@ -21,7 +22,7 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, "pactus_wallet.db")
-            .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_3_4)
+            .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_3_4, AppDatabase.MIGRATION_4_5)
             .fallbackToDestructiveMigration()
             .build()
 
@@ -33,4 +34,7 @@ object DatabaseModule {
 
     @Provides
     fun provideBalanceAlertDao(db: AppDatabase): BalanceAlertDao = db.balanceAlertDao()
+
+    @Provides
+    fun provideMonitoredNodeDao(db: AppDatabase): MonitoredNodeDao = db.monitoredNodeDao()
 }

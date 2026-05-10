@@ -7,9 +7,11 @@
     <string name="widget_tap_to_open">Tap to open wallet</string>
 
     <!-- Bottom navigation -->
+    <string name="nav_node">Node</string>
     <string name="nav_wallet">Wallet</string>
     <string name="nav_activity">Activity</string>
     <string name="nav_browser">Browser</string>
+    <string name="nav_discover">Discover</string>
     <string name="nav_settings">Settings</string>
 
     <!-- Common actions -->
@@ -20,6 +22,7 @@
     <string name="action_continue">Continue</string>
     <string name="action_reject">Reject</string>
     <string name="action_save">Save Changes</string>
+    <string name="action_cancel">Cancel</string>
     <string name="action_clear">Clear</string>
     <string name="action_hide">Hide</string>
     <string name="action_add">Add</string>
@@ -181,6 +184,13 @@
     <string name="settings_section_backup">Backup</string>
     <string name="settings_backup_phrase">Backup Phrase</string>
     <string name="settings_backup_phrase_subtitle">View your 12-word recovery phrase</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_subtitle">Choose your preferred theme</string>
+    <string name="theme_select">Select Theme</string>
+    <string name="theme_system">System Default</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
     <string name="settings_section_about">About</string>
     <string name="settings_about">About Velora Wallet</string>
     <string name="settings_about_subtitle">Version, links, and legal</string>
@@ -231,6 +241,13 @@
     <string name="unlock_biometric">Unlock with Biometric</string>
     <string name="unlock_button">Unlock</string>
 
+    <!-- Biometric -->
+    <string name="biometric_enable_title">Enable Biometric</string>
+    <string name="biometric_enable_subtitle">Authenticate to securely store your password</string>
+    <string name="biometric_unlock_subtitle">Authenticate to proceed</string>
+    <string name="biometric_error_not_setup">Biometric unlock not set up</string>
+    <string name="biometric_error_expired">Biometric session expired or changed</string>
+
     <!-- About settings -->
     <string name="about_title">About</string>
     <string name="about_version">Version %1$s</string>
@@ -243,6 +260,61 @@
     <string name="about_github_subtitle">Open source — MIT License</string>
     <string name="about_explorer">Block Explorer</string>
     <string name="about_explorer_subtitle">pactusscan.com</string>
+    <string name="about_terms">Terms of Service</string>
+    <string name="about_terms_subtitle">velora.pactusscan.com/terms-of-service</string>
+    <string name="about_privacy">Privacy Policy</string>
+    <string name="about_privacy_subtitle">velora.pactusscan.com/privacy-policy</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_transactions">Transactions</string>
+    <string name="notification_channel_transactions_desc">Notifications for incoming transfers</string>
+    <string name="notification_channel_alerts">Wallet Alerts</string>
+    <string name="notification_channel_alerts_desc">Alerts for low balance or other wallet events</string>
+    <string name="notification_incoming_transfer_title">Incoming Transfer</string>
+    <string name="notification_incoming_transfer_text">Received %1$s from %2$s</string>
+    <string name="notification_low_balance_title">Low Balance Alert</string>
+    <string name="notification_high_balance_title">High Balance Alert</string>
+    <string name="notification_balance_alert_text">Wallet \'%1$s\' balance is %2$s, which is %3$s your threshold of %4$s</string>
+    <string name="notification_condition_below">below</string>
+    <string name="notification_condition_above">above</string>
+
+    <!-- Node Monitor screen -->
+    <string name="node_title">Node Monitor</string>
+    <string name="node_add_content_description">Add node</string>
+    <string name="node_empty_title">No nodes monitored</string>
+    <string name="node_empty_subtitle">Add a validator address to start monitoring</string>
+    <string name="node_add_button">Add Node</string>
+    <string name="node_card_title">Node Monitoring</string>
+    <string name="node_refresh">Refresh</string>
+    <string name="node_remove">Remove</string>
+    <string name="node_current_height">Current Height</string>
+    <string name="node_last_active">Last Active: %1$s</string>
+    <string name="node_online">Online · Synced</string>
+    <string name="node_offline">Offline</string>
+    <string name="node_overview_title">NODE OVERVIEW</string>
+    <string name="node_view_validators">View Validators</string>
+    <string name="node_active_validators">Active validators</string>
+    <string name="node_validators_count">%1$d / %2$d Validators</string>
+    <string name="node_total_stake">Total stake</string>
+    <string name="node_avg_score">Avg score (active): %1$s%%</string>
+    <string name="node_validators_sheet_title">Validator Addresses</string>
+    <string name="node_validators_count_label">%1$d validators</string>
+    <string name="node_validators_copy_hint">Tap copy to use an address in a Bond transaction</string>
+    <string name="node_stake_label">Stake: %1$s PAC</string>
+    <string name="node_copy_address">Copy address</string>
+    <string name="node_address_copied">Copied</string>
+    <string name="node_load_error">Failed to load node data</string>
+    <string name="node_retry">Retry</string>
+    <string name="node_add_dialog_title">Add Node</string>
+    <string name="node_add_dialog_body">Enter a validator address to monitor its node.</string>
+    <string name="node_address_label">Validator address</string>
+    <string name="node_address_placeholder">pc1p…</string>
+    <string name="node_direction_inbound">Inbound</string>
+    <string name="node_direction_outbound">Outbound</string>
+    <string name="node_direction_unknown">Unknown</string>
+    <string name="node_protocol">Protocol v%1$s</string>
+    <string name="node_peer_id">PeerID: %1$s…%2$s</string>
+    <string name="node_add_confirm">Add</string>
 
     <!-- Language selection -->
     <string name="language_select">Select Language</string>
@@ -251,6 +323,7 @@
     <string name="language_malay">Malay (Bahasa Malaysia)</string>
     <string name="language_vietnamese">Vietnamese (Tiếng Việt)</string>
     <string name="language_french">French (Français)</string>
+    <string name="language_spanish">Spanish (Español)</string>
 
     <!-- Onboarding — Welcome -->
     <string name="welcome_tagline">Your keys. Your coins.\nFull control, no node required.</string>
