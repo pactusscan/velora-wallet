@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.2] - 2026-05-15
+## [0.1.2] - 2026-05-10
 
 ### Added
 - **Node Monitoring Dashboard**: Added a new dashboard to track Pactus validator nodes, including status, current block height, version, and network orientation (Inbound/Outbound).
