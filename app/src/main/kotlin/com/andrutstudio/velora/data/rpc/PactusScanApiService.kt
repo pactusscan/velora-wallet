@@ -37,7 +37,7 @@ data class PactusScanTxListResponse(
 // ── Node monitoring models ────────────────────────────────────────────────────
 
 data class PeerDetailResponse(
-    @SerializedName("peer") val peer: PeerInfo,
+    @SerializedName("peer") val peer: PeerInfo?,
     @SerializedName("peer_online") val peerOnline: Boolean,
     @SerializedName("validators") val validators: List<ValidatorPeerInfo>
 )

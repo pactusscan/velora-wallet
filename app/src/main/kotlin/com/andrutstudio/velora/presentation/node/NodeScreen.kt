@@ -332,8 +332,15 @@ private fun NodeLoadedContent(
     data: PeerDetailResponse,
     onShowValidators: (List<ValidatorPeerInfo>) -> Unit,
 ) {
-    val peer = data.peer
-    val nodeName = peer.moniker.ifBlank { peer.peerId.take(12) + "…" }
+    val peer = data.peer ?: run {
+        NodeErrorContent(
+            message = "Peer information is missing from the node response",
+            onRetry = { /* This would be handled by the parent's refresh */ }
+        )
+        return
+    }
+
+    val nodeName = (peer.moniker ?: "").ifBlank { (peer.peerId ?: "").take(12) + "…" }
     val isOnline = data.peerOnline
 
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -368,9 +375,10 @@ private fun NodeLoadedContent(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        NodeChip(peer.agentParsed.os.uppercase(Locale.ROOT))
-        NodeChip(peer.agentParsed.arch.uppercase(Locale.ROOT))
-        NodeChip(peer.agentParsed.nodeType.uppercase(Locale.ROOT))
+        val agent = peer.agentParsed
+        NodeChip((agent.os ?: "unknown").uppercase(Locale.ROOT))
+        NodeChip((agent.arch ?: "unknown").uppercase(Locale.ROOT))
+        NodeChip((agent.nodeType ?: "unknown").uppercase(Locale.ROOT))
     }
 
     Spacer(Modifier.height(6.dp))
@@ -379,12 +387,12 @@ private fun NodeLoadedContent(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        NodeChip(stringResource(R.string.node_protocol, peer.agentParsed.protocolVersion))
+        NodeChip(stringResource(R.string.node_protocol, peer.agentParsed.protocolVersion ?: "0"))
         NodeChip(
             stringResource(
                 R.string.node_peer_id,
-                peer.peerId.take(6),
-                peer.peerId.takeLast(6),
+                (peer.peerId ?: "").take(6),
+                (peer.peerId ?: "").takeLast(6),
             )
         )
     }
