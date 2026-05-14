@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import com.andrutstudio.velora.R
 import com.andrutstudio.velora.presentation.onboarding.OnboardingViewModel
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
-import com.andrutstudio.velora.presentation.theme.SurfaceContainer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -215,8 +214,8 @@ private fun WordInput(
         shape = RoundedCornerShape(12.dp),
         textStyle = MaterialTheme.typography.bodyMedium,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = SurfaceContainer,
-            unfocusedContainerColor = SurfaceContainer,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
             unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
         )
     )

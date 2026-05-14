@@ -25,7 +25,6 @@ import com.andrutstudio.velora.R
 import com.andrutstudio.velora.presentation.theme.BrandPurple
 import com.andrutstudio.velora.presentation.theme.BrandTeal
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
-import com.andrutstudio.velora.presentation.theme.SurfaceVariant
 
 @Composable
 fun WelcomeScreen(
@@ -148,13 +147,13 @@ fun WelcomeScreen(
                     .fillMaxWidth()
                     .height(57.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = SurfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onBackground,
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
                 shape = RoundedCornerShape(15.dp),
                 border = BorderStroke(
                     width = 1.dp,
-                    color = SurfaceVariant,
+                    color = MaterialTheme.colorScheme.outlineVariant,
                 ),
             ) {
                 Text(
