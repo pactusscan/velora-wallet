@@ -2,11 +2,13 @@ package com.andrutstudio.velora.presentation.node
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,8 +25,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -34,6 +36,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.DragHandle
 import androidx.compose.material.icons.rounded.Hub
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Refresh
@@ -51,6 +54,8 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -58,10 +63,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,8 +86,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.andrutstudio.velora.R
 import com.andrutstudio.velora.data.rpc.AgentParsed
 import com.andrutstudio.velora.data.rpc.PeerDetailResponse
@@ -92,6 +98,8 @@ import com.andrutstudio.velora.presentation.components.MainBottomNavigation
 import com.andrutstudio.velora.presentation.navigation.Screen
 import com.andrutstudio.velora.presentation.theme.BrandTeal
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.text.DecimalFormat
 import java.util.Locale
 import kotlin.math.abs
@@ -103,9 +111,20 @@ private val OnlineGreen = Color(0xFF00E676)
 fun NodeScreen(navController: NavController) {
     val viewModel: NodeViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     var validatorsSheet by remember { mutableStateOf<List<ValidatorPeerInfo>?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    LaunchedEffect(Unit) {
+        viewModel.effect
+            .onEach { effect ->
+                when (effect) {
+                    is NodeViewModel.Effect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message)
+                }
+            }
+            .launchIn(this)
+    }
 
     Scaffold(
         topBar = {
@@ -130,6 +149,7 @@ fun NodeScreen(navController: NavController) {
                 ),
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         Box(
             modifier = Modifier
@@ -142,19 +162,35 @@ fun NodeScreen(navController: NavController) {
                     onAdd = { viewModel.onEvent(NodeViewModel.Event.OpenAdd) },
                 )
             } else {
+                val lazyListState = rememberLazyListState()
+                val reorderableLazyColumnState = rememberReorderableLazyListState(lazyListState) { from, to ->
+                    viewModel.onEvent(NodeViewModel.Event.MoveNode(from.index, to.index))
+                }
+
                 LazyColumn(
+                    state = lazyListState,
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 100.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 100.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    items(state.nodes) { address ->
-                        NodeMonitorCard(
-                            address = address,
-                            loadState = state.peerData[address],
-                            onRemove = { viewModel.onEvent(NodeViewModel.Event.Remove(address)) },
-                            onRefresh = { viewModel.onEvent(NodeViewModel.Event.Refresh(address)) },
-                            onShowValidators = { validatorsSheet = it },
-                        )
+                    itemsIndexed(state.nodes, key = { _, address -> address }) { _, address ->
+                        ReorderableItem(reorderableLazyColumnState, key = address) { isDragging ->
+                            val elevation by animateFloatAsState(
+                                targetValue = if (isDragging) 16f else 8f,
+                                animationSpec = tween(200),
+                                label = "elevation"
+                            )
+                            NodeMonitorCard(
+                                address = address,
+                                loadState = state.peerData[address],
+                                onRemove = { viewModel.onEvent(NodeViewModel.Event.Remove(address)) },
+                                onRefresh = { viewModel.onEvent(NodeViewModel.Event.Refresh(address)) },
+                                onShowValidators = { validatorsSheet = it },
+                                isDragging = isDragging,
+                                elevation = elevation.dp,
+                                dragHandleModifier = Modifier.draggableHandle()
+                            )
+                        }
                     }
                 }
             }
@@ -238,48 +274,64 @@ private fun NodeMonitorCard(
     onRemove: () -> Unit,
     onRefresh: () -> Unit,
     onShowValidators: (List<ValidatorPeerInfo>) -> Unit,
+    isDragging: Boolean = false,
+    elevation: androidx.compose.ui.unit.Dp = 8.dp,
+    dragHandleModifier: Modifier = Modifier,
 ) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .shadow(
-                elevation = 12.dp,
+                elevation = elevation,
                 shape = RoundedCornerShape(16.dp),
                 ambientColor = BrandTeal.copy(alpha = 0.2f),
                 spotColor = BrandTeal.copy(alpha = 0.3f),
             ),
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surface,
-        border = BorderStroke(1.dp, BrandTeal.copy(alpha = 0.35f)),
+        border = BorderStroke(1.dp, if (isDragging) BrandTeal else BrandTeal.copy(alpha = 0.35f)),
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Rounded.DragHandle,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    modifier = dragHandleModifier.size(20.dp).padding(end = 4.dp)
+                )
+                
+                val moniker = when (loadState) {
+                    is NodeViewModel.PeerLoadState.Loaded -> loadState.response.peer?.moniker ?: ""
+                    else -> ""
+                }
                 Text(
-                    stringResource(R.string.node_card_title),
+                    text = moniker.ifBlank { stringResource(R.string.node_card_title) },
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
-                IconButton(onClick = onRefresh, modifier = Modifier.size(32.dp)) {
+                IconButton(onClick = onRefresh, modifier = Modifier.size(28.dp)) {
                     Icon(
                         Icons.Rounded.Refresh,
                         contentDescription = stringResource(R.string.node_refresh),
                         tint = BrandTeal.copy(alpha = 0.8f),
-                        modifier = Modifier.size(18.dp),
+                        modifier = Modifier.size(16.dp),
                     )
                 }
-                IconButton(onClick = onRemove, modifier = Modifier.size(32.dp)) {
+                IconButton(onClick = onRemove, modifier = Modifier.size(28.dp)) {
                     Icon(
                         Icons.Rounded.Delete,
                         contentDescription = stringResource(R.string.node_remove),
                         tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
-                        modifier = Modifier.size(18.dp),
+                        modifier = Modifier.size(16.dp),
                     )
                 }
             }
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(4.dp))
 
             when (loadState) {
                 null, NodeViewModel.PeerLoadState.Loading -> NodeLoadingContent()
@@ -293,17 +345,17 @@ private fun NodeMonitorCard(
 @Composable
 private fun NodeLoadingContent() {
     Box(
-        modifier = Modifier.fillMaxWidth().height(120.dp),
+        modifier = Modifier.fillMaxWidth().height(80.dp),
         contentAlignment = Alignment.Center,
     ) {
-        CircularProgressIndicator(color = BrandTeal, modifier = Modifier.size(32.dp))
+        CircularProgressIndicator(color = BrandTeal, modifier = Modifier.size(24.dp))
     }
 }
 
 @Composable
 private fun NodeErrorContent(message: String, onRetry: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -311,17 +363,16 @@ private fun NodeErrorContent(message: String, onRetry: () -> Unit) {
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.bodyMedium,
         )
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(2.dp))
         Text(
             message,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.bodySmall,
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        Spacer(Modifier.height(8.dp))
-        TextButton(onClick = onRetry) {
-            Text(stringResource(R.string.node_retry), color = BrandTeal)
+        TextButton(onClick = onRetry, contentPadding = PaddingValues(0.dp)) {
+            Text(stringResource(R.string.node_retry), color = BrandTeal, style = MaterialTheme.typography.labelMedium)
         }
     }
 }
@@ -334,84 +385,87 @@ private fun NodeLoadedContent(
 ) {
     val peer = data.peer ?: run {
         NodeErrorContent(
-            message = "Peer information is missing from the node response",
-            onRetry = { /* This would be handled by the parent's refresh */ }
+            message = "Peer information missing",
+            onRetry = { }
         )
         return
     }
 
-    val nodeName = (peer.moniker ?: "").ifBlank { (peer.peerId ?: "").take(12) + "…" }
+    val clipboard = LocalClipboardManager.current
     val isOnline = data.peerOnline
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         PulsingDot(online = isOnline)
         Spacer(Modifier.width(8.dp))
         Text(
-            nodeName,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface,
+            if (isOnline) stringResource(R.string.node_online) else stringResource(R.string.node_offline),
+            style = MaterialTheme.typography.labelSmall,
+            color = if (isOnline) OnlineGreen else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.weight(1f),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
         )
         Icon(
             Icons.Rounded.Wifi,
             contentDescription = null,
             tint = if (isOnline) OnlineGreen else MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(16.dp),
+            modifier = Modifier.size(14.dp),
         )
     }
-    Text(
-        if (isOnline) stringResource(R.string.node_online) else stringResource(R.string.node_offline),
-        style = MaterialTheme.typography.labelSmall,
-        color = if (isOnline) OnlineGreen else MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(start = 22.dp),
-    )
 
-    Spacer(Modifier.height(12.dp))
+    Spacer(Modifier.height(6.dp))
 
+    // PeerID line
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { clipboard.setText(AnnotatedString(peer.peerId)) },
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = "PeerID: ${peer.peerId.take(12)}...${peer.peerId.takeLast(6)}",
+            style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontFamily = FontFamily.Monospace,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f)
+        )
+        Icon(
+            Icons.Rounded.ContentCopy,
+            contentDescription = null,
+            modifier = Modifier.size(12.dp),
+            tint = BrandTeal.copy(alpha = 0.6f)
+        )
+    }
+
+    Spacer(Modifier.height(6.dp))
+
+    // Specs chips
     FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         val agent = peer.agentParsed
         NodeChip((agent.os ?: "unknown").uppercase(Locale.ROOT))
         NodeChip((agent.arch ?: "unknown").uppercase(Locale.ROOT))
         NodeChip((agent.nodeType ?: "unknown").uppercase(Locale.ROOT))
+        NodeChip("v${agent.nodeVersion}")
+        NodeChip("PROTOCOL v${agent.protocolVersion ?: "0"}")
     }
 
-    Spacer(Modifier.height(6.dp))
+    Spacer(Modifier.height(10.dp))
+    HorizontalDivider(color = BrandTeal.copy(alpha = 0.08f))
+    Spacer(Modifier.height(10.dp))
 
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp),
-    ) {
-        NodeChip(stringResource(R.string.node_protocol, peer.agentParsed.protocolVersion ?: "0"))
-        NodeChip(
-            stringResource(
-                R.string.node_peer_id,
-                (peer.peerId ?: "").take(6),
-                (peer.peerId ?: "").takeLast(6),
-            )
-        )
-    }
-
-    Spacer(Modifier.height(14.dp))
-    HorizontalDivider(color = BrandTeal.copy(alpha = 0.12f))
-    Spacer(Modifier.height(14.dp))
-
-    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 stringResource(R.string.node_current_height),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Spacer(Modifier.height(2.dp))
             Text(
                 "#${formatNumber(peer.height)}",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = BrandTeal,
                 fontFamily = FontFamily.Monospace,
@@ -423,22 +477,14 @@ private fun NodeLoadedContent(
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Spacer(Modifier.height(4.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                DirectionBadge(direction = peer.direction)
-            }
-            Spacer(Modifier.height(4.dp))
-            Text(
-                "v${peer.agentParsed.nodeVersion}",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Spacer(Modifier.height(2.dp))
+            DirectionBadge(direction = peer.direction)
         }
     }
 
-    Spacer(Modifier.height(14.dp))
-    HorizontalDivider(color = BrandTeal.copy(alpha = 0.12f))
-    Spacer(Modifier.height(14.dp))
+    Spacer(Modifier.height(10.dp))
+    HorizontalDivider(color = BrandTeal.copy(alpha = 0.08f))
+    Spacer(Modifier.height(10.dp))
 
     NetworkOverviewSection(
         validators = data.validators,
@@ -458,10 +504,10 @@ private fun PulsingDot(online: Boolean) {
             animationSpec = infiniteRepeatable(tween(900), RepeatMode.Reverse),
             label = "dot_alpha",
         )
-        Box(modifier = Modifier.size(10.dp).clip(CircleShape).background(OnlineGreen.copy(alpha = alpha)))
+        Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(OnlineGreen.copy(alpha = alpha)))
     } else {
         Box(
-            modifier = Modifier.size(10.dp).clip(CircleShape)
+            modifier = Modifier.size(8.dp).clip(CircleShape)
                 .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
         )
     }
@@ -470,14 +516,14 @@ private fun PulsingDot(online: Boolean) {
 @Composable
 private fun NodeChip(label: String) {
     Surface(
-        shape = RoundedCornerShape(6.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        border = BorderStroke(0.5.dp, BrandTeal.copy(alpha = 0.2f)),
+        shape = RoundedCornerShape(4.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        border = BorderStroke(0.5.dp, BrandTeal.copy(alpha = 0.15f)),
     ) {
         Text(
             label,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1,
         )
@@ -486,18 +532,22 @@ private fun NodeChip(label: String) {
 
 @Composable
 private fun DirectionBadge(direction: Int) {
-    val unknownColor = MaterialTheme.colorScheme.onSurfaceVariant
-    val (arrow, label, color) = when (direction) {
-        1 -> Triple("↑", stringResource(R.string.node_direction_inbound), BrandTeal)
-        2 -> Triple("↓", stringResource(R.string.node_direction_outbound), Color(0xFF82B1FF))
-        else -> Triple("⟷", stringResource(R.string.node_direction_unknown), unknownColor)
+    val (arrow, color) = when (direction) {
+        1 -> "↑ INBOUND" to BrandTeal
+        2 -> "↓ OUTBOUND" to Color(0xFF82B1FF)
+        else -> "⟷ UNKNOWN" to MaterialTheme.colorScheme.onSurfaceVariant
     }
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(3.dp),
+    Surface(
+        shape = RoundedCornerShape(4.dp),
+        color = color.copy(alpha = 0.1f),
+        border = BorderStroke(0.5.dp, color.copy(alpha = 0.2f)),
     ) {
-        Text(arrow, color = color, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
-        Text(label, color = color, style = MaterialTheme.typography.labelSmall)
+        Text(
+            arrow,
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+            color = color,
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold)
+        )
     }
 }
 
@@ -515,20 +565,20 @@ private fun NetworkOverviewSection(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 stringResource(R.string.node_overview_title),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.5.sp),
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                letterSpacing = 1.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                 modifier = Modifier.weight(1f),
             )
             TextButton(
                 onClick = onShowValidators,
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp),
+                modifier = Modifier.height(24.dp)
             ) {
                 Icon(
                     Icons.Rounded.List,
                     contentDescription = null,
-                    modifier = Modifier.size(14.dp),
+                    modifier = Modifier.size(12.dp),
                     tint = BrandTeal,
                 )
                 Spacer(Modifier.width(4.dp))
@@ -539,60 +589,66 @@ private fun NetworkOverviewSection(
                 )
             }
         }
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(6.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     stringResource(R.string.node_active_validators),
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     stringResource(R.string.node_validators_count, activeValidators.size, validators.size),
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
-                    color = BrandTeal,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
-            Box(
-                modifier = Modifier.size(40.dp).clip(CircleShape).background(BrandTeal.copy(alpha = 0.12f)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(Icons.Rounded.Hub, contentDescription = null, tint = BrandTeal, modifier = Modifier.size(20.dp))
-            }
-        }
-
-        Spacer(Modifier.height(10.dp))
-
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     stringResource(R.string.node_total_stake),
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     "${formatNumber(totalStakePac)} PAC",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
                     color = BrandTeal,
                 )
-                Text(
-                    stringResource(
-                        R.string.node_avg_score,
-                        String.format(Locale.US, "%.2f", avgScore * 100),
-                    ),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
             }
-            Box(
-                modifier = Modifier.size(40.dp).clip(CircleShape).background(BrandTeal.copy(alpha = 0.12f)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(Icons.Rounded.Hub, contentDescription = null, tint = BrandTeal, modifier = Modifier.size(20.dp))
-            }
+            ScoreBadge(score = avgScore)
+        }
+    }
+}
+
+@Composable
+private fun ScoreBadge(score: Double) {
+    val color = when {
+        score >= 0.9 -> OnlineGreen
+        score >= 0.7 -> Color(0xFFFFB300)
+        else -> MaterialTheme.colorScheme.error
+    }
+    Column(horizontalAlignment = Alignment.End) {
+        Text(
+            "AVG SCORE",
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(Modifier.height(2.dp))
+        Surface(
+            shape = RoundedCornerShape(6.dp),
+            color = color.copy(alpha = 0.12f),
+            border = BorderStroke(1.dp, color.copy(alpha = 0.3f))
+        ) {
+            Text(
+                String.format(Locale.US, "%.1f%%", score * 100),
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = color
+            )
         }
     }
 }
@@ -733,10 +789,10 @@ private fun AddNodeDialog(
                 OutlinedTextField(
                     value = input,
                     onValueChange = onInputChange,
-                    label = { Text(stringResource(R.string.node_address_label)) },
+                    label = { Text("Validator address or PeerID") },
                     placeholder = {
                         Text(
-                            stringResource(R.string.node_address_placeholder),
+                            "pc1p… or 12D3…",
                             fontFamily = FontFamily.Monospace,
                             style = MaterialTheme.typography.bodySmall,
                         )

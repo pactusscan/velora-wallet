@@ -12,6 +12,7 @@ data class Transaction(
     val blockTime: Long,
     val status: TransactionStatus,
     val direction: Int = 0, // 0: Self, 1: In, 2: Out
+    val involvedAddress: String = "",
 )
 
 enum class TransactionType { 

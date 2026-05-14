@@ -7,4 +7,6 @@ import androidx.room.PrimaryKey
 data class MonitoredNodeEntity(
     @PrimaryKey val validatorAddress: String,
     val addedAt: Long = System.currentTimeMillis(),
+    val displayOrder: Int = 0,
+    val lastKnownOnline: Boolean = true,
 )

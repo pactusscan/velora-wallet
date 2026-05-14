@@ -1,6 +1,7 @@
 import java.util.Properties
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.TimeZone
 
 // --- Configuration Loading ---
 
@@ -20,12 +21,17 @@ val localProperties = Properties().apply {
 // --- Helper functions for versioning ---
 
 /**
- * Generates a descriptive suffix based on the current time of day and a full timestamp.
- * Example result: -evening-07052026184335
+ * Generates a descriptive suffix based on UTC time to ensure consistency.
+ * Example result: -evening-07052026184335 (UTC)
  */
 fun getVersionSuffix(): String {
     val date = Date()
-    val hour = SimpleDateFormat("HH").format(date).toInt()
+    val utcZone = TimeZone.getTimeZone("UTC")
+
+    // Explicitly set UTC timezone for the hour calculation
+    val hourFormat = SimpleDateFormat("HH").apply { timeZone = utcZone }
+    val hour = hourFormat.format(date).toInt()
+
     val timeOfDay = when (hour) {
         in 5..10 -> "morning"
         in 11..14 -> "afternoon"
@@ -33,21 +39,28 @@ fun getVersionSuffix(): String {
         in 19..23 -> "night"
         else -> "midnight"
     }
-    val timestamp = SimpleDateFormat("ddMMyyyyHHmmss").format(date)
+
+    // Explicitly set UTC timezone for the timestamp
+    val timestamp = SimpleDateFormat("ddMMyyyyHHmmss").apply {
+        timeZone = utcZone
+    }.format(date)
+
     return "-$timeOfDay-$timestamp"
 }
 
 /**
- * Generates a unique version code based on the date and hour.
+ * Generates a unique version code based on the UTC date and hour.
  * Format: YYMMDDHH (e.g., 26050718)
  */
 fun generateVersionCode(): Int {
-    return SimpleDateFormat("yyMMddHH").format(Date()).toInt()
+    return SimpleDateFormat("yyMMddHH").apply {
+        timeZone = TimeZone.getTimeZone("UTC")
+    }.format(Date()).toInt()
 }
 
 // CRITICAL: Store suffix in a variable to ensure consistency across the build process
-// and prevent "double suffix" issues.
 val buildSuffix = getVersionSuffix()
+val fullVersionName = "0.1.3$buildSuffix"
 
 // ---------------------------------------
 
@@ -70,14 +83,10 @@ android {
         minSdk = 26
         targetSdk = 35
 
-        // AUTOMATED: Updates based on build time
+        // Uses UTC-based version code
         versionCode = generateVersionCode()
 
-        // MANUAL: Update this manually for major/minor releases
-        versionName = "0.1.2"
-
-        // Use the static buildSuffix variable
-        versionNameSuffix = buildSuffix
+        versionName = fullVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -110,8 +119,8 @@ android {
             applicationIdSuffix = ".debug"
             isDebuggable = true
             signingConfig = signingConfigs.getByName("debug")
-            buildConfigField("String", "RPC_MAINNET", "\"https://bootstrap1.pactus.org/jsonrpc\"")
-            buildConfigField("String", "RPC_TESTNET", "\"https://testnet1.pactus.org/jsonrpc\"")
+            buildConfigField("String", "RPC_MAINNET", "\"https://pactus.org\"")
+            buildConfigField("String", "RPC_TESTNET", "\"https://pactus.org\"")
         }
         release {
             isMinifyEnabled = true
@@ -121,8 +130,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "RPC_MAINNET", "\"https://bootstrap1.pactus.org/jsonrpc\"")
-            buildConfigField("String", "RPC_TESTNET", "\"https://testnet1.pactus.org/jsonrpc\"")
+            buildConfigField("String", "RPC_MAINNET", "\"https://pactus.org\"")
+            buildConfigField("String", "RPC_TESTNET", "\"https://pactus.org\"")
         }
     }
 
@@ -147,17 +156,12 @@ android {
     }
 
     // --- Automatic APK Renaming Implementation ---
-    /**
-     * Customizes the output filename for APKs.
-     * Expected format: VeloraWallet-0.1.1-evening-07052026184335.apk
-     */
     applicationVariants.all {
         val variant = this
         variant.outputs.all {
             val output = this
             if (output is com.android.build.gradle.internal.api.ApkVariantOutputImpl) {
-                // variant.versionName already combines (versionName + versionNameSuffix)
-                // e.g., "0.1.1" + "-evening-..."
+                // variant.versionName inherits the UTC buildSuffix from defaultConfig
                 val fileName = "VeloraWallet-${variant.versionName}.apk"
                 output.outputFileName = fileName
             }
@@ -216,6 +220,7 @@ dependencies {
     implementation(libs.browser)
     implementation(libs.glance.appwidget)
     implementation(libs.glance.material3)
+    implementation(libs.reorderable)
 
     // Background Tasks
     implementation(libs.work.runtime.ktx)

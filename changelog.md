@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.1.3] - 2026-05-14
+
+### Added
+- **Instant Transaction Notifications**: Improved synchronization logic to ensure you receive alerts for incoming transfers, outgoing payments, and successful staking (bond) transactions immediately.
+- **Smart Filtering**: The app now automatically hides "spam" notifications like block rewards and internal transfers between your own accounts, keeping your notification tray clean.
+- **Multi-Wallet Monitoring**: All your created or imported wallets are now monitored in the background for any activity.
+- **Improved Visual Alerts**: Notifications now feature the official Velora logo and a custom shield icon in the status bar for a more premium and trustworthy experience.
+- **Secure Backup Interface**: Enhanced security on the recovery phrase screen to prevent accidental screenshots or screen recordings of your sensitive data.
+- **Swipe Actions**: Added intuitive "swipe to manage" gestures for accounts and wallets.
+- **Multi-Language Support**: All transaction alerts are fully localized in English, Indonesian, German, Russian, Vietnamese, Portuguese (Brazil), Malay, French, Spanish, and Chinese.
+
+### Fixed & Improved
+- **Better Node Monitoring**: Fixed an issue where validator status wouldn't update correctly; you'll now get reliable alerts if your monitored node goes offline.
+- **Accurate Version Display**: The version number in the "About" screen now perfectly matches the system information and APK filename, including the build time.
+- **Transaction Reliability**: Each transaction now has its own unique notification, so you won't miss any alerts even if multiple transactions happen at once.
+- **Stability Fixes**: Resolved various technical issues and crashes related to background sync and screen transitions for a smoother experience.
+
 ## [0.1.2] - 2026-05-10
 
 ### Added

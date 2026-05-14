@@ -35,6 +35,8 @@ class StakeViewModel @Inject constructor(
         val selectedAccount: Account? = null,
         val availableBalance: Amount = Amount.ZERO,
         val validatorAddress: String = "",
+        val validatorStake: Amount? = null,
+        val maxStakableAmount: Amount? = null,
         val validatorPublicKey: String = "",
         val amountText: String = "",
         val memo: String = "",
@@ -77,6 +79,7 @@ class StakeViewModel @Inject constructor(
     val effect = _effect.receiveAsFlow()
 
     private var feeJob: Job? = null
+    private var validatorStakeJob: Job? = null
 
     init {
         loadWallet()
@@ -114,7 +117,33 @@ class StakeViewModel @Inject constructor(
     }
 
     fun onValidatorAddressChange(address: String) {
-        _state.update { it.copy(validatorAddress = address.trim(), validatorAddressError = null) }
+        val trimmed = address.trim()
+        _state.update { it.copy(validatorAddress = trimmed, validatorAddressError = null) }
+        fetchValidatorStake(trimmed)
+    }
+
+    private fun fetchValidatorStake(address: String) {
+        validatorStakeJob?.cancel()
+        if (!address.startsWith("pc1p") || address.length < 20) {
+            _state.update { it.copy(validatorStake = null) }
+            return
+        }
+
+        validatorStakeJob = viewModelScope.launch {
+            delay(500)
+            try {
+                val response = blockchainRepository.getValidatorPeer(address)
+                val validator = response.validators.find { it.address == address }
+                if (validator != null) {
+                    _state.update { it.copy(validatorStake = Amount(validator.stake)) }
+                } else {
+                    _state.update { it.copy(validatorStake = null) }
+                }
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                _state.update { it.copy(validatorStake = null) }
+            }
+        }
     }
 
     fun onValidatorPublicKeyChange(publicKey: String) {
@@ -209,7 +238,20 @@ class StakeViewModel @Inject constructor(
                 _state.update { it.copy(amountError = "Insufficient balance for amount + fee") }
                 return
             }
-            _state.update { it.copy(isConfirmVisible = true, password = "", passwordError = null) }
+
+            // Check validator stake limit (1000 PAC)
+            current.validatorStake?.let { currentStake ->
+                if (currentStake.nanoPac + amount.nanoPac > 1_000_000_000_000L) {
+                    val remaining = Amount.fromNanoPac(1_000_000_000_000L - currentStake.nanoPac)
+                    _state.update { it.copy(
+                        amountError = "limit_exceeded", // Signal to UI to use string resource with arg
+                        maxStakableAmount = remaining
+                    ) }
+                    return
+                }
+            }
+
+            _state.update { it.copy(isConfirmVisible = true, password = "", passwordError = null, maxStakableAmount = null) }
         }
     }
 

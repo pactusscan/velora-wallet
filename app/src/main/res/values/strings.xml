@@ -31,6 +31,8 @@
     <string name="common_balance">Balance: %1$s</string>
     <string name="common_amount_placeholder">0.00</string>
     <string name="common_fee_placeholder">0.01</string>
+    <string name="balance_total_label">Total Balance</string>
+    <string name="balance_usd_estimate">≈ $%1$s</string>
 
     <!-- Home screen -->
     <string name="home_accounts_header">Accounts</string>
@@ -70,6 +72,8 @@
     <string name="stake_success_message">Your staking transaction has been broadcast to the Pactus network.</string>
     <string name="stake_tx_id_copied">Transaction ID copied</string>
     <string name="stake_sender_label">Sender</string>
+    <string name="stake_current_label">Current Stake: %1$s</string>
+    <string name="stake_max_error">Total stake cannot exceed 1,000 PAC. You can only add max %1$s PAC.</string>
     <string name="home_my_wallets">My Wallets</string>
     <string name="home_add_new">Add New</string>
     <string name="home_add_new_wallet">Add New Wallet</string>
@@ -144,6 +148,8 @@
     <string name="history_status_pending">Pending</string>
     <string name="history_status_failed">Failed</string>
     <string name="history_status_confirmed">Confirmed</string>
+    <string name="history_filter_all_accounts">All Accounts</string>
+    <string name="history_select_account">Select Account</string>
     <string name="history_transaction_detail">Transaction Detail</string>
     <string name="history_tx_id">TX ID</string>
     <string name="history_empty_title">No transactions yet</string>
@@ -188,12 +194,14 @@
     <string name="settings_theme">Theme</string>
     <string name="settings_theme_subtitle">Choose your preferred theme</string>
     <string name="theme_select">Select Theme</string>
+    <string name="theme_selector">Theme</string>
     <string name="theme_system">System Default</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="settings_section_about">About</string>
     <string name="settings_about">About Velora Wallet</string>
     <string name="settings_about_subtitle">Version, links, and legal</string>
+    <string name="settings_tap_to_rename">Tap to rename</string>
 
     <!-- Security settings -->
     <string name="security_title">Security</string>
@@ -252,14 +260,9 @@
     <string name="about_title">About</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_tagline">Light-client wallet for the Pactus blockchain</string>
-    <string name="about_website">Pactus Website</string>
-    <string name="about_website_subtitle">pactus.org</string>
-    <string name="about_docs">Documentation</string>
-    <string name="about_docs_subtitle">docs.pactus.org</string>
-    <string name="about_github">View on GitHub</string>
-    <string name="about_github_subtitle">Open source — MIT License</string>
-    <string name="about_explorer">Block Explorer</string>
-    <string name="about_explorer_subtitle">pactusscan.com</string>
+    <string name="about_website">Velora Website</string>
+    <string name="about_website_subtitle">velora.pactusscan.com</string>
+    <string name="about_explorer">View in Explorer</string>
     <string name="about_terms">Terms of Service</string>
     <string name="about_terms_subtitle">velora.pactusscan.com/terms-of-service</string>
     <string name="about_privacy">Privacy Policy</string>
@@ -272,11 +275,17 @@
     <string name="notification_channel_alerts_desc">Alerts for low balance or other wallet events</string>
     <string name="notification_incoming_transfer_title">Incoming Transfer</string>
     <string name="notification_incoming_transfer_text">Received %1$s from %2$s</string>
+    <string name="notification_outgoing_transfer_title">Transfer Sent</string>
+    <string name="notification_outgoing_transfer_text">Sent %1$s to %2$s</string>
+    <string name="notification_bond_title">Stake Bonded</string>
+    <string name="notification_bond_text">Bonded %1$s to validator %2$s successfully</string>
     <string name="notification_low_balance_title">Low Balance Alert</string>
     <string name="notification_high_balance_title">High Balance Alert</string>
     <string name="notification_balance_alert_text">Wallet \'%1$s\' balance is %2$s, which is %3$s your threshold of %4$s</string>
     <string name="notification_condition_below">below</string>
     <string name="notification_condition_above">above</string>
+    <string name="notification_node_offline_title">Node Offline</string>
+    <string name="notification_node_offline_text">Node %1$s is unreachable or offline.</string>
 
     <!-- Node Monitor screen -->
     <string name="node_title">Node Monitor</string>
@@ -305,6 +314,13 @@
     <string name="node_address_copied">Copied</string>
     <string name="node_load_error">Failed to load node data</string>
     <string name="node_retry">Retry</string>
+    <string name="node_error_connection_refused">Connection refused. The node\'s pactus-daemon might be stopped.</string>
+    <string name="node_error_dns">DNS error. Cannot resolve node address.</string>
+    <string name="node_error_timeout">Connection timed out. The server is taking too long to respond.</string>
+    <string name="node_error_server_offline">Server error. The pactus-daemon might be offline or undergoing maintenance.</string>
+    <string name="node_error_server_code">Server returned error %1$d</string>
+    <string name="node_error_daemon_down">Cannot connect. Node daemon might be down.</string>
+    <string name="node_error_not_found">Node not found. Check the validator address.</string>
     <string name="node_add_dialog_title">Add Node</string>
     <string name="node_add_dialog_body">Enter a validator address to monitor its node.</string>
     <string name="node_address_label">Validator address</string>
@@ -324,6 +340,10 @@
     <string name="language_vietnamese">Vietnamese (Tiếng Việt)</string>
     <string name="language_french">French (Français)</string>
     <string name="language_spanish">Spanish (Español)</string>
+    <string name="language_german">German (Deutsch)</string>
+    <string name="language_portuguese">Portuguese (Português)</string>
+    <string name="language_russian">Russian (Русский)</string>
+    <string name="language_chinese">Chinese (简体中文)</string>
 
     <!-- Onboarding — Welcome -->
     <string name="welcome_tagline">Your keys. Your coins.\nFull control, no node required.</string>

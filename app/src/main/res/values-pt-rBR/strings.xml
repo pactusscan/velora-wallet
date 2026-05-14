@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Velora Wallet</string>
+
+    <!-- Widget -->
+    <string name="widget_description">Exibe seu saldo de PAC na tela inicial</string>
+    <string name="widget_tap_to_open">Toque para abrir a carteira</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_node">Nó</string>
+    <string name="nav_wallet">Carteira</string>
+    <string name="nav_activity">Atividade</string>
+    <string name="nav_browser">Navegador</string>
+    <string name="nav_discover">Descobrir</string>
+    <string name="nav_settings">Configurações</string>
+
+    <!-- Common actions -->
+    <string name="action_back">Voltar</string>
+    <string name="action_copy">Copiar</string>
+    <string name="action_share">Compartilhar</string>
+    <string name="action_confirm">Confirmar</string>
+    <string name="action_continue">Continuar</string>
+    <string name="action_reject">Rejeitar</string>
+    <string name="action_save">Salvar alterações</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_clear">Limpar</string>
+    <string name="action_hide">Ocultar</string>
+    <string name="action_add">Adicionar</string>
+    <string name="action_delete">Excluir</string>
+    <string name="action_switch_wallet">Trocar carteira</string>
+    <string name="common_balance">Saldo: %1$s</string>
+    <string name="common_amount_placeholder">0,00</string>
+    <string name="common_fee_placeholder">0,01</string>
+    <string name="balance_total_label">Saldo Total</string>
+    <string name="balance_usd_estimate">≈ $%1$s</string>
+
+    <!-- Home screen -->
+    <string name="home_accounts_header">Contas</string>
+    <string name="home_add_account">Adicionar</string>
+    <string name="home_add_account_description">Gere um novo endereço dentro desta carteira. Os fundos são separados, mas compartilham a mesma frase de recuperação.</string>
+    <string name="home_address_copied">Endereço copiado</string>
+
+    <!-- Balance Alert -->
+    <string name="alert_title">Alerta de Saldo</string>
+    <string name="alert_description">Seja notificado com base no limite de saldo da conta.</string>
+    <string name="alert_lower_than">Menor que</string>
+    <string name="alert_higher_than">Maior que</string>
+    <string name="alert_threshold_label">Limite (PAC)</string>
+    <string name="alert_threshold_placeholder">ex: 10,0</string>
+    <string name="alert_enable">Ativar Alerta</string>
+    <string name="alert_save">Salvar Alerta</string>
+    <string name="alert_remove">Remover Alerta</string>
+
+    <string name="home_receive">Receber</string>
+    <string name="home_send">Enviar</string>
+    <string name="home_stake">Stake</string>
+    <string name="stake_title">Bond / Stake</string>
+    <string name="stake_validator_label">Endereço do validador</string>
+    <string name="stake_validator_placeholder">pc1p...</string>
+    <string name="stake_validator_pubkey_label">Chave Pública do Validador (Opcional)</string>
+    <string name="stake_validator_pubkey_placeholder">Apenas se não for o seu validador</string>
+    <string name="stake_amount_label">Valor do stake</string>
+    <string name="stake_fee_label">Taxa de rede</string>
+    <string name="stake_memo_label">Memo (Opcional)</string>
+    <string name="stake_memo_placeholder">Mensagem opcional</string>
+    <string name="stake_preview_button">Revisar Bond/Stake</string>
+    <string name="stake_confirm_title">Confirmar Bond/Stake</string>
+    <string name="stake_confirm_total">Total</string>
+    <string name="stake_confirm_biometric">Confirmar com Biometria</string>
+    <string name="stake_confirm_button">Confirmar e Stake</string>
+    <string name="stake_success_title">Bond/Stake com Sucesso</string>
+    <string name="stake_success_message">Sua transação de staking foi transmitida para a rede Pactus.</string>
+    <string name="stake_tx_id_copied">ID da transação copiado</string>
+    <string name="stake_sender_label">Remetente</string>
+    <string name="home_my_wallets">Minhas Carteiras</string>
+    <string name="home_add_new">Adicionar Nova</string>
+    <string name="home_add_new_wallet">Adicionar Nova Carteira</string>
+    <string name="home_accounts_count">%1$d conta</string>
+    <string name="home_accounts_count_plural">%1$d contas</string>
+    <string name="home_reset_wallet_title">Redefinir Carteira?</string>
+    <string name="home_reset_wallet_message">Isso excluirá permanentemente sua carteira deste dispositivo. Certifique-se de ter feito o backup de sua frase semente antes de prosseguir.</string>
+    <string name="home_delete_account_title">Excluir conta?</string>
+    <string name="home_delete_account_message">Esta conta será removida desta carteira. Os fundos permanecem acessíveis através da sua frase de recuperação.</string>
+    <string name="home_delete_wallet_title">Excluir \"%1$s\"?</string>
+    <string name="home_delete_wallet_message">Remover esta carteira apaga seu cofre criptografado deste dispositivo. Certifique-se de ter a frase de recuperação salva.</string>
+    <string name="home_rename_account_title">Renomear Conta</string>
+    <string name="home_rename_account_label">Rótulo</string>
+    <string name="home_rename_wallet_title">Renomear Carteira</string>
+    <string name="home_add_wallet_title">Adicionar Carteira</string>
+    <string name="home_add_wallet_create_subtitle">Gerar uma nova frase de recuperação</string>
+    <string name="home_add_wallet_restore_subtitle">Usar sua frase de recuperação existente</string>
+    <string name="home_add_wallet_import_title">Importar Chave Privada</string>
+    <string name="home_add_wallet_import_subtitle">Importar uma única conta Pactus</string>
+    <string name="home_add_wallet_watch_title">Observar Endereço</string>
+    <string name="home_add_wallet_watch_subtitle">Acompanhar qualquer endereço Pactus (apenas leitura)</string>
+    <string name="add_wallet_title">Adicionar nova carteira</string>
+    <string name="add_wallet_description">Uma frase de recuperação de 12 palavras será gerada. Revele-a mais tarde em Configurações antes de transferir fundos.</string>
+    <string name="add_wallet_name_placeholder">ex: Economias</string>
+    <string name="add_wallet_password_hint">Pelo menos 8 caracteres</string>
+    <string name="add_wallet_button">Criar carteira</string>
+    <string name="watch_wallet_header">Acompanhar qualquer endereço</string>
+    <string name="watch_wallet_description">Acompanhe o saldo e a atividade de qualquer endereço Pactus. Você não poderá enviar fundos desta carteira.</string>
+    <string name="watch_wallet_button">Adicionar Carteira de Observação</string>
+    <string name="error_offline_reconnecting">Você está offline. Reconectando…</string>
+
+    <!-- Send screen -->
+    <string name="send_title">Enviar PAC</string>
+    <string name="send_to_label">Para o endereço</string>
+    <string name="send_to_placeholder">pc1z…</string>
+    <string name="send_scan_qr">Escanear QR</string>
+    <string name="send_scan_prompt">Escanear Endereço Pactus</string>
+    <string name="send_amount_label">Valor</string>
+    <string name="send_amount_nanopac">Valor em NanoPAC</string>
+    <string name="send_amount_pac">Valor em PAC</string>
+    <string name="send_max">MÁX</string>
+    <string name="send_memo_label">Memo (Opcional)</string>
+    <string name="send_memo_placeholder">Para que serve isso?</string>
+    <string name="send_fee_label">Taxa de rede</string>
+    <string name="send_confirm_title">Confirmar Transação</string>
+    <string name="send_confirm_recipient">Destinatário</string>
+    <string name="send_confirm_biometric">Confirmar com Biometria</string>
+    <string name="send_confirm_button">Confirmar e Enviar</string>
+    <string name="send_preview">Pré-visualização</string>
+    <string name="send_preview_button">Revisar Transação</string>
+    <string name="send_from_label">Enviar De</string>
+    <string name="send_success_title">Transferência com Sucesso</string>
+    <string name="send_success_message">Seu PAC foi enviado para a rede e está sendo processado.</string>
+    <string name="send_tx_id_copied">ID da transação copiado</string>
+    <string name="send_success">Transação enviada! ID: %1$s…</string>
+    <string name="send_unit_pac">PAC</string>
+    <string name="send_unit_npac">nPAC</string>
+
+    <!-- Receive screen -->
+    <string name="receive_title">Receber PAC</string>
+    <string name="receive_your_address">Seu Endereço de Carteira</string>
+    <string name="receive_instruction">Compartilhe este endereço para receber PAC</string>
+    <string name="receive_security_warning">Envie apenas PAC ou tokens da rede Pactus para este endereço. O envio de outros ativos resultará em perda permanente.</string>
+    <string name="receive_qr_desc">Código QR</string>
+    <string name="receive_address_copied">Endereço copiado para a área de transferência</string>
+
+    <!-- Transaction history -->
+    <string name="history_title">Histórico de Transações</string>
+    <string name="history_filter_all">Tudo</string>
+    <string name="history_filter_transfers">Transferências</string>
+    <string name="history_filter_bonds">Bonds</string>
+    <string name="history_status_pending">Pendente</string>
+    <string name="history_status_failed">Falhou</string>
+    <string name="history_status_confirmed">Confirmado</string>
+    <string name="history_transaction_detail">Detalhes da Transação</string>
+    <string name="history_tx_id">ID da TX</string>
+    <string name="history_empty_title">Nenhuma transação ainda</string>
+    <string name="history_empty_subtitle">Seu histórico de transações aparecerá aqui</string>
+
+    <!-- Browser -->
+    <string name="browser_close">Fechar navegador</string>
+    <string name="browser_bookmark">Favorito</string>
+    <string name="browser_menu">Menu</string>
+    <string name="browser_go_back">Voltar</string>
+    <string name="browser_go_forward">Avançar</string>
+    <string name="browser_stop">Parar</string>
+    <string name="browser_reload">Recarregar</string>
+    <string name="browser_search_placeholder">Pesquisar ou digitar URL</string>
+    <string name="browser_ecosystem_title">Ecossistema Pactus</string>
+    <string name="browser_ecosystem_subtitle">Descubra o mundo descentralizado do Pactus</string>
+    <string name="browser_sign_title">Assinar Transação</string>
+    <string name="browser_sign_from">De</string>
+    <string name="browser_sign_to">Para</string>
+    <string name="browser_sign_amount">Valor</string>
+    <string name="browser_sign_fee">Taxa</string>
+    <string name="browser_sign_memo">Memo</string>
+    <string name="browser_bookmarks_header">Favoritos</string>
+    <string name="browser_bookmarks_empty">Nenhum favorito ainda</string>
+    <string name="browser_history_header">Histórico</string>
+    <string name="browser_history_empty">Nenhum histórico ainda</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Configurações</string>
+    <string name="settings_section_security">Segurança</string>
+    <string name="settings_change_password">Alterar Senha</string>
+    <string name="settings_change_password_subtitle">Atualizar a senha da sua carteira</string>
+    <string name="settings_biometric">Desbloqueio Biométrico</string>
+    <string name="settings_biometric_subtitle">Usar impressão digital ou rosto para desbloquear</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_language_subtitle">Escolha o seu idioma preferido</string>
+    <string name="settings_section_network">Rede</string>
+    <string name="settings_section_backup">Backup</string>
+    <string name="settings_backup_phrase">Frase de Backup</string>
+    <string name="settings_backup_phrase_subtitle">Ver sua frase de recuperação de 12 palavras</string>
+    <string name="settings_section_appearance">Aparência</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_subtitle">Escolha o seu tema preferido</string>
+    <string name="theme_select">Selecionar Tema</string>
+    <string name="theme_system">Padrão do Sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Escuro</string>
+    <string name="settings_section_about">Sobre</string>
+    <string name="settings_about">Sobre Velora Wallet</string>
+    <string name="settings_about_subtitle">Versão, links e jurídico</string>
+
+    <!-- Security settings -->
+    <string name="security_title">Segurança</string>
+    <string name="security_change_password_header">Alterar Senha</string>
+    <string name="security_current_password">Senha Atual</string>
+    <string name="security_new_password">Nova Senha</string>
+    <string name="security_confirm_password">Confirmar Nova Senha</string>
+    <string name="security_strength_strong">Forte</string>
+    <string name="security_strength_medium">Média</string>
+    <string name="security_strength_weak">Fraca</string>
+    <string name="security_strength_too_short">Muito curta</string>
+
+    <!-- Network settings -->
+    <string name="network_title">Configurações de Rede</string>
+    <string name="network_mainnet">Mainnet</string>
+    <string name="network_mainnet_desc">Rede de produção segura</string>
+    <string name="network_testnet">Testnet</string>
+    <string name="network_testnet_desc">Rede experimental para testes</string>
+    <string name="network_select">Selecionar Rede</string>
+    <string name="network_mainnet_rpc">RPC da Mainnet</string>
+    <string name="network_testnet_rpc">RPC da Testnet</string>
+    <string name="network_coin_type">Tipo de moeda: %1$d</string>
+    <string name="network_selected">Selecionado</string>
+    <string name="network_switch_warning">Mudar de rede atualizará automaticamente os endereços das suas contas para corresponder à rede selecionada.</string>
+
+    <!-- Backup settings -->
+    <string name="backup_title">Frase de Backup</string>
+    <string name="backup_keep_secret">Mantenha sua frase em segredo</string>
+    <string name="backup_warning">Qualquer pessoa com esta frase pode acessar sua carteira e fundos. Nunca a compartilhe e nunca a armazene digitalmente.</string>
+    <string name="backup_reveal_description">Digite sua senha para revelar a frase</string>
+    <string name="backup_reveal_description_biometric">Autentique-se com biometria ou digite sua senha para revelar a frase</string>
+    <string name="backup_password_label">Senha</string>
+    <string name="backup_reveal">Revelar Frase</string>
+    <string name="backup_reveal_biometric">Revelar com Biometria</string>
+    <string name="backup_your_phrase">Sua frase de recuperação</string>
+    <string name="backup_your_private_key">Sua chave privada</string>
+    <string name="backup_copied">Copiado — armazene com segurança e limpe a área de transferência</string>
+    <string name="backup_copied_toast">Copiado para a área de transferência</string>
+    <string name="backup_label_mnemonic">Mnemônico</string>
+    <string name="backup_label_private_key">Chave Privada</string>
+
+    <!-- Unlock dialog -->
+    <string name="unlock_title">Desbloquear Carteira</string>
+    <string name="unlock_description">Digite sua senha para continuar.</string>
+    <string name="unlock_biometric">Desbloquear com Biometria</string>
+    <string name="unlock_button">Desbloquear</string>
+
+    <!-- Biometric -->
+    <string name="biometric_enable_title">Ativar Biometria</string>
+    <string name="biometric_enable_subtitle">Autentique-se para armazenar sua senha com segurança</string>
+    <string name="biometric_unlock_subtitle">Autentique-se para prosseguir</string>
+    <string name="biometric_error_not_setup">Desbloqueio biométrico não configurado</string>
+    <string name="biometric_error_expired">Sessão biométrica expirada ou alterada</string>
+
+    <!-- About settings -->
+    <string name="about_title">Sobre</string>
+    <string name="about_version">Versão %1$s</string>
+    <string name="about_tagline">Carteira light-client para a blockchain Pactus</string>
+    <string name="about_website">Site do Velora</string>
+    <string name="about_website_subtitle">velora.pactusscan.com</string>
+    <string name="about_terms">Termos de Serviço</string>
+    <string name="about_terms_subtitle">velora.pactusscan.com/terms-of-service</string>
+    <string name="about_privacy">Política de Privacidade</string>
+    <string name="about_privacy_subtitle">velora.pactusscan.com/privacy-policy</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_transactions">Transações</string>
+    <string name="notification_channel_transactions_desc">Notificações de transferências recebidas</string>
+    <string name="notification_channel_alerts">Alertas de Carteira</string>
+    <string name="notification_channel_alerts_desc">Alertas de saldo baixo ou outros eventos da carteira</string>
+    <string name="notification_incoming_transfer_title">Transferência Recebida</string>
+    <string name="notification_incoming_transfer_text">Recebeu %1$s de %2$s</string>
+    <string name="notification_outgoing_transfer_title">Transferência Enviada</string>
+    <string name="notification_outgoing_transfer_text">Enviou %1$s para %2$s</string>
+    <string name="notification_bond_title">Stake Vinculado (Bond)</string>
+    <string name="notification_bond_text">%1$s vinculado com sucesso ao validador %2$s</string>
+    <string name="notification_low_balance_title">Alerta de Saldo Baixo</string>
+    <string name="notification_high_balance_title">Alerta de Saldo Alto</string>
+    <string name="notification_balance_alert_text">O saldo da carteira \'%1$s\' é %2$s, o que está %3$s do seu limite de %4$s</string>
+    <string name="notification_condition_below">abaixo</string>
+    <string name="notification_condition_above">acima</string>
+
+    <!-- Node Monitor screen -->
+    <string name="node_title">Monitor de Nó</string>
+    <string name="node_add_content_description">Adicionar nó</string>
+    <string name="node_empty_title">Nenhum nó monitorado</string>
+    <string name="node_empty_subtitle">Adicione um endereço de validador para começar a monitorar</string>
+    <string name="node_add_button">Adicionar Nó</string>
+    <string name="node_card_title">Monitoramento de Nó</string>
+    <string name="node_refresh">Atualizar</string>
+    <string name="node_remove">Remover</string>
+    <string name="node_current_height">Altura Atual</string>
+    <string name="node_last_active">Último Ativo: %1$s</string>
+    <string name="node_online">Online · Sincronizado</string>
+    <string name="node_offline">Offline</string>
+    <string name="node_overview_title">VISÃO GERAL DO NÓ</string>
+    <string name="node_view_validators">Ver Validadores</string>
+    <string name="node_active_validators">Validadores ativos</string>
+    <string name="node_validators_count">%1$d / %2$d Validadores</string>
+    <string name="node_total_stake">Stake total</string>
+    <string name="node_avg_score">Pontuação média (ativa): %1$s%%</string>
+    <string name="node_validators_sheet_title">Endereços de Validadores</string>
+    <string name="node_validators_count_label">%1$d validadores</string>
+    <string name="node_validators_copy_hint">Toque em copiar para usar um endereço em uma transação Bond</string>
+    <string name="node_stake_label">Stake: %1$s PAC</string>
+    <string name="node_copy_address">Copiar endereço</string>
+    <string name="node_address_copied">Copiado</string>
+    <string name="node_load_error">Falha ao carregar dados do nó</string>
+    <string name="node_retry">Repetir</string>
+    <string name="node_error_connection_refused">Conexão recusada. O pactus-daemon no nó pode ter parado.</string>
+    <string name="node_error_dns">Erro de DNS. Não foi possível resolver o endereço do nó.</string>
+    <string name="node_error_timeout">Tempo limite de conexão esgotado. O servidor está demorando muito para responder.</string>
+    <string name="node_error_server_offline">Erro de servidor. O pactus-daemon pode estar offline ou em manutenção.</string>
+    <string name="node_error_server_code">O servidor retornou o erro %1$d</string>
+    <string name="node_error_daemon_down">Não foi possível conectar. O daemon do nó pode estar fora do ar.</string>
+    <string name="node_error_not_found">Nó não encontrado. Verifique o endereço do validador.</string>
+    <string name="node_add_confirm">Adicionar</string>
+    <string name="node_add_dialog_title">Adicionar Nó</string>
+    <string name="node_add_dialog_body">Digite um endereço de validador para monitorar seu nó.</string>
+    <string name="node_address_label">Endereço do validador</string>
+    <string name="node_address_placeholder">pc1p…</string>
+    <string name="node_direction_inbound">Entrada</string>
+    <string name="node_direction_outbound">Saída</string>
+    <string name="node_direction_unknown">Desconhecido</string>
+    <string name="node_protocol">Protocolo v%1$s</string>
+    <string name="node_peer_id">PeerID: %1$s…%2$s</string>
+
+    <!-- Language selection -->
+    <string name="language_select">Selecionar Idioma</string>
+    <string name="language_english">Inglês (English)</string>
+    <string name="language_indonesian">Indonésio (Bahasa Indonesia)</string>
+    <string name="language_malay">Malaio (Bahasa Malaysia)</string>
+    <string name="language_vietnamese">Vietnamita (Tiếng Việt)</string>
+    <string name="language_french">Francês (Français)</string>
+    <string name="language_spanish">Espanhol (Español)</string>
+    <string name="language_german">Alemão (Deutsch)</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_russian">Russo (Русский)</string>
+    <string name="language_chinese">Chinês (简体中文)</string>
+
+    <!-- Onboarding — Welcome -->
+    <string name="welcome_tagline">Suas chaves. Suas moedas.\nControle total, sem necessidade de nó.</string>
+    <string name="welcome_create">Criar Nova Carteira</string>
+    <string name="welcome_restore">Restaurar da Frase Semente</string>
+
+    <string name="welcome_import">Importar de Chave Privada</string>
+    <string name="welcome_add_options_subtitle">Escolha como você deseja adicionar uma carteira ao Velora.</string>
+
+    <!-- Onboarding — Create wallet -->
+    <string name="create_wallet_name_title">Dê um nome à sua carteira</string>
+    <string name="create_wallet_name_subtitle">Você pode mudar isso a qualquer momento nas configurações.</string>
+    <string name="create_wallet_name_label">Nome da carteira</string>
+    <string name="create_wallet_name_placeholder">ex: Minha Carteira Velora</string>
+    <string name="create_wallet_generate">Gerar Frase Semente</string>
+
+    <!-- Onboarding — Mnemonic backup -->
+    <string name="mnemonic_title">Frase Semente</string>
+    <string name="mnemonic_backup_title">Anote sua frase semente</string>
+    <string name="mnemonic_backup_subtitle">Estas 12 palavras são a única maneira de recuperar sua carteira.\nGuarde-as em um lugar seguro — nunca as compartilhe com ninguém.</string>
+    <string name="mnemonic_security_warning">Nunca digite sua frase semente em qualquer site ou compartilhe-a digitalmente. Qualquer pessoa com essas palavras controla seus fundos.</string>
+    <string name="mnemonic_confirm_checkbox">Eu anotei minha frase semente e a guardei com segurança.</string>
+    <string name="mnemonic_verify_button">Verificar Frase Semente</string>
+    <!-- Onboarding — Backup -->
+    <string name="mnemonic_restore_subtitle">Digite suas palavras secretas na ordem correta.</string>
+    <string name="mnemonic_tap_to_reveal">Toque para revelar</string>
+    <string name="mnemonic_copied">Frase semente copiada para a área de transferência</string>
+
+    <!-- Onboarding — SplashScreen -->
+    <string name="splash_powered_by">Desenvolvido por Pactus Blockchain</string>
+    <string name="splash_dedicated_to">Dedicado ao Ecossistema Pactus</string>
+
+    <!-- Onboarding — Mnemonic verify -->
+    <string name="verify_title">Verificar Backup</string>
+    <string name="verify_confirm_title">Confirme sua frase semente</string>
+    <string name="verify_confirm_subtitle">Digite as palavras que faltam para confirmar que você salvou sua frase semente corretamente.</string>
+
+    <!-- Onboarding — Restore wallet -->
+    <string name="restore_title">Restaurar Carteira</string>
+    <string name="restore_enter_seed">Digite sua frase semente</string>
+    <string name="restore_seed_subtitle">Digite suas palavras em ordem. Apenas letras minúsculas.</string>
+    <string name="restore_wallet_name_label">Nome da carteira</string>
+    <string name="restore_wallet_name_placeholder">ex: Carteira Restaurada</string>
+    <string name="restore_12_words">12 palavras</string>
+    <string name="restore_24_words">24 palavras</string>
+    <string name="restore_button">Restaurar Carteira</string>
+
+    <!-- Onboarding — Import -->
+    <string name="import_title">Importar Conta</string>
+    <string name="import_description">Digite sua chave privada para importar uma conta existente. Uma chave privada é um código secreto que lhe dá acesso aos seus fundos.</string>
+    <string name="import_pk_label">Chave privada</string>
+    <string name="import_pk_placeholder">Digite sua chave secreta…</string>
+    <string name="import_security_warning">Certifique-se de que ninguém está observando sua tela ao digitar a chave.</string>
+    <string name="import_wallet_name_placeholder">Minha Carteira Importada</string>
+
+    <!-- Onboarding — Setup security -->
+    <string name="security_setup_title">Segure sua Carteira</string>
+    <string name="security_setup_header">Defina uma senha</string>
+    <string name="security_setup_subtitle">Esta senha criptografa sua carteira neste dispositivo.\nVocê precisará dela para aprovar transações.</string>
+    <string name="security_setup_password_label">Senha</string>
+    <string name="security_setup_confirm_label">Confirmar senha</string>
+    <string name="security_setup_passwords_mismatch">As senhas não coincidem</string>
+    <string name="security_setup_biometric_title">Ativar desbloqueio biométrico</string>
+    <string name="security_setup_biometric_subtitle">Usar impressão digital ou rosto para desbloquear sem senha</string>
+    <string name="security_setup_create">Criar Carteira</string>
+</resources>

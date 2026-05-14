@@ -28,6 +28,8 @@
     <string name="common_balance">Saldo: %1$s</string>
     <string name="common_amount_placeholder">0.00</string>
     <string name="common_fee_placeholder">0.01</string>
+    <string name="balance_total_label">Total Saldo</string>
+    <string name="balance_usd_estimate">≈ $%1$s</string>
 
     <!-- Home screen -->
     <string name="home_accounts_header">Akun</string>
@@ -88,18 +90,10 @@
     <string name="send_from_label">Kirim Dari</string>
     <string name="send_success_title">Transfer Berhasil</string>
     <string name="send_success_message">PAC Anda telah dikirim ke jaringan dan sedang diproses.</string>
-    <string name="send_tx_id_copied">ID Transaksi disalin</string>
-    <string name="send_success">Transaksi terkirim! ID: %1$s…</string>
-    <string name="send_unit_pac">PAC</string>
-    <string name="send_unit_npac">nPAC</string>
-
-    <!-- Receive screen -->
-    <string name="receive_title">Terima PAC</string>
-    <string name="receive_your_address">Alamat Dompet Anda</string>
-    <string name="receive_instruction">Bagikan alamat ini untuk menerima PAC</string>
-    <string name="receive_security_warning">Kirim hanya PAC atau token di jaringan Pactus ke alamat ini. Mengirim aset lain akan menyebabkan kehilangan permanen.</string>
-    <string name="receive_qr_desc">Kode QR</string>
-    <string name="receive_address_copied">Alamat disalin ke papan klip</string>
+    <string name="stake_tx_id_copied">ID Transaksi disalin</string>
+    <string name="stake_sender_label">Pengirim</string>
+    <string name="stake_current_label">Stake Saat Ini: %1$s</string>
+    <string name="stake_max_error">Total stake tidak boleh melebihi 1.000 PAC. Anda hanya bisa menambah maksimal %1$s PAC.</string>
 
     <!-- Transaction history -->
     <string name="history_title">Riwayat Transaksi</string>
@@ -109,49 +103,12 @@
     <string name="history_status_pending">Menunggu</string>
     <string name="history_status_failed">Gagal</string>
     <string name="history_status_confirmed">Dikonfirmasi</string>
+    <string name="history_filter_all_accounts">Semua Akun</string>
+    <string name="history_select_account">Pilih Akun</string>
     <string name="history_transaction_detail">Detail Transaksi</string>
     <string name="history_tx_id">ID Transaksi</string>
     <string name="history_empty_title">Belum ada transaksi</string>
     <string name="history_empty_subtitle">Riwayat transaksi Anda akan muncul di sini</string>
-
-    <!-- Browser -->
-    <string name="browser_close">Tutup browser</string>
-    <string name="browser_bookmark">Penanda</string>
-    <string name="browser_menu">Menu</string>
-    <string name="browser_go_back">Kembali</string>
-    <string name="browser_go_forward">Maju</string>
-    <string name="browser_stop">Berhenti</string>
-    <string name="browser_reload">Muat ulang</string>
-    <string name="browser_search_placeholder">Cari atau masukkan URL</string>
-    <string name="browser_ecosystem_title">Ekosistem Pactus</string>
-    <string name="browser_ecosystem_subtitle">Temukan dunia terdesentralisasi Pactus</string>
-    <string name="browser_sign_title">Tanda Tangani Transaksi</string>
-    <string name="browser_sign_from">Dari</string>
-    <string name="browser_sign_to">Ke</string>
-    <string name="browser_sign_amount">Jumlah</string>
-    <string name="browser_sign_fee">Biaya</string>
-    <string name="browser_sign_memo">Memo</string>
-    <string name="browser_bookmarks_header">Penanda</string>
-    <string name="browser_bookmarks_empty">Belum ada penanda</string>
-    <string name="browser_history_header">Riwayat</string>
-    <string name="browser_history_empty">Belum ada riwayat</string>
-
-    <!-- Settings -->
-    <string name="settings_title">Pengaturan</string>
-    <string name="settings_section_security">Keamanan</string>
-    <string name="settings_change_password">Ubah Kata Sandi</string>
-    <string name="settings_change_password_subtitle">Perbarui kata sandi dompet Anda</string>
-    <string name="settings_biometric">Buka Kunci Biometrik</string>
-    <string name="settings_biometric_subtitle">Gunakan sidik jari atau wajah untuk membuka kunci</string>
-    <string name="settings_language">Bahasa</string>
-    <string name="settings_language_subtitle">Pilih bahasa yang Anda sukai</string>
-    <string name="settings_section_network">Jaringan</string>
-    <string name="settings_section_backup">Cadangan</string>
-    <string name="settings_backup_phrase">Frasa Cadangan</string>
-    <string name="settings_backup_phrase_subtitle">Lihat frasa pemulihan 12 kata Anda</string>
-    <string name="settings_section_about">Tentang</string>
-    <string name="settings_about">Tentang Velora Wallet</string>
-    <string name="settings_about_subtitle">Versi, tautan, dan lisensi</string>
 
     <!-- Security settings -->
     <string name="security_title">Keamanan</string>
@@ -210,14 +167,8 @@
     <string name="about_title">Tentang</string>
     <string name="about_version">Versi %1$s</string>
     <string name="about_tagline">Dompet light-client untuk blockchain Pactus</string>
-    <string name="about_website">Situs Web Pactus</string>
-    <string name="about_website_subtitle">pactus.org</string>
-    <string name="about_docs">Dokumentasi</string>
-    <string name="about_docs_subtitle">docs.pactus.org</string>
-    <string name="about_github">Lihat di GitHub</string>
-    <string name="about_github_subtitle">Sumber terbuka — Lisensi MIT</string>
-    <string name="about_explorer">Block Explorer</string>
-    <string name="about_explorer_subtitle">pactusscan.com</string>
+    <string name="about_website">Situs Web Velora</string>
+    <string name="about_website_subtitle">velora.pactusscan.com</string>
     <string name="about_terms">Syarat Layanan</string>
     <string name="about_terms_subtitle">velora.pactusscan.com/terms-of-service</string>
     <string name="about_privacy">Kebijakan Privasi</string>
@@ -230,11 +181,62 @@
     <string name="notification_channel_alerts_desc">Peringatan untuk saldo rendah atau peristiwa dompet lainnya</string>
     <string name="notification_incoming_transfer_title">Transfer Masuk</string>
     <string name="notification_incoming_transfer_text">Menerima %1$s dari %2$s</string>
+    <string name="notification_outgoing_transfer_title">Transfer Terkirim</string>
+    <string name="notification_outgoing_transfer_text">Mengirim %1$s ke %2$s</string>
+    <string name="notification_bond_title">Stake Berhasil</string>
+    <string name="notification_bond_text">Berhasil melakukan bond %1$s ke validator %2$s</string>
     <string name="notification_low_balance_title">Peringatan Saldo Rendah</string>
     <string name="notification_high_balance_title">Peringatan Saldo Tinggi</string>
     <string name="notification_balance_alert_text">Saldo dompet \'%1$s\' adalah %2$s, yang berada %3$s ambang batas Anda sebesar %4$s</string>
     <string name="notification_condition_below">di bawah</string>
     <string name="notification_condition_above">di atas</string>
+    <string name="notification_node_offline_title">Node Offline</string>
+    <string name="notification_node_offline_text">Node %1$s tidak terjangkau atau offline.</string>
+
+    <!-- Node Monitor screen -->
+    <string name="node_title">Pantau Node</string>
+    <string name="node_add_content_description">Tambah node</string>
+    <string name="node_empty_title">Tidak ada node yang dipantau</string>
+    <string name="node_empty_subtitle">Tambah alamat validator untuk mulai memantau</string>
+    <string name="node_add_button">Tambah Node</string>
+    <string name="node_card_title">Pemantauan Node</string>
+    <string name="node_refresh">Segarkan</string>
+    <string name="node_remove">Hapus</string>
+    <string name="node_current_height">Tinggi Saat Ini</string>
+    <string name="node_last_active">Aktif Terakhir: %1$s</string>
+    <string name="node_online">Online · Sinkron</string>
+    <string name="node_offline">Offline</string>
+    <string name="node_overview_title">IKHTISAR NODE</string>
+    <string name="node_view_validators">Lihat Validator</string>
+    <string name="node_active_validators">Validator aktif</string>
+    <string name="node_validators_count">%1$d / %2$d Validator</string>
+    <string name="node_total_stake">Total stake</string>
+    <string name="node_avg_score">Skor rata-rata (aktif): %1$s%%</string>
+    <string name="node_validators_sheet_title">Alamat Validator</string>
+    <string name="node_validators_count_label">%1$d validator</string>
+    <string name="node_validators_copy_hint">Ketuk salin untuk menggunakan alamat dalam transaksi Bond</string>
+    <string name="node_stake_label">Stake: %1$s PAC</string>
+    <string name="node_copy_address">Salin alamat</string>
+    <string name="node_address_copied">Tersalin</string>
+    <string name="node_load_error">Gagal memuat data node</string>
+    <string name="node_retry">Coba Lagi</string>
+    <string name="node_error_connection_refused">Koneksi ditolak. Daemon pactus di node mungkin terhenti.</string>
+    <string name="node_error_dns">Kesalahan DNS. Tidak dapat menemukan alamat node.</string>
+    <string name="node_error_timeout">Waktu koneksi habis. Server terlalu lama merespons.</string>
+    <string name="node_error_server_offline">Kesalahan server. Daemon pactus mungkin offline atau sedang pemeliharaan.</string>
+    <string name="node_error_server_code">Server mengembalikan kesalahan %1$d</string>
+    <string name="node_error_daemon_down">Tidak dapat terhubung. Daemon node mungkin mati.</string>
+    <string name="node_error_not_found">Node tidak ditemukan. Periksa alamat validator.</string>
+    <string name="node_add_dialog_title">Tambah Node</string>
+    <string name="node_add_dialog_body">Masukkan alamat validator untuk memantau nodenya.</string>
+    <string name="node_address_label">Alamat validator</string>
+    <string name="node_address_placeholder">pc1p…</string>
+    <string name="node_direction_inbound">Masuk</string>
+    <string name="node_direction_outbound">Keluar</string>
+    <string name="node_direction_unknown">Tidak diketahui</string>
+    <string name="node_protocol">Protokol v%1$s</string>
+    <string name="node_peer_id">PeerID: %1$s…%2$s</string>
+    <string name="node_add_confirm">Tambah</string>
 
     <!-- Language selection -->
     <string name="language_select">Pilih Bahasa</string>
@@ -243,6 +245,11 @@
     <string name="language_malay">Bahasa Malaysia</string>
     <string name="language_vietnamese">Bahasa Vietnam (Tiếng Việt)</string>
     <string name="language_french">Bahasa Prancis (Français)</string>
+    <string name="language_spanish">Bahasa Spanyol (Español)</string>
+    <string name="language_german">Bahasa Jerman (Deutsch)</string>
+    <string name="language_portuguese">Bahasa Portugis (Português)</string>
+    <string name="language_russian">Bahasa Rusia (Русский)</string>
+    <string name="language_chinese">Bahasa Mandarin (简体中文)</string>
 
     <!-- Onboarding — Welcome -->
     <string name="welcome_tagline">Kunci Anda. Koin Anda.\nKontrol penuh, tanpa perlu node.</string>

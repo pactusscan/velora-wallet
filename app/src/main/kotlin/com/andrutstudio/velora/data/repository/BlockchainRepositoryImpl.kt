@@ -186,6 +186,10 @@ class BlockchainRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getValidatorPeer(address: String): com.andrutstudio.velora.data.rpc.PeerDetailResponse = withContext(Dispatchers.IO) {
+        pactusScan.getValidatorPeer(address)
+    }
+
     override fun triggerSync() {
         val request = OneTimeWorkRequestBuilder<TxSyncWorker>()
             .build()
@@ -208,6 +212,7 @@ class BlockchainRepositoryImpl @Inject constructor(
         blockTime = blockTime,
         status = TransactionStatus.valueOf(status),
         direction = direction,
+        involvedAddress = involvedAddress,
     )
 
     private fun Int.toTransactionType(): TransactionType = when (this) {

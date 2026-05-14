@@ -25,6 +25,8 @@ class TxSyncWorker @AssistedInject constructor(
     private val walletRepository: WalletRepository,
     private val transactionDao: TransactionDao,
     private val balanceAlertDao: com.andrutstudio.velora.data.local.db.BalanceAlertDao,
+    private val monitoredNodeDao: com.andrutstudio.velora.data.local.db.MonitoredNodeDao,
+    private val pactusScan: com.andrutstudio.velora.data.rpc.PactusScanApiService,
     private val notificationHelper: NotificationHelper,
     private val widgetUpdater: com.andrutstudio.velora.presentation.widget.WidgetUpdater,
 ) : CoroutineWorker(context, workerParams) {
@@ -32,88 +34,42 @@ class TxSyncWorker @AssistedInject constructor(
     companion object {
         const val WORK_NAME = "tx_sync_periodic"
         const val NOTIFICATION_CHANNEL_ID = "transactions"
-        private const val MAX_BLOCKS_PER_SYNC = 500L
     }
 
     override suspend fun doWork(): Result {
         android.util.Log.d("TxSyncWorker", "Sync worker started")
         return runCatching {
-            // Ensure wallet is loaded if it's not already (e.g. after app kill)
-            if (walletRepository.hasWallet() && walletRepository.observeWallet().first() == null) {
-                android.util.Log.d("TxSyncWorker", "Wallet not loaded, calling loadLockedWallet")
-                walletRepository.loadLockedWallet()
-            }
-
-            val wallet = walletRepository.observeWallet().filterNotNull().first()
-            val addresses = wallet.accounts.map { it.address }
-            if (addresses.isEmpty()) {
+            // Get ALL addresses from ALL wallets (TrustWallet style)
+            val allWallets = walletRepository.observeWallets().first()
+            val allAddresses = allWallets.flatMap { w -> w.accounts.map { it.address } }.toSet()
+            
+            if (allAddresses.isEmpty()) {
                 android.util.Log.d("TxSyncWorker", "No addresses found, stopping")
                 return Result.success()
             }
 
-            // 1. Check for incoming transactions
-            val currentHeight = rpcCaller.getBlockHeight()
-            android.util.Log.d("TxSyncWorker", "Current height: $currentHeight")
-            
-            val lastSynced = transactionDao.getLastSyncedHeight(addresses)
-                ?: (currentHeight - 20) // For new wallets, only check last 20 blocks for notifications
+            android.util.Log.d("TxSyncWorker", "Monitoring ${allAddresses.size} addresses")
 
-            val startHeight = maxOf(lastSynced + 1, currentHeight - MAX_BLOCKS_PER_SYNC)
-            android.util.Log.d("TxSyncWorker", "Syncing from $startHeight to $currentHeight")
-            
-            val addressSet = addresses.toSet()
-            
-            if (startHeight <= currentHeight) {
-                for (height in startHeight..currentHeight) {
-                    val block = runCatching { rpcCaller.getBlock(height) }.getOrNull() ?: continue
-                    for (tx in block.txs) {
-                        val involvedAddress = when {
-                            (tx.receiver != null && addressSet.contains(tx.receiver)) -> tx.receiver
-                            (tx.sender != null && addressSet.contains(tx.sender)) -> tx.sender
-                            else -> null
-                        } ?: continue
-
-                        val entity = TransactionEntity(
-                            id = tx.id,
-                            type = tx.typeStr.toTransactionType(),
-                            fromAddress = tx.sender ?: "",
-                            toAddress = tx.receiver,
-                            amountNanoPac = tx.amountNanoPac,
-                            feeNanoPac = tx.feeNanoPac,
-                            memo = tx.memo,
-                            blockHeight = tx.blockHeight,
-                            blockTime = tx.blockTime,
-                            status = TransactionStatus.CONFIRMED.name,
-                            involvedAddress = involvedAddress,
-                        )
-                        val inserted = transactionDao.insertIfNew(entity)
-                        
-                        // Notify for incoming transfers from external addresses
-                        if (inserted != -1L && tx.receiver != null && addressSet.contains(tx.receiver)
-                            && (tx.sender == null || !addressSet.contains(tx.sender))) {
-                            
-                            android.util.Log.d("TxSyncWorker", "New incoming TX found: ${tx.id}")
-                            val amount = Amount.fromNanoPac(tx.amountNanoPac)
-                            notificationHelper.showIncomingTransferNotification(
-                                address = tx.sender ?: "Unknown",
-                                amount = formatPac(amount),
-                            )
-                        }
-                    }
-                }
+            // 1. Sync Transactions and trigger notifications
+            for (address in allAddresses) {
+                syncAddressTransactions(address, allAddresses)
             }
 
-            // 2. Check for balance alerts
-            checkBalanceAlerts(wallet.accounts)
+            // 2. Check for balance alerts (active wallet only)
+            val activeWallet = walletRepository.observeWallet().filterNotNull().first()
+            checkBalanceAlerts(activeWallet.accounts)
             
-            // 3. Update widgets
-            val totalBalance = wallet.accounts.sumOf { acc -> 
+            // 3. Check for monitored nodes
+            checkMonitoredNodes()
+            
+            // 4. Update widgets (active wallet only)
+            val totalBalance = activeWallet.accounts.sumOf { acc -> 
                 runCatching { rpcCaller.getAccount(acc.address).balance.nanoPac }.getOrDefault(0L)
             }
             widgetUpdater.update(
                 totalBalanceNanoPac = totalBalance,
-                walletName = wallet.name,
-                networkName = wallet.network.displayName,
+                walletName = activeWallet.name,
+                networkName = activeWallet.network.displayName,
             )
 
             android.util.Log.d("TxSyncWorker", "Sync worker completed successfully")
@@ -121,6 +77,87 @@ class TxSyncWorker @AssistedInject constructor(
         }.getOrElse { e -> 
             android.util.Log.e("TxSyncWorker", "Sync worker failed", e)
             Result.retry() 
+        }
+    }
+
+    private suspend fun syncAddressTransactions(address: String, myAddresses: Set<String>) {
+        runCatching {
+            // Fetch last 10 transactions from Explorer
+            val response = pactusScan.getTransactions(address, page = 1, limit = 10)
+            
+            for (tx in response.txs) {
+                // Skip if already in DB (meaning we've seen it and potentially notified)
+                if (transactionDao.getById(tx.id) != null) continue
+
+                val txType = tx.payloadType.toTransactionType()
+                val entity = TransactionEntity(
+                    id = tx.id,
+                    type = txType,
+                    fromAddress = tx.sender ?: "",
+                    toAddress = tx.receiver,
+                    amountNanoPac = tx.amountNanoPac,
+                    feeNanoPac = tx.feeNanoPac,
+                    memo = tx.memo,
+                    blockHeight = tx.blockHeight,
+                    blockTime = tx.blockTime,
+                    status = TransactionStatus.CONFIRMED.name,
+                    involvedAddress = address,
+                    direction = tx.direction,
+                    isNotified = true
+                )
+
+                // Insert into DB
+                transactionDao.insertIfNew(entity)
+
+                // Trigger Notification
+                // direction: 0=self, 1=in, 2=out
+                val isIncoming = tx.direction == 1
+                val isOutgoing = tx.direction == 2
+                
+                // Skip if it's an internal transfer (between our own addresses)
+                val isInternal = tx.sender != null && myAddresses.contains(tx.sender) && 
+                                tx.receiver != null && myAddresses.contains(tx.receiver)
+                
+                // Skip if it's a block reward (from genesis address)
+                val isBlockReward = tx.sender == "000000000000000000000000000000000000000000"
+
+                if (isInternal || isBlockReward) {
+                    android.util.Log.d("TxSyncWorker", "Skipping notification for TX ${tx.id} (Internal: $isInternal, BlockReward: $isBlockReward)")
+                    continue
+                }
+
+                val amount = Amount.fromNanoPac(tx.amountNanoPac)
+                val formattedAmount = formatPac(amount)
+
+                when {
+                    isIncoming -> {
+                        android.util.Log.d("TxSyncWorker", "Notifying incoming TX: ${tx.id}")
+                        notificationHelper.showIncomingTransferNotification(
+                            txId = tx.id,
+                            address = tx.sender ?: "Unknown",
+                            amount = formattedAmount
+                        )
+                    }
+                    isOutgoing -> {
+                        android.util.Log.d("TxSyncWorker", "Notifying outgoing TX: ${tx.id}")
+                        if (txType == "BOND") {
+                            notificationHelper.showBondNotification(
+                                txId = tx.id,
+                                validatorAddress = tx.receiver ?: "Unknown",
+                                amount = formattedAmount
+                            )
+                        } else {
+                            notificationHelper.showOutgoingTransferNotification(
+                                txId = tx.id,
+                                address = tx.receiver ?: "Unknown",
+                                amount = formattedAmount
+                            )
+                        }
+                    }
+                }
+            }
+        }.onFailure { e ->
+            android.util.Log.e("TxSyncWorker", "Failed to sync address $address", e)
         }
     }
 
@@ -142,7 +179,6 @@ class TxSyncWorker @AssistedInject constructor(
             }
 
             if (isConditionMet) {
-                // If we haven't triggered for this condition yet, show notification
                 if (alert.lastTriggeredValue == null) {
                     android.util.Log.d("TxSyncWorker", "Balance alert triggered for ${account.address}")
                     val balance = Amount.fromNanoPac(currentBalance)
@@ -155,11 +191,9 @@ class TxSyncWorker @AssistedInject constructor(
                         isLowerThan = alert.type == com.andrutstudio.velora.data.local.db.AlertType.LOWER_THAN
                     )
 
-                    // Mark as triggered so we don't spam
                     balanceAlertDao.insertAlert(alert.copy(lastTriggeredValue = currentBalance))
                 }
             } else {
-                // Condition no longer met, reset triggered state so it can trigger again next time it crosses
                 if (alert.lastTriggeredValue != null) {
                     android.util.Log.d("TxSyncWorker", "Balance alert reset for ${account.address}")
                     balanceAlertDao.insertAlert(alert.copy(lastTriggeredValue = null))
@@ -168,10 +202,47 @@ class TxSyncWorker @AssistedInject constructor(
         }
     }
 
-    private fun String.toTransactionType(): String = when {
-        contains("UNBOND", ignoreCase = true) -> "UNBOND"
-        contains("BOND", ignoreCase = true) -> "BOND"
-        contains("SORTITION", ignoreCase = true) -> "SORTITION"
+    private suspend fun checkMonitoredNodes() {
+        val nodes = monitoredNodeDao.getAll().first()
+        for (node in nodes) {
+            val isValidator = node.validatorAddress.startsWith("pc1p")
+            val result = runCatching {
+                if (isValidator) {
+                    pactusScan.getValidatorPeer(node.validatorAddress)
+                } else {
+                    pactusScan.getPeerById(node.validatorAddress)
+                }
+            }
+
+            val response = result.getOrNull()
+            // A node is considered online only if the API call succeeds AND peerOnline is true
+            val isOnline = result.isSuccess && response?.peerOnline == true
+
+            if (!isOnline) {
+                // If it was online before, and now it's offline (or API failed), notify
+                if (node.lastKnownOnline) {
+                    val nodeName = response?.peer?.moniker ?: (node.validatorAddress.take(8) + "...")
+                    android.util.Log.d("TxSyncWorker", "Node offline detected: $nodeName")
+                    notificationHelper.showNodeOfflineNotification(nodeName)
+                    monitoredNodeDao.update(node.copy(lastKnownOnline = false))
+                }
+            } else {
+                // If it was offline and is now back online, update status quietly
+                if (!node.lastKnownOnline) {
+                    android.util.Log.d("TxSyncWorker", "Node back online: ${node.validatorAddress}")
+                    monitoredNodeDao.update(node.copy(lastKnownOnline = true))
+                }
+            }
+        }
+    }
+
+    private fun Int.toTransactionType(): String = when (this) {
+        1 -> "TRANSFER"
+        2 -> "BOND"
+        4 -> "UNBOND"
+        3 -> "SORTITION"
+        5 -> "WITHDRAW"
+        6 -> "BATCH_TRANSFER"
         else -> "TRANSFER"
     }
 }

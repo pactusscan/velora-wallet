@@ -6,7 +6,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.MenuBook
 import androidx.compose.material.icons.automirrored.rounded.OpenInNew
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
@@ -21,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.andrutstudio.velora.BuildConfig
 import com.andrutstudio.velora.R
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
 
@@ -31,6 +29,15 @@ fun AboutSettingsScreen(
     onNavigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
+    
+    val versionName = runCatching {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            context.packageManager.getPackageInfo(context.packageName, android.content.pm.PackageManager.PackageInfoFlags.of(0))
+        } else {
+            @Suppress("DEPRECATION")
+            context.packageManager.getPackageInfo(context.packageName, 0)
+        }.versionName ?: "Unknown"
+    }.getOrDefault("Unknown")
 
     fun openUrl(url: String) {
         context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
@@ -78,7 +85,7 @@ fun AboutSettingsScreen(
                     textAlign = TextAlign.Center,
                 )
                 Text(
-                    stringResource(R.string.about_version, BuildConfig.VERSION_NAME),
+                    stringResource(R.string.about_version, versionName),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -97,25 +104,7 @@ fun AboutSettingsScreen(
                 icon = Icons.Rounded.Language,
                 title = stringResource(R.string.about_website),
                 subtitle = stringResource(R.string.about_website_subtitle),
-                onClick = { openUrl("https://pactus.org") },
-            )
-            AboutLinkItem(
-                icon = Icons.AutoMirrored.Rounded.MenuBook,
-                title = stringResource(R.string.about_docs),
-                subtitle = stringResource(R.string.about_docs_subtitle),
-                onClick = { openUrl("https://docs.pactus.org") },
-            )
-            AboutLinkItem(
-                icon = Icons.Rounded.Code,
-                title = stringResource(R.string.about_github),
-                subtitle = stringResource(R.string.about_github_subtitle),
-                onClick = { openUrl("https://github.com/pactus-project") },
-            )
-            AboutLinkItem(
-                icon = Icons.Rounded.Search,
-                title = stringResource(R.string.about_explorer),
-                subtitle = stringResource(R.string.about_explorer_subtitle),
-                onClick = { openUrl("https://pactusscan.com") },
+                onClick = { openUrl("https://velora.pactusscan.com") },
             )
             AboutLinkItem(
                 icon = Icons.Rounded.Gavel,

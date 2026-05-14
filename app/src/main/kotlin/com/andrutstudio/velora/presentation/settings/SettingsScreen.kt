@@ -193,20 +193,20 @@ fun SettingsScreen(
                             Icon(
                                 Icons.Rounded.AccountBalanceWallet,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                tint = Color.White,
                                 modifier = Modifier.size(32.dp),
                             )
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = wallet.name,
                                     style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    color = Color.White,
                                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                                 )
                                 Text(
-                                    text = stringResource(R.string.create_wallet_name_subtitle),
+                                    text = stringResource(R.string.settings_tap_to_rename),
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                                    color = Color.White.copy(alpha = 0.7f)
                                 )
                             }
                             NetworkBadge(network = wallet.network)
@@ -254,7 +254,7 @@ fun SettingsScreen(
                 SettingsSectionHeader(stringResource(R.string.settings_section_appearance))
                 SettingsItem(
                     icon = Icons.Rounded.DarkMode,
-                    title = stringResource(R.string.settings_theme),
+                    title = stringResource(R.string.theme_selector),
                     subtitle = when (state.themePreference) {
                         ThemePreference.DARK -> stringResource(R.string.theme_dark)
                         ThemePreference.LIGHT -> stringResource(R.string.theme_light)
@@ -478,6 +478,10 @@ private fun LanguageSelectorDialog(
         "in" to stringResource(R.string.language_indonesian),
         "ms" to stringResource(R.string.language_malay),
         "vi" to stringResource(R.string.language_vietnamese),
+        "de" to stringResource(R.string.language_german),
+        "pt" to stringResource(R.string.language_portuguese),
+        "ru" to stringResource(R.string.language_russian),
+        "zh" to stringResource(R.string.language_chinese),
     ).sortedBy { it.second }
 
     AlertDialog(
@@ -654,20 +658,20 @@ private fun SettingsScreenPreview() {
                             Icon(
                                 Icons.Rounded.AccountBalanceWallet,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                tint = Color.White,
                                 modifier = Modifier.size(32.dp),
                             )
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "Preview Wallet",
                                     style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    color = Color.White,
                                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                                 )
                                 Text(
-                                    text = "Tap to rename",
+                                    text = stringResource(R.string.settings_tap_to_rename),
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                                    color = Color.White.copy(alpha = 0.7f)
                                 )
                             }
                             NetworkBadge(network = Network.MAINNET)

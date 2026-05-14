@@ -207,7 +207,18 @@ private fun StakeScreenContent(
                     label = { Text(stringResource(R.string.stake_validator_label)) },
                     placeholder = { Text(stringResource(R.string.stake_validator_placeholder)) },
                     isError = state.validatorAddressError != null,
-                    supportingText = state.validatorAddressError?.let { { Text(it) } },
+                    supportingText = {
+                        Column {
+                            state.validatorAddressError?.let { Text(it) }
+                            state.validatorStake?.let {
+                                Text(
+                                    text = stringResource(R.string.stake_current_label, formatPac(it)),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                            }
+                        }
+                    },
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
                 )
@@ -234,7 +245,15 @@ private fun StakeScreenContent(
                         imeAction = ImeAction.Next,
                     ),
                     isError = state.amountError != null,
-                    supportingText = state.amountError?.let { { Text(it) } },
+                    supportingText = {
+                        state.amountError?.let {
+                            if (state.maxStakableAmount != null) {
+                                Text(stringResource(R.string.stake_max_error, formatPac(state.maxStakableAmount)))
+                            } else {
+                                Text(it)
+                            }
+                        }
+                    },
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
                 )

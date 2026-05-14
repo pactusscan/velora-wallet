@@ -33,15 +33,24 @@ class TransactionHistoryViewModel @Inject constructor(
     data class State(
         val transactions: List<Transaction> = emptyList(),
         val filter: Filter = Filter.ALL,
+        val selectedAddressFilter: String? = null,
         val isLoading: Boolean = true,
         val wallet: Wallet? = null,
     ) {
         val filtered: List<Transaction>
-            get() = when (filter) {
-                Filter.ALL -> transactions
-                Filter.TRANSFER -> transactions.filter { it.type == TransactionType.TRANSFER }
-                Filter.BOND -> transactions.filter {
-                    it.type == TransactionType.BOND || it.type == TransactionType.UNBOND
+            get() {
+                val typeFiltered = when (filter) {
+                    Filter.ALL -> transactions
+                    Filter.TRANSFER -> transactions.filter { it.type == TransactionType.TRANSFER }
+                    Filter.BOND -> transactions.filter {
+                        it.type == TransactionType.BOND || it.type == TransactionType.UNBOND
+                    }
+                }
+                
+                return if (selectedAddressFilter == null) {
+                    typeFiltered
+                } else {
+                    typeFiltered.filter { it.involvedAddress == selectedAddressFilter }
                 }
             }
     }
@@ -100,6 +109,10 @@ class TransactionHistoryViewModel @Inject constructor(
 
     fun setFilter(filter: Filter) {
         _state.update { it.copy(filter = filter) }
+    }
+
+    fun setAddressFilter(address: String?) {
+        _state.update { it.copy(selectedAddressFilter = address) }
     }
 
     fun onTransactionClick(txId: String) {

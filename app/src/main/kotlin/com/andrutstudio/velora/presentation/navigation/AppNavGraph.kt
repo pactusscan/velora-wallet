@@ -9,8 +9,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.fragment.app.FragmentActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +25,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import dagger.hilt.android.EntryPointAccessors
 import com.andrutstudio.velora.presentation.browser.BrowserScreen
 import com.andrutstudio.velora.presentation.history.TransactionDetailScreen
 import com.andrutstudio.velora.presentation.settings.AboutSettingsScreen
@@ -32,6 +36,7 @@ import com.andrutstudio.velora.presentation.settings.SettingsScreen
 import com.andrutstudio.velora.presentation.settings.SettingsViewModel
 import com.andrutstudio.velora.presentation.history.TransactionHistoryScreen
 import com.andrutstudio.velora.presentation.home.HomeScreen
+import com.andrutstudio.velora.presentation.home.BiometricEntryPoint
 import com.andrutstudio.velora.presentation.node.NodeScreen
 import com.andrutstudio.velora.presentation.home.AddWalletOptionsScreen
 import com.andrutstudio.velora.presentation.onboarding.OnboardingViewModel
@@ -55,6 +60,11 @@ fun AppNavGraph(
     navController: NavHostController,
     startDestination: String,
 ) {
+    val context = LocalContext.current
+    val biometricHelper = remember {
+        EntryPointAccessors.fromApplication(context.applicationContext, BiometricEntryPoint::class.java).biometricHelper()
+    }
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -120,6 +130,19 @@ fun AppNavGraph(
                                     popUpTo(0) { inclusive = true }
                                     launchSingleTop = true
                                 }
+                            is OnboardingViewModel.Effect.RequestBiometricEnrollment -> {
+                                val activity = context as? FragmentActivity
+                                if (activity != null) {
+                                    biometricHelper.showBiometricPromptForEncryption(
+                                        activity = activity,
+                                        passwordToStore = effect.password,
+                                        onSuccess = { vm.onBiometricEnrollmentSuccess() },
+                                        onError = { vm.onBiometricEnrollmentError(it) }
+                                    )
+                                } else {
+                                    vm.onBiometricEnrollmentError("Activity not found")
+                                }
+                            }
                             else -> {}
                         }
                     }
@@ -249,6 +272,19 @@ fun AppNavGraph(
                                     popUpTo(0) { inclusive = true }
                                     launchSingleTop = true
                                 }
+                            is OnboardingViewModel.Effect.RequestBiometricEnrollment -> {
+                                val activity = context as? FragmentActivity
+                                if (activity != null) {
+                                    biometricHelper.showBiometricPromptForEncryption(
+                                        activity = activity,
+                                        passwordToStore = effect.password,
+                                        onSuccess = { vm.onBiometricEnrollmentSuccess() },
+                                        onError = { vm.onBiometricEnrollmentError(it) }
+                                    )
+                                } else {
+                                    vm.onBiometricEnrollmentError("Activity not found")
+                                }
+                            }
                             else -> {}
                         }
                     }

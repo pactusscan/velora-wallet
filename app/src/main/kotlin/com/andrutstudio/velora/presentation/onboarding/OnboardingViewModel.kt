@@ -54,6 +54,7 @@ class OnboardingViewModel @Inject constructor(
         data object NavigateToBackup : Effect
         data object NavigateToSecurity : Effect
         data object NavigateToHome : Effect
+        data class RequestBiometricEnrollment(val password: String) : Effect
         data class ShowError(val message: String) : Effect
     }
 
@@ -308,16 +309,39 @@ class OnboardingViewModel @Inject constructor(
                     )
                 }
                 
-                // Save biometric preference
-                walletRepository.setBiometricEnabled(enableBiometric)
-            }.onSuccess {
-                clearSensitiveData()
-                _effect.send(Effect.NavigateToHome)
+                // Save biometric preference initially as false, will be set to true on success
+                walletRepository.setBiometricEnabled(false)
+
+                if (enableBiometric) {
+                    _state.update { it.copy(isLoading = false) }
+                    _effect.send(Effect.RequestBiometricEnrollment(password))
+                } else {
+                    clearSensitiveData()
+                    _effect.send(Effect.NavigateToHome)
+                }
             }.onFailure { e ->
                 android.util.Log.e("Onboarding", "Setup failed", e)
                 _state.update { it.copy(isLoading = false) }
                 _effect.send(Effect.ShowError(e.message ?: "Failed to create wallet."))
             }
+        }
+    }
+
+    fun onBiometricEnrollmentSuccess() {
+        viewModelScope.launch {
+            walletRepository.setBiometricEnabled(true)
+            clearSensitiveData()
+            _effect.send(Effect.NavigateToHome)
+        }
+    }
+
+    fun onBiometricEnrollmentError(error: String) {
+        viewModelScope.launch {
+            // Even if biometric fails, the wallet is already created, so we go home
+            // but keep biometric disabled
+            walletRepository.setBiometricEnabled(false)
+            clearSensitiveData()
+            _effect.send(Effect.NavigateToHome)
         }
     }
 

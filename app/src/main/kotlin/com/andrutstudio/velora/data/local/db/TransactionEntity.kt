@@ -18,4 +18,6 @@ data class TransactionEntity(
     val direction: Int = 0,
     /** Which of our wallet addresses is involved in this TX. */
     val involvedAddress: String,
+    /** Whether the user has been notified about this transaction. */
+    val isNotified: Boolean = false,
 )

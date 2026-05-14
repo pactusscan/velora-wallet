@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.andrutstudio.velora.R
 import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.domain.model.Network
@@ -90,7 +91,7 @@ fun BalanceCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Total Balance",
+                        stringResource(R.string.balance_total_label),
                         style = MaterialTheme.typography.labelLarge,
                         color = Color.White.copy(alpha = 0.8f)
                     )
@@ -106,7 +107,7 @@ fun BalanceCard(
                         AnimatedBalance(totalBalance)
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            "PAC",
+                            stringResource(R.string.send_unit_pac),
                             style = MaterialTheme.typography.titleMedium,
                             color = Color.White.copy(alpha = 0.9f),
                             modifier = Modifier.padding(bottom = 4.dp),
@@ -117,8 +118,9 @@ fun BalanceCard(
                     pacPriceUsd?.let { price ->
                         val usdValue = totalBalance.pac * price
                         val symbols = DecimalFormatSymbols(Locale.US)
+                        val formattedUsd = DecimalFormat("#,##0.00", symbols).format(usdValue)
                         Text(
-                            text = "≈ $${DecimalFormat("#,##0.00", symbols).format(usdValue)}",
+                            text = stringResource(R.string.balance_usd_estimate, formattedUsd),
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.White.copy(alpha = 0.7f)
                         )

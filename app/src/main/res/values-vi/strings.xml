@@ -27,6 +27,8 @@
     <string name="common_balance">Số dư: %1$s</string>
     <string name="common_amount_placeholder">0.00</string>
     <string name="common_fee_placeholder">0.01</string>
+    <string name="balance_total_label">Tổng Số Dư</string>
+    <string name="balance_usd_estimate">≈ $%1$s</string>
 
     <!-- Home screen -->
     <string name="home_accounts_header">Tài khoản</string>
@@ -223,18 +225,57 @@
     <string name="about_title">Giới thiệu</string>
     <string name="about_version">Phiên bản %1$s</string>
     <string name="about_tagline">Ví light-client cho blockchain Pactus</string>
-    <string name="about_website">Trang web Pactus</string>
-    <string name="about_website_subtitle">pactus.org</string>
-    <string name="about_docs">Tài liệu</string>
-    <string name="about_docs_subtitle">docs.pactus.org</string>
-    <string name="about_github">Xem trên GitHub</string>
-    <string name="about_github_subtitle">Mã nguồn mở — Giấy phép MIT</string>
-    <string name="about_explorer">Trình khám phá khối</string>
-    <string name="about_explorer_subtitle">pactusscan.com</string>
+    <string name="about_website">Trang web Velora</string>
+    <string name="about_website_subtitle">velora.pactusscan.com</string>
     <string name="about_terms">Điều khoản dịch vụ</string>
     <string name="about_terms_subtitle">velora.pactusscan.com/terms-of-service</string>
     <string name="about_privacy">Chính sách bảo mật</string>
     <string name="about_privacy_subtitle">velora.pactusscan.com/privacy-policy</string>
+
+    <!-- Node Monitor screen -->
+    <string name="node_title">Giám sát Node</string>
+    <string name="node_add_content_description">Thêm node</string>
+    <string name="node_empty_title">Chưa giám sát node nào</string>
+    <string name="node_empty_subtitle">Thêm địa chỉ validator để bắt đầu giám sát</string>
+    <string name="node_add_button">Thêm Node</string>
+    <string name="node_card_title">Giám sát Node</string>
+    <string name="node_refresh">Làm mới</string>
+    <string name="node_remove">Xóa</string>
+    <string name="node_current_height">Chiều cao hiện tại</string>
+    <string name="node_last_active">Hoạt động lần cuối: %1$s</string>
+    <string name="node_online">Trực tuyến · Đã đồng bộ</string>
+    <string name="node_offline">Ngoại tuyến</string>
+    <string name="node_overview_title">TỔNG QUAN NODE</string>
+    <string name="node_view_validators">Xem các Validator</string>
+    <string name="node_active_validators">Validator đang hoạt động</string>
+    <string name="node_validators_count">%1$d / %2$d Validator</string>
+    <string name="node_total_stake">Tổng stake</string>
+    <string name="node_avg_score">Điểm TB (hoạt động): %1$s%%</string>
+    <string name="node_validators_sheet_title">Địa chỉ Validator</string>
+    <string name="node_validators_count_label">%1$d validator</string>
+    <string name="node_validators_copy_hint">Chạm để sao chép địa chỉ dùng trong giao dịch Bond</string>
+    <string name="node_stake_label">Stake: %1$s PAC</string>
+    <string name="node_copy_address">Sao chép địa chỉ</string>
+    <string name="node_address_copied">Đã sao chép</string>
+    <string name="node_load_error">Lỗi khi tải dữ liệu node</string>
+    <string name="node_retry">Thử lại</string>
+    <string name="node_error_connection_refused">Kết nối bị từ chối. pactus-daemon trên máy chủ có thể đã dừng.</string>
+    <string name="node_error_dns">Lỗi DNS. Không thể phân giải địa chỉ máy chủ.</string>
+    <string name="node_error_timeout">Hết thời gian kết nối. Máy chủ phản hồi quá lâu.</string>
+    <string name="node_error_server_offline">Lỗi máy chủ. pactus-daemon có thể đang ngoại tuyến hoặc đang bảo trì.</string>
+    <string name="node_error_server_code">Máy chủ trả về lỗi %1$d</string>
+    <string name="node_error_daemon_down">Không thể kết nối. Node daemon có thể đã tắt.</string>
+    <string name="node_error_not_found">Không tìm thấy node. Kiểm tra địa chỉ validator.</string>
+    <string name="node_add_confirm">Thêm</string>
+    <string name="node_add_dialog_title">Thêm Node</string>
+    <string name="node_add_dialog_body">Nhập địa chỉ validator để giám sát node của nó.</string>
+    <string name="node_address_label">Địa chỉ validator</string>
+    <string name="node_address_placeholder">pc1p…</string>
+    <string name="node_direction_inbound">Vào</string>
+    <string name="node_direction_outbound">Ra</string>
+    <string name="node_direction_unknown">Không xác định</string>
+    <string name="node_protocol">Giao thức v%1$s</string>
+    <string name="node_peer_id">PeerID: %1$s…%2$s</string>
 
     <!-- Language selection -->
     <string name="language_select">Chọn Ngôn Ngữ</string>
@@ -243,6 +284,11 @@
     <string name="language_malay">Tiếng Malaysia (Bahasa Malaysia)</string>
     <string name="language_vietnamese">Tiếng Việt</string>
     <string name="language_french">Tiếng Pháp (Français)</string>
+    <string name="language_spanish">Tiếng Tây Ban Nha (Español)</string>
+    <string name="language_german">Tiếng Đức (Deutsch)</string>
+    <string name="language_portuguese">Tiếng Bồ Đào Nha (Português)</string>
+    <string name="language_russian">Tiếng Nga (Русский)</string>
+    <string name="language_chinese">Tiếng Trung (简体中文)</string>
 
     <!-- Onboarding — Welcome -->
     <string name="welcome_tagline">Khóa của bạn. Tiền của bạn.\nKiểm soát hoàn toàn, không cần node.</string>
@@ -315,6 +361,10 @@
     <string name="notification_channel_alerts_desc">Cảnh báo về số dư thấp hoặc các sự kiện khác</string>
     <string name="notification_incoming_transfer_title">Chuyển Khoản Đến</string>
     <string name="notification_incoming_transfer_text">Đã nhận %1$s từ %2$s</string>
+    <string name="notification_outgoing_transfer_title">Đã Gửi Chuyển Khoản</string>
+    <string name="notification_outgoing_transfer_text">Đã gửi %1$s đến %2$s</string>
+    <string name="notification_bond_title">Stake Đã Bond</string>
+    <string name="notification_bond_text">Đã bond %1$s đến validator %2$s thành công</string>
     <string name="notification_low_balance_title">Cảnh Báo Số Dư Thấp</string>
     <string name="notification_high_balance_title">Cảnh Báo Số Dư Cao</string>
     <string name="notification_balance_alert_text">Số dư ví \'%1$s\' là %2$s, nằm %3$s ngưỡng %4$s của bạn</string>

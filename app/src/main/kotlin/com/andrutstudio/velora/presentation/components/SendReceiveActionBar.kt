@@ -18,9 +18,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import com.andrutstudio.velora.R
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
 import com.andrutstudio.velora.presentation.theme.BrandTeal
 import com.andrutstudio.velora.presentation.theme.BrandPurple
@@ -43,7 +45,7 @@ fun SendReceiveActionBar(
     ) {
         ActionButton(
             icon = Icons.Rounded.ArrowDownward,
-            label = "Receive",
+            label = stringResource(R.string.home_receive),
             background = null,
             contentColor = MaterialTheme.colorScheme.onSurface,
             onClick = onReceive,
@@ -51,7 +53,7 @@ fun SendReceiveActionBar(
         )
         ActionButton(
             icon = Icons.Rounded.VerifiedUser,
-            label = "Stake",
+            label = stringResource(R.string.home_stake),
             background = null,
             contentColor = MaterialTheme.colorScheme.onSurface,
             onClick = onStake,
@@ -59,7 +61,7 @@ fun SendReceiveActionBar(
         )
         ActionButton(
             icon = Icons.Rounded.ArrowUpward,
-            label = "Send",
+            label = stringResource(R.string.home_send),
             background = Brush.linearGradient(
                 listOf(BrandTeal.copy(alpha = 0.95f), BrandPurple.copy(alpha = 0.85f)),
             ),

@@ -32,5 +32,6 @@ interface BlockchainRepository {
     ): RawTransaction
     suspend fun broadcastTransaction(signedHex: String): String
     suspend fun getTransaction(txId: String): Transaction
+    suspend fun getValidatorPeer(address: String): com.andrutstudio.velora.data.rpc.PeerDetailResponse
     fun triggerSync()
 }

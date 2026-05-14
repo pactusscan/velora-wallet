@@ -1,6 +1,7 @@
 package com.andrutstudio.velora.presentation.history
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -20,7 +22,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowDownward
+import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.ArrowUpward
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.Layers
 import androidx.compose.material.icons.rounded.Payments
@@ -33,26 +37,35 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -68,6 +81,7 @@ import com.andrutstudio.velora.presentation.components.formatPac
 import com.andrutstudio.velora.presentation.navigation.Screen
 import com.andrutstudio.velora.presentation.theme.BrandTeal
 import com.andrutstudio.velora.presentation.theme.DangerRed
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -98,8 +112,148 @@ fun TransactionHistoryScreen(
         myAddresses = myAddresses,
         onBack = { navController.popBackStack() },
         onFilterSelect = viewModel::setFilter,
+        onAddressFilterSelect = viewModel::setAddressFilter,
         onTransactionClick = viewModel::onTransactionClick
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AccountSelectorHeader(
+    selectedAddress: String?,
+    accounts: List<com.andrutstudio.velora.domain.model.Account>,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val selectedAccount = accounts.find { it.address == selectedAddress }
+    val label = selectedAccount?.label?.ifBlank { selectedAccount.address.truncate() }
+        ?: stringResource(R.string.history_filter_all_accounts)
+
+    Surface(
+        onClick = onClick,
+        color = MaterialTheme.colorScheme.surface,
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Icon(
+                Icons.Rounded.ArrowDropDown,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp),
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AccountSelectionSheet(
+    accounts: List<com.andrutstudio.velora.domain.model.Account>,
+    selectedAddress: String?,
+    onSelect: (String?) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val sheetState = rememberModalBottomSheetState()
+    
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = MaterialTheme.colorScheme.surface,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .padding(bottom = 24.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.history_select_account),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
+                fontWeight = FontWeight.Bold
+            )
+            
+            LazyColumn {
+                item {
+                    AccountItem(
+                        label = stringResource(R.string.history_filter_all_accounts),
+                        isSelected = selectedAddress == null,
+                        onClick = { onSelect(null); onDismiss() }
+                    )
+                }
+                items(accounts) { account ->
+                    AccountItem(
+                        label = account.label.ifBlank { account.address.truncate() },
+                        address = account.address,
+                        isSelected = selectedAddress == account.address,
+                        onClick = { onSelect(account.address); onDismiss() }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AccountItem(
+    label: String,
+    address: String? = null,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(
+                    if (isSelected) BrandTeal.copy(alpha = 0.1f)
+                    else MaterialTheme.colorScheme.surfaceVariant
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                if (isSelected) Icons.Rounded.Check else Icons.Rounded.History,
+                contentDescription = null,
+                tint = if (isSelected) BrandTeal else MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                color = if (isSelected) BrandTeal else MaterialTheme.colorScheme.onSurface
+            )
+            if (address != null) {
+                Text(
+                    text = address.truncate(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontFamily = FontFamily.Monospace
+                )
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -126,6 +280,19 @@ private fun FilterRow(
                         },
                     )
                 },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = BrandTeal.copy(alpha = 0.1f),
+                    selectedLabelColor = BrandTeal,
+                    selectedLeadingIconColor = BrandTeal
+                ),
+                border = FilterChipDefaults.filterChipBorder(
+                    enabled = true,
+                    selected = selected == filter,
+                    borderColor = MaterialTheme.colorScheme.outlineVariant,
+                    selectedBorderColor = BrandTeal.copy(alpha = 0.5f),
+                    borderWidth = 1.dp,
+                    selectedBorderWidth = 1.dp
+                )
             )
         }
     }
@@ -370,6 +537,7 @@ private fun TransactionHistoryScreenPreview() {
             myAddresses = setOf("pc1rlw4vxhmcrn790jlm0a2xh22vk6jllqh82yvl29"),
             onBack = {},
             onFilterSelect = {},
+            onAddressFilterSelect = {},
             onTransactionClick = {}
         )
     }
@@ -383,8 +551,11 @@ private fun TransactionHistoryContent(
     myAddresses: Set<String>,
     onBack: () -> Unit,
     onFilterSelect: (TransactionHistoryViewModel.Filter) -> Unit,
+    onAddressFilterSelect: (String?) -> Unit,
     onTransactionClick: (String) -> Unit,
 ) {
+    var showAccountSheet by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -408,10 +579,19 @@ private fun TransactionHistoryContent(
             Column(
                 modifier = Modifier.fillMaxSize(),
             ) {
+                state.wallet?.let { wallet ->
+                    AccountSelectorHeader(
+                        selectedAddress = state.selectedAddressFilter,
+                        accounts = wallet.accounts,
+                        onClick = { showAccountSheet = true }
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                }
+
                 FilterRow(
                     selected = state.filter,
                     onSelect = onFilterSelect,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                 )
 
                 Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
@@ -438,6 +618,17 @@ private fun TransactionHistoryContent(
                     currentRoute = Screen.TransactionHistory.route
                 )
             }
+        }
+    }
+
+    if (showAccountSheet) {
+        state.wallet?.let { wallet ->
+            AccountSelectionSheet(
+                accounts = wallet.accounts,
+                selectedAddress = state.selectedAddressFilter,
+                onSelect = onAddressFilterSelect,
+                onDismiss = { showAccountSheet = false }
+            )
         }
     }
 }

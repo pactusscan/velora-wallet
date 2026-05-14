@@ -27,6 +27,8 @@
     <string name="common_balance">Saldo: %1$s</string>
     <string name="common_amount_placeholder">0.00</string>
     <string name="common_fee_placeholder">0.01</string>
+    <string name="balance_total_label">Saldo Total</string>
+    <string name="balance_usd_estimate">≈ $%1$s</string>
 
     <!-- Home screen -->
     <string name="home_accounts_header">Cuentas</string>
@@ -54,6 +56,8 @@
     <string name="stake_success_message">Su transacción de staking ha sido transmitida a la red Pactus.</string>
     <string name="stake_tx_id_copied">ID de transacción copiado</string>
     <string name="stake_sender_label">Remitente</string>
+    <string name="stake_current_label">Stake actual: %1$s</string>
+    <string name="stake_max_error">El stake total no puede exceder los 1.000 PAC. Solo puedes añadir un máximo de %1$s PAC.</string>
     <string name="home_my_wallets">Mis billeteras</string>
     <string name="home_add_new">Añadir nueva</string>
     <string name="home_add_new_wallet">Añadir nueva billetera</string>
@@ -140,6 +144,8 @@
     <string name="history_status_pending">Pendiente</string>
     <string name="history_status_failed">Fallido</string>
     <string name="history_status_confirmed">Confirmado</string>
+    <string name="history_filter_all_accounts">Todas las cuentas</string>
+    <string name="history_select_account">Seleccionar cuenta</string>
     <string name="history_transaction_detail">Detalle de transacción</string>
     <string name="history_tx_id">ID de TX</string>
     <string name="history_empty_title">Aún no hay transacciones</string>
@@ -180,9 +186,13 @@
     <string name="settings_section_backup">Respaldo</string>
     <string name="settings_backup_phrase">Frase de respaldo</string>
     <string name="settings_backup_phrase_subtitle">Vea su frase de recuperación de 12 palabras</string>
+    <string name="settings_section_appearance">Apariencia</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_subtitle">Elige tu tema preferido</string>
     <string name="settings_section_about">Acerca de</string>
     <string name="settings_about">Acerca de Velora Wallet</string>
     <string name="settings_about_subtitle">Versión, enlaces y legal</string>
+    <string name="settings_tap_to_rename">Toca para renombrar</string>
 
     <!-- Security settings -->
     <string name="security_title">Seguridad</string>
@@ -241,14 +251,9 @@
     <string name="about_title">Acerca de</string>
     <string name="about_version">Versión %1$s</string>
     <string name="about_tagline">Billetera de cliente ligero para la blockchain Pactus</string>
-    <string name="about_website">Sitio web de Pactus</string>
-    <string name="about_website_subtitle">pactus.org</string>
-    <string name="about_docs">Documentación</string>
-    <string name="about_docs_subtitle">docs.pactus.org</string>
-    <string name="about_github">Ver en GitHub</string>
-    <string name="about_github_subtitle">Código abierto — Licencia MIT</string>
-    <string name="about_explorer">Explorador de bloques</string>
-    <string name="about_explorer_subtitle">pactusscan.com</string>
+    <string name="about_website">Sitio web de Velora</string>
+    <string name="about_website_subtitle">velora.pactusscan.com</string>
+    <string name="about_explorer">Ver en el explorador</string>
     <string name="about_terms">Términos de servicio</string>
     <string name="about_terms_subtitle">velora.pactusscan.com/terms-of-service</string>
     <string name="about_privacy">Política de privacidad</string>
@@ -262,6 +267,10 @@
     <string name="language_vietnamese">Vietnamita (Tiếng Việt)</string>
     <string name="language_french">Francés (Français)</string>
     <string name="language_spanish">Español</string>
+    <string name="language_german">Alemán (Deutsch)</string>
+    <string name="language_portuguese">Portugués (Português)</string>
+    <string name="language_russian">Ruso (Русский)</string>
+    <string name="language_chinese">Chino (简体中文)</string>
 
     <!-- Onboarding — Welcome -->
     <string name="welcome_tagline">Sus llaves. Sus monedas.\nControl total, sin necesidad de nodo.</string>
@@ -327,6 +336,51 @@
     <string name="security_setup_biometric_subtitle">Use huella digital o rostro para desbloquear sin contraseña</string>
     <string name="security_setup_create">Crear billetera</string>
 
+    <!-- Node Monitor screen -->
+    <string name="node_title">Monitor de Nodo</string>
+    <string name="node_add_content_description">Añadir nodo</string>
+    <string name="node_empty_title">No hay nodos monitoreados</string>
+    <string name="node_empty_subtitle">Añada una dirección de validador para comenzar a monitorear</string>
+    <string name="node_add_button">Añadir Nodo</string>
+    <string name="node_card_title">Monitoreo de Nodo</string>
+    <string name="node_refresh">Refrescar</string>
+    <string name="node_remove">Eliminar</string>
+    <string name="node_current_height">Altura Actual</string>
+    <string name="node_last_active">Última Actividad: %1$s</string>
+    <string name="node_online">En línea · Sincronizado</string>
+    <string name="node_offline">Fuera de línea</string>
+    <string name="node_overview_title">RESUMEN DEL NODO</string>
+    <string name="node_view_validators">Ver Validadores</string>
+    <string name="node_active_validators">Validadores activos</string>
+    <string name="node_validators_count">%1$d / %2$d Validadores</string>
+    <string name="node_total_stake">Stake total</string>
+    <string name="node_avg_score">Puntuación media (activo): %1$s%%</string>
+    <string name="node_validators_sheet_title">Direcciones de Validadores</string>
+    <string name="node_validators_count_label">%1$d validadores</string>
+    <string name="node_validators_copy_hint">Toque copiar para usar una dirección en una transacción Bond</string>
+    <string name="node_stake_label">Stake: %1$s PAC</string>
+    <string name="node_copy_address">Copiar dirección</string>
+    <string name="node_address_copied">Copiado</string>
+    <string name="node_load_error">Error al cargar datos del nodo</string>
+    <string name="node_retry">Reintentar</string>
+    <string name="node_error_connection_refused">Conexión rechazada. El daemon de pactus en el nodo podría estar detenido.</string>
+    <string name="node_error_dns">Error de DNS. No se dapat resolver la dirección del nodo.</string>
+    <string name="node_error_timeout">Tiempo de conexión agotado. El servidor está tardando demasiado en responder.</string>
+    <string name="node_error_server_offline">Error del servidor. El daemon de pactus podría estar fuera de línea o en mantenimiento.</string>
+    <string name="node_error_server_code">El servidor devolvió el error %1$d</string>
+    <string name="node_error_daemon_down">No se puede conectar. El daemon del nodo podría estar caído.</string>
+    <string name="node_error_not_found">Nodo no encontrado. Verifique la dirección del validador.</string>
+    <string name="node_add_dialog_title">Añadir Nodo</string>
+    <string name="node_add_dialog_body">Ingrese una dirección de validador para monitorear su nodo.</string>
+    <string name="node_address_label">Dirección del validador</string>
+    <string name="node_address_placeholder">pc1p…</string>
+    <string name="node_direction_inbound">Entrante</string>
+    <string name="node_direction_outbound">Saliente</string>
+    <string name="node_direction_unknown">Desconocido</string>
+    <string name="node_protocol">Protocolo v%1$s</string>
+    <string name="node_peer_id">PeerID: %1$s…%2$s</string>
+    <string name="node_add_confirm">Añadir</string>
+
     <!-- Notifications -->
     <string name="notification_channel_transactions">Transacciones</string>
     <string name="notification_channel_transactions_desc">Notificaciones de transferencias entrantes</string>
@@ -334,6 +388,10 @@
     <string name="notification_channel_alerts_desc">Alertas de saldo bajo u otros eventos de la billetera</string>
     <string name="notification_incoming_transfer_title">Transferencia entrante</string>
     <string name="notification_incoming_transfer_text">Recibió %1$s de %2$s</string>
+    <string name="notification_outgoing_transfer_title">Transferencia enviada</string>
+    <string name="notification_outgoing_transfer_text">Envió %1$s a %2$s</string>
+    <string name="notification_bond_title">Stake vinculado (Bond)</string>
+    <string name="notification_bond_text">%1$s vinculado con éxito al validador %2$s</string>
     <string name="notification_low_balance_title">Alerta de saldo bajo</string>
     <string name="notification_high_balance_title">Alerta de saldo alto</string>
     <string name="notification_balance_alert_text">El saldo de la billetera \'%1$s\' es %2$s, lo cual está %3$s su umbral de %4$s</string>

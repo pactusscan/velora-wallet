@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Velora Wallet</string>
+
+    <!-- Widget -->
+    <string name="widget_description">Отображает ваш баланс PAC на главном экране</string>
+    <string name="widget_tap_to_open">Нажмите, чтобы открыть кошелек</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_node">Узел</string>
+    <string name="nav_wallet">Кошелек</string>
+    <string name="nav_activity">Активность</string>
+    <string name="nav_browser">Браузер</string>
+    <string name="nav_discover">Обзор</string>
+    <string name="nav_settings">Настройки</string>
+
+    <!-- Common actions -->
+    <string name="action_back">Назад</string>
+    <string name="action_copy">Копировать</string>
+    <string name="action_share">Поделиться</string>
+    <string name="action_confirm">Подтвердить</string>
+    <string name="action_continue">Продолжить</string>
+    <string name="action_reject">Отклонить</string>
+    <string name="action_save">Сохранить изменения</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_clear">Очистить</string>
+    <string name="action_hide">Скрыть</string>
+    <string name="action_add">Добавить</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_switch_wallet">Сменить кошелек</string>
+    <string name="common_balance">Баланс: %1$s</string>
+    <string name="common_amount_placeholder">0.00</string>
+    <string name="common_fee_placeholder">0.01</string>
+    <string name="balance_total_label">Общий баланс</string>
+    <string name="balance_usd_estimate">≈ $%1$s</string>
+
+    <!-- Home screen -->
+    <string name="home_accounts_header">Счета</string>
+    <string name="home_add_account">Добавить</string>
+    <string name="home_add_account_description">Создайте новый адрес в этом кошельке. Средства хранятся отдельно, но используют одну и ту же фразу восстановления.</string>
+    <string name="home_address_copied">Адрес скопирован</string>
+
+    <!-- Balance Alert -->
+    <string name="alert_title">Оповещение о балансе</string>
+    <string name="alert_description">Получайте уведомления при достижении порогового значения баланса.</string>
+    <string name="alert_lower_than">Ниже чем</string>
+    <string name="alert_higher_than">Выше чем</string>
+    <string name="alert_threshold_label">Порог (PAC)</string>
+    <string name="alert_threshold_placeholder">например, 10.0</string>
+    <string name="alert_enable">Включить оповещение</string>
+    <string name="alert_save">Сохранить оповещение</string>
+    <string name="alert_remove">Удалить оповещение</string>
+
+    <string name="home_receive">Получить</string>
+    <string name="home_send">Отправить</string>
+    <string name="home_stake">Стейкинг</string>
+    <string name="stake_title">Делегирование / Стейкинг</string>
+    <string name="stake_validator_label">Адрес валидатора</string>
+    <string name="stake_validator_placeholder">pc1p...</string>
+    <string name="stake_validator_pubkey_label">Публичный ключ валидатора (необязательно)</string>
+    <string name="stake_validator_pubkey_placeholder">Только если это не ваш валидатор</string>
+    <string name="stake_amount_label">Сумма стейкинга</string>
+    <string name="stake_fee_label">Комиссия сети</string>
+    <string name="stake_memo_label">Примечание (необязательно)</string>
+    <string name="stake_memo_placeholder">Ваше сообщение</string>
+    <string name="stake_preview_button">Проверить стейкинг</string>
+    <string name="stake_confirm_title">Подтверждение стейкинга</string>
+    <string name="stake_confirm_total">Итого</string>
+    <string name="stake_confirm_biometric">Подтвердить биометрией</string>
+    <string name="stake_confirm_button">Подтвердить и отправить</string>
+    <string name="stake_success_title">Стейкинг выполнен</string>
+    <string name="stake_success_message">Ваша транзакция стейкинга отправлена в сеть Pactus.</string>
+    <string name="stake_tx_id_copied">ID транзакции скопирован</string>
+    <string name="stake_sender_label">Отправитель</string>
+    <string name="home_my_wallets">Мои кошельки</string>
+    <string name="home_add_new">Добавить новый</string>
+    <string name="home_add_new_wallet">Добавить новый кошелек</string>
+    <string name="home_accounts_count">%1$d счет</string>
+    <string name="home_accounts_count_plural">%1$d счетов</string>
+    <string name="home_reset_wallet_title">Сбросить кошелек?</string>
+    <string name="home_reset_wallet_message">Это навсегда удалит ваш кошелек с этого устройства. Убедитесь, что вы сохранили сид-фразу перед продолжением.</string>
+    <string name="home_delete_account_title">Удалить счет?</string>
+    <string name="home_delete_account_message">Этот счет будет удален из кошелька. Средства останутся доступны по вашей фразе восстановления.</string>
+    <string name="home_delete_wallet_title">Удалить \"%1$s\"?</string>
+    <string name="home_delete_wallet_message">Удаление кошелька сотрет его зашифрованное хранилище с устройства. Убедитесь, что фраза восстановления сохранена.</string>
+    <string name="home_rename_account_title">Переименовать счет</string>
+    <string name="home_rename_account_label">Метка</string>
+    <string name="home_rename_wallet_title">Переименовать кошелек</string>
+    <string name="home_add_wallet_title">Добавить кошелек</string>
+    <string name="home_add_wallet_create_subtitle">Создать новую фразу восстановления</string>
+    <string name="home_add_wallet_restore_subtitle">Использовать имеющуюся фразу восстановления</string>
+    <string name="home_add_wallet_import_title">Импорт приватного ключа</string>
+    <string name="home_add_wallet_import_subtitle">Импортировать один аккаунт Pactus</string>
+    <string name="home_add_wallet_watch_title">Наблюдение за адресом</string>
+    <string name="home_add_wallet_watch_subtitle">Отслеживать любой адрес Pactus (только чтение)</string>
+    <string name="add_wallet_title">Создать новый кошелек</string>
+    <string name="add_wallet_description">Будет создана фраза восстановления из 12 слов. Вы сможете увидеть ее позже в настройках.</string>
+    <string name="add_wallet_name_placeholder">например, Сбережения</string>
+    <string name="add_wallet_password_hint">Минимум 8 символов</string>
+    <string name="add_wallet_button">Создать кошелек</string>
+    <string name="watch_wallet_header">Следить за любым адресом</string>
+    <string name="watch_wallet_description">Наблюдайте за балансом и активностью любого адреса Pactus. Вы не сможете отправлять средства из этого кошелька.</string>
+    <string name="watch_wallet_button">Добавить кошелек для наблюдения</string>
+    <string name="error_offline_reconnecting">Вы оффлайн. Переподключение…</string>
+
+    <!-- Send screen -->
+    <string name="send_title">Отправить PAC</string>
+    <string name="send_to_label">Адрес получателя</string>
+    <string name="send_to_placeholder">pc1z…</string>
+    <string name="send_scan_qr">Сканировать QR</string>
+    <string name="send_scan_prompt">Сканировать адрес Pactus</string>
+    <string name="send_amount_label">Сумма</string>
+    <string name="send_amount_nanopac">Сумма в NanoPAC</string>
+    <string name="send_amount_pac">Сумма в PAC</string>
+    <string name="send_max">МАКС</string>
+    <string name="send_memo_label">Примечание (необязательно)</string>
+    <string name="send_memo_placeholder">Для чего эта транзакция?</string>
+    <string name="send_fee_label">Комиссия сети</string>
+    <string name="send_confirm_title">Подтверждение транзакции</string>
+    <string name="send_confirm_recipient">Получатель</string>
+    <string name="send_confirm_biometric">Подтвердить биометрией</string>
+    <string name="send_confirm_button">Подтвердить и отправить</string>
+    <string name="send_preview">Предпросмотр</string>
+    <string name="send_preview_button">Проверить транзакцию</string>
+    <string name="send_from_label">Отправить с</string>
+    <string name="send_success_title">Перевод выполнен</string>
+    <string name="send_success_message">Ваши PAC отправлены в сеть и обрабатываются.</string>
+    <string name="send_tx_id_copied">ID транзакции скопирован</string>
+    <string name="send_success">Транзакция отправлена! ID: %1$s…</string>
+    <string name="send_unit_pac">PAC</string>
+    <string name="send_unit_npac">nPAC</string>
+
+    <!-- Receive screen -->
+    <string name="receive_title">Получить PAC</string>
+    <string name="receive_your_address">Ваш адрес кошелька</string>
+    <string name="receive_instruction">Поделитесь этим адресом для получения PAC</string>
+    <string name="receive_security_warning">Отправляйте на этот адрес только PAC или токены сети Pactus. Отправка других активов приведет к их безвозвратной потере.</string>
+    <string name="receive_qr_desc">QR-код</string>
+    <string name="receive_address_copied">Адрес скопирован в буфер обмена</string>
+
+    <!-- Transaction history -->
+    <string name="history_title">История транзакций</string>
+    <string name="history_filter_all">Все</string>
+    <string name="history_filter_transfers">Переводы</string>
+    <string name="history_filter_bonds">Стейкинг</string>
+    <string name="history_status_pending">В ожидании</string>
+    <string name="history_status_failed">Ошибка</string>
+    <string name="history_status_confirmed">Подтверждено</string>
+    <string name="history_transaction_detail">Детали транзакции</string>
+    <string name="history_tx_id">TX ID</string>
+    <string name="history_empty_title">Транзакций пока нет</string>
+    <string name="history_empty_subtitle">Здесь будет отображаться ваша история транзакций</string>
+
+    <!-- Browser -->
+    <string name="browser_close">Закрыть браузер</string>
+    <string name="browser_bookmark">Закладка</string>
+    <string name="browser_menu">Меню</string>
+    <string name="browser_go_back">Назад</string>
+    <string name="browser_go_forward">Вперед</string>
+    <string name="browser_stop">Стоп</string>
+    <string name="browser_reload">Обновить</string>
+    <string name="browser_search_placeholder">Поиск или ввод URL</string>
+    <string name="browser_ecosystem_title">Экосистема Pactus</string>
+    <string name="browser_ecosystem_subtitle">Откройте для себя децентрализованный мир Pactus</string>
+    <string name="browser_sign_title">Подписать транзакцию</string>
+    <string name="browser_sign_from">От</string>
+    <string name="browser_sign_to">Кому</string>
+    <string name="browser_sign_amount">Сумма</string>
+    <string name="browser_sign_fee">Комиссия</string>
+    <string name="browser_sign_memo">Примечание</string>
+    <string name="browser_bookmarks_header">Закладки</string>
+    <string name="browser_bookmarks_empty">Закладок пока нет</string>
+    <string name="browser_history_header">История</string>
+    <string name="browser_history_empty">Истории пока нет</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_section_security">Безопасность</string>
+    <string name="settings_change_password">Сменить пароль</string>
+    <string name="settings_change_password_subtitle">Обновите пароль кошелька</string>
+    <string name="settings_biometric">Биометрия</string>
+    <string name="settings_biometric_subtitle">Вход по отпечатку или лицу</string>
+    <string name="settings_language">Язык</string>
+    <string name="settings_language_subtitle">Выберите предпочтительный язык</string>
+    <string name="settings_section_network">Сеть</string>
+    <string name="settings_section_backup">Резервная копия</string>
+    <string name="settings_backup_phrase">Сид-фраза</string>
+    <string name="settings_backup_phrase_subtitle">Просмотр вашей фразы из 12 слов</string>
+    <string name="settings_section_appearance">Внешний вид</string>
+    <string name="settings_theme">Тема</string>
+    <string name="settings_theme_subtitle">Выберите цветовую схему</string>
+    <string name="theme_select">Выбор темы</string>
+    <string name="theme_system">Системная тема</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Темная</string>
+    <string name="settings_section_about">О приложении</string>
+    <string name="settings_about">О кошельке Velora</string>
+    <string name="settings_about_subtitle">Версия, ссылки и информация</string>
+
+    <!-- Security settings -->
+    <string name="security_title">Безопасность</string>
+    <string name="security_change_password_header">Изменение пароля</string>
+    <string name="security_current_password">Текущий пароль</string>
+    <string name="security_new_password">Новый пароль</string>
+    <string name="security_confirm_password">Подтвердите новый пароль</string>
+    <string name="security_strength_strong">Надежный</string>
+    <string name="security_strength_medium">Средний</string>
+    <string name="security_strength_weak">Слабый</string>
+    <string name="security_strength_too_short">Слишком короткий</string>
+
+    <!-- Network settings -->
+    <string name="network_title">Настройки сети</string>
+    <string name="network_mainnet">Mainnet</string>
+    <string name="network_mainnet_desc">Основная сеть</string>
+    <string name="network_testnet">Testnet</string>
+    <string name="network_testnet_desc">Экспериментальная сеть</string>
+    <string name="network_select">Выберите сеть</string>
+    <string name="network_mainnet_rpc">Mainnet RPC</string>
+    <string name="network_testnet_rpc">Testnet RPC</string>
+    <string name="network_coin_type">Тип монеты: %1$d</string>
+    <string name="network_selected">Выбрано</string>
+    <string name="network_switch_warning">Смена сети автоматически обновит адреса ваших счетов.</string>
+
+    <!-- Backup settings -->
+    <string name="backup_title">Резервная копия</string>
+    <string name="backup_keep_secret">Храните фразу в секрете</string>
+    <string name="backup_warning">Любой, у кого есть эта фраза, может получить доступ к вашим средствам. Никогда не делитесь ею.</string>
+    <string name="backup_reveal_description">Введите пароль, чтобы увидеть фразу</string>
+    <string name="backup_reveal_description_biometric">Подтвердите личность для просмотра фразы</string>
+    <string name="backup_password_label">Пароль</string>
+    <string name="backup_reveal">Показать фразу</string>
+    <string name="backup_reveal_biometric">Показать по биометрии</string>
+    <string name="backup_your_phrase">Ваша фраза восстановления</string>
+    <string name="backup_your_private_key">Ваш приватный ключ</string>
+    <string name="backup_copied">Скопировано — храните в надежном месте</string>
+    <string name="backup_copied_toast">Скопировано в буфер обмена</string>
+    <string name="backup_label_mnemonic">Мнемоника</string>
+    <string name="backup_label_private_key">Приватный ключ</string>
+
+    <!-- Unlock dialog -->
+    <string name="unlock_title">Разблокировать кошелек</string>
+    <string name="unlock_description">Введите пароль для продолжения.</string>
+    <string name="unlock_biometric">Войти по биометрии</string>
+    <string name="unlock_button">Разблокировать</string>
+
+    <!-- Biometric -->
+    <string name="biometric_enable_title">Включить биометрию</string>
+    <string name="biometric_enable_subtitle">Подтвердите личность для сохранения пароля</string>
+    <string name="biometric_unlock_subtitle">Подтвердите личность для входа</string>
+    <string name="biometric_error_not_setup">Биометрия не настроена</string>
+    <string name="biometric_error_expired">Сессия биометрии истекла</string>
+
+    <!-- About settings -->
+    <string name="about_title">О приложении</string>
+    <string name="about_version">Версия %1$s</string>
+    <string name="about_tagline">Легкий клиент для блокчейна Pactus</string>
+    <string name="about_website">Сайт Velora</string>
+    <string name="about_website_subtitle">velora.pactusscan.com</string>
+    <string name="about_terms">Условия использования</string>
+    <string name="about_terms_subtitle">velora.pactusscan.com/terms-of-service</string>
+    <string name="about_privacy">Политика конфиденциальности</string>
+    <string name="about_privacy_subtitle">velora.pactusscan.com/privacy-policy</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_transactions">Транзакции</string>
+    <string name="notification_channel_transactions_desc">Уведомления о входящих переводах</string>
+    <string name="notification_channel_alerts">Оповещения кошелька</string>
+    <string name="notification_channel_alerts_desc">Оповещения о низком балансе или других событиях</string>
+    <string name="notification_incoming_transfer_title">Входящий перевод</string>
+    <string name="notification_incoming_transfer_text">Получено %1$s от %2$s</string>
+    <string name="notification_outgoing_transfer_title">Перевод отправлен</string>
+    <string name="notification_outgoing_transfer_text">Отправлено %1$s на %2$s</string>
+    <string name="notification_bond_title">Стейк заблокирован (Bond)</string>
+    <string name="notification_bond_text">Успешно заблокировано (Bond) %1$s на валидатора %2$s</string>
+    <string name="notification_low_balance_title">Низкий баланс</string>
+    <string name="notification_high_balance_title">Высокий баланс</string>
+    <string name="notification_balance_alert_text">Баланс кошелька \'%1$s\' составляет %2$s, что %3$s вашего порога в %4$s</string>
+    <string name="notification_condition_below">ниже</string>
+    <string name="notification_condition_above">выше</string>
+
+    <!-- Node Monitor screen -->
+    <string name="node_title">Монитор узла</string>
+    <string name="node_add_content_description">Добавить узел</string>
+    <string name="node_empty_title">Нет отслеживаемых узлов</string>
+    <string name="node_empty_subtitle">Добавьте адрес валидатора для мониторинга</string>
+    <string name="node_add_button">Добавить узел</string>
+    <string name="node_card_title">Мониторинг узла</string>
+    <string name="node_refresh">Обновить</string>
+    <string name="node_remove">Удалить</string>
+    <string name="node_current_height">Текущая высота</string>
+    <string name="node_last_active">Активность: %1$s</string>
+    <string name="node_online">В сети · Синхронизировано</string>
+    <string name="node_offline">Не в сети</string>
+    <string name="node_overview_title">ОБЗОР УЗЛА</string>
+    <string name="node_view_validators">Посмотреть валидаторов</string>
+    <string name="node_active_validators">Активные валидаторы</string>
+    <string name="node_validators_count">%1$d / %2$d валидаторов</string>
+    <string name="node_total_stake">Общий стейк</string>
+    <string name="node_avg_score">Ср. оценка (актив): %1$s%%</string>
+    <string name="node_validators_sheet_title">Адреса валидаторов</string>
+    <string name="node_validators_count_label">%1$d валидаторов</string>
+    <string name="node_validators_copy_hint">Нажмите, чтобы скопировать адрес для Bond транзакции</string>
+    <string name="node_stake_label">Стейк: %1$s PAC</string>
+    <string name="node_copy_address">Копировать адрес</string>
+    <string name="node_address_copied">Скопировано</string>
+    <string name="node_load_error">Ошибка загрузки данных</string>
+    <string name="node_retry">Повторить</string>
+    <string name="node_error_connection_refused">Соединение отклонено. pactus-daemon может быть остановлен.</string>
+    <string name="node_error_dns">Ошибка DNS. Не удалось разрешить адрес.</string>
+    <string name="node_error_timeout">Тайм-аут соединения.</string>
+    <string name="node_error_server_offline">Ошибка сервера. Возможно, узел на обслуживании.</string>
+    <string name="node_error_server_code">Сервер вернул ошибку %1$d</string>
+    <string name="node_error_daemon_down">Не удалось подключиться к демону.</string>
+    <string name="node_error_not_found">Узел не найден. Проверьте адрес.</string>
+    <string name="node_add_confirm">Добавить</string>
+    <string name="node_add_dialog_title">Добавить узел</string>
+    <string name="node_add_dialog_body">Введите адрес валидатора для мониторинга его узла.</string>
+    <string name="node_address_label">Адрес валидатора</string>
+    <string name="node_address_placeholder">pc1p…</string>
+    <string name="node_direction_inbound">Входящее</string>
+    <string name="node_direction_outbound">Исходящее</string>
+    <string name="node_direction_unknown">Неизвестно</string>
+    <string name="node_protocol">Протокол v%1$s</string>
+    <string name="node_peer_id">PeerID: %1$s…%2$s</string>
+
+    <!-- Language selection -->
+    <string name="language_select">Выбор языка</string>
+    <string name="language_english">Английский (English)</string>
+    <string name="language_indonesian">Индонезийский (Bahasa Indonesia)</string>
+    <string name="language_malay">Малайский (Bahasa Malaysia)</string>
+    <string name="language_vietnamese">Вьетнамский (Tiếng Việt)</string>
+    <string name="language_french">Французский (Français)</string>
+    <string name="language_spanish">Испанский (Español)</string>
+    <string name="language_german">Немецкий (Deutsch)</string>
+    <string name="language_portuguese">Португальский (Português)</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_chinese">Китайский (简体中文)</string>
+
+    <!-- Onboarding — Welcome -->
+    <string name="welcome_tagline">Ваши ключи. Ваши монеты.\nПолный контроль, узел не требуется.</string>
+    <string name="welcome_create">Создать новый кошелек</string>
+    <string name="welcome_restore">Восстановить по сид-фразе</string>
+
+    <string name="welcome_import">Импорт приватного ключа</string>
+    <string name="welcome_add_options_subtitle">Выберите способ добавления кошелька в Velora.</string>
+
+    <!-- Onboarding — Create wallet -->
+    <string name="create_wallet_name_title">Имя кошелька</string>
+    <string name="create_wallet_name_subtitle">Вы сможете изменить его позже в настройках.</string>
+    <string name="create_wallet_name_label">Имя кошелька</string>
+    <string name="create_wallet_name_placeholder">например, Мой кошелек Velora</string>
+    <string name="create_wallet_generate">Создать сид-фразу</string>
+
+    <!-- Onboarding — Mnemonic backup -->
+    <string name="mnemonic_title">Сид-фраза</string>
+    <string name="mnemonic_backup_title">Запишите вашу сид-фразу</string>
+    <string name="mnemonic_backup_subtitle">Эти 12 слов — единственный способ восстановить ваш кошелек.\nХраните их в надежном месте и никогда не делитесь ими.</string>
+    <string name="mnemonic_security_warning">Никогда не вводите сид-фразу на сайтах и не пересылайте ее в цифровом виде. Любой, у кого есть эти слова, управляет вашими средствами.</string>
+    <string name="mnemonic_confirm_checkbox">Я записал сид-фразу и храню ее в надежном месте.</string>
+    <string name="mnemonic_verify_button">Проверить сид-фразу</string>
+    <!-- Onboarding — Backup -->
+    <string name="mnemonic_restore_subtitle">Введите секретные слова в правильном порядке.</string>
+    <string name="mnemonic_tap_to_reveal">Нажмите, чтобы увидеть</string>
+    <string name="mnemonic_copied">Сид-фраза скопирована в буфер обмена</string>
+
+    <!-- Onboarding — SplashScreen -->
+    <string name="splash_powered_by">На базе блокчейна Pactus</string>
+    <string name="splash_dedicated_to">Посвящается экосистеме Pactus</string>
+
+    <!-- Onboarding — Mnemonic verify -->
+    <string name="verify_title">Проверка копии</string>
+    <string name="verify_confirm_title">Подтвердите сид-фразу</string>
+    <string name="verify_confirm_subtitle">Введите недостающие слова, чтобы подтвердить правильность записи.</string>
+
+    <!-- Onboarding — Restore wallet -->
+    <string name="restore_title">Восстановление кошелька</string>
+    <string name="restore_enter_seed">Введите вашу сид-фразу</string>
+    <string name="restore_seed_subtitle">Вводите слова по порядку. Только строчные буквы.</string>
+    <string name="restore_wallet_name_label">Имя кошелька</string>
+    <string name="restore_wallet_name_placeholder">например, Восстановленный кошелек</string>
+    <string name="restore_12_words">12 слов</string>
+    <string name="restore_24_words">24 слова</string>
+    <string name="restore_button">Восстановить кошелек</string>
+
+    <!-- Onboarding — Import -->
+    <string name="import_title">Импорт аккаунта</string>
+    <string name="import_description">Введите приватный ключ для импорта счета. Приватный ключ — это секретный код, дающий доступ к вашим средствам.</string>
+    <string name="import_pk_label">Приватный ключ</string>
+    <string name="import_pk_placeholder">Введите секретный ключ…</string>
+    <string name="import_security_warning">Убедитесь, что никто не видит ваш экран при вводе ключа.</string>
+    <string name="import_wallet_name_placeholder">Мой импортированный кошелек</string>
+
+    <!-- Onboarding — Setup security -->
+    <string name="security_setup_title">Защита кошелька</string>
+    <string name="security_setup_header">Установите пароль</string>
+    <string name="security_setup_subtitle">Этот пароль зашифрует кошелек на этом устройстве.\nОн понадобится для подтверждения транзакций.</string>
+    <string name="security_setup_password_label">Пароль</string>
+    <string name="security_setup_confirm_label">Подтвердите пароль</string>
+    <string name="security_setup_passwords_mismatch">Пароли не совпадают</string>
+    <string name="security_setup_biometric_title">Включить биометрию</string>
+    <string name="security_setup_biometric_subtitle">Используйте отпечаток или лицо для входа без пароля</string>
+    <string name="security_setup_create">Создать кошелек</string>
+</resources>

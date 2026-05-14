@@ -192,15 +192,15 @@ fun MainBottomNavigation(
         Surface(
             modifier = Modifier
                 .offset(y = (-16).dp)
-                .size(width = 72.dp, height = 56.dp)
+                .size(62.dp)
                 .align(Alignment.TopCenter)
                 .shadow(
                     elevation = 20.dp,
-                    shape = RoundedCornerShape(22.dp),
+                    shape = CircleShape,
                     ambientColor = Color(0xFF23C4B2).copy(alpha = 0.5f),
                     spotColor = Color(0xFF7B78FF).copy(alpha = 0.8f),
                 ),
-            shape = RoundedCornerShape(22.dp),
+            shape = CircleShape,
             color = Color.Transparent, 
         ) {
             Box(
