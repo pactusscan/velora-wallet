@@ -69,15 +69,21 @@ fun ImportPrivateKeyScreen(
             )
 
             val pkError = state.privateKeyError
+            val pkTextStyle = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Monospace)
             OutlinedTextField(
                 value = state.privateKeyInput,
                 onValueChange = onPrivateKeyChange,
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text(stringResource(R.string.import_pk_label)) },
-                placeholder = { Text(stringResource(R.string.import_pk_placeholder), fontFamily = FontFamily.Monospace) },
+                placeholder = { 
+                    Text(
+                        text = stringResource(R.string.import_pk_placeholder), 
+                        style = pkTextStyle
+                    ) 
+                },
                 isError = pkError != null,
                 supportingText = pkError?.let { { Text(it) } },
-                textStyle = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
+                textStyle = pkTextStyle,
                 keyboardOptions = KeyboardOptions(
                     capitalization = KeyboardCapitalization.None,
                     autoCorrect = false,
