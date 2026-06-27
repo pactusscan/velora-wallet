@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.1.4] - 2026-06-27
+
+### Added
+- **Address Book**: A permanent storage for your favorite wallet addresses. Save frequent recipients with custom names to avoid manual typing and potential errors.
+- **Saved Memos**: Quick-access storage for transaction notes. Save common memos and fill them instantly using the new picker interface.
+- **Upgraded Send Experience**:
+    - Integrated "Address Book" and "QR Scan" shortcuts directly into the recipient field.
+    - Added a "Saved Memos" button to the transaction note field.
+    - All new features are fully localized in all supported languages.
+- **Smart Connectivity Guard**: The app now verifies an active internet connection before checking node status, preventing false "Node Offline" alerts during general network outages.
+- **Local Contact Database**: Implemented a secure, offline database to ensure your contacts and memos stay on your device and load instantly.
+- **Universal Localized Buttons**: Main action buttons (Send, Receive, Stake) are now fully localized across all 10 supported languages.
+
+### Fixed & Improved
+- **Enhanced QR Scannability**: Optimized QR code generation with a higher error correction level (Level H) to guarantee reliable scanning, even with the Velora brand logo overlay.
+- **UI Refinement**: Optimized the "Send" screen layout for better accessibility and a cleaner look.
+- **Theme Stability**: Fixed styling and font inconsistencies in the "Restore Wallet" and "Import Private Key" screens for a seamless experience in System, Light, and Dark modes.
+- **Navigation Fluidity**: Smoother Bottom Sheet animations when selecting contacts or memos.
+- **Consistency**: Standardized font styles and icons across all input fields during the transaction flow.
+
 ## [0.1.3] - 2026-05-14
 
 ### Added

@@ -1,6 +1,8 @@
 package com.andrutstudio.velora.data.sync
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -203,6 +205,11 @@ class TxSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun checkMonitoredNodes() {
+        if (!isNetworkAvailable()) {
+            android.util.Log.d("TxSyncWorker", "Network unavailable, skipping node monitoring")
+            return
+        }
+
         val nodes = monitoredNodeDao.getAll().first()
         for (node in nodes) {
             val isValidator = node.validatorAddress.startsWith("pc1p")
@@ -234,6 +241,13 @@ class TxSyncWorker @AssistedInject constructor(
                 }
             }
         }
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     private fun Int.toTransactionType(): String = when (this) {

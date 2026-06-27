@@ -110,6 +110,16 @@
     <string name="send_to_label">To address</string>
     <string name="send_to_placeholder">pc1z…</string>
     <string name="send_scan_qr">Scan QR</string>
+    <string name="send_address_book">Address Book</string>
+    <string name="address_book_empty">Your address book is empty.</string>
+    <string name="address_book_add_title">Add to Address Book</string>
+    <string name="address_book_label_hint">Label (e.g. My Exchange)</string>
+    <string name="address_book_address_hint">Pactus Address</string>
+    <string name="address_book_save">Save to Contacts</string>
+    <string name="send_saved_memos">Saved Memos</string>
+    <string name="memos_empty">No saved memos yet.</string>
+    <string name="memos_add_title">Save Memo</string>
+    <string name="memos_text_hint">Enter memo text</string>
     <string name="send_scan_prompt">Scan Pactus Address</string>
     <string name="send_amount_label">Amount</string>
     <string name="send_amount_nanopac">Amount in NanoPAC</string>

@@ -12,6 +12,8 @@ import com.andrutstudio.velora.data.local.db.BalanceAlertDao
 import com.andrutstudio.velora.data.local.db.BrowserDao
 import com.andrutstudio.velora.data.local.db.MonitoredNodeDao
 import com.andrutstudio.velora.data.local.db.TransactionDao
+import com.andrutstudio.velora.data.local.db.AddressBookDao
+import com.andrutstudio.velora.data.local.db.SavedMemoDao
 import javax.inject.Singleton
 
 @Module
@@ -22,7 +24,13 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, "pactus_wallet.db")
-            .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_3_4, AppDatabase.MIGRATION_4_5)
+            .addMigrations(
+                AppDatabase.MIGRATION_1_2, 
+                AppDatabase.MIGRATION_3_4, 
+                AppDatabase.MIGRATION_4_5,
+                AppDatabase.MIGRATION_5_6,
+                AppDatabase.MIGRATION_6_7
+            )
             .fallbackToDestructiveMigration()
             .build()
 
@@ -37,4 +45,10 @@ object DatabaseModule {
 
     @Provides
     fun provideMonitoredNodeDao(db: AppDatabase): MonitoredNodeDao = db.monitoredNodeDao()
+
+    @Provides
+    fun provideAddressBookDao(db: AppDatabase): AddressBookDao = db.addressBookDao()
+
+    @Provides
+    fun provideSavedMemoDao(db: AppDatabase): SavedMemoDao = db.savedMemoDao()
 }

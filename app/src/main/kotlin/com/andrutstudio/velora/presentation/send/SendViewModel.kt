@@ -21,6 +21,10 @@ import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.domain.model.Wallet
 import com.andrutstudio.velora.domain.repository.BlockchainRepository
 import com.andrutstudio.velora.domain.repository.WalletRepository
+import com.andrutstudio.velora.domain.repository.AddressBookRepository
+import com.andrutstudio.velora.domain.repository.SavedMemoRepository
+import com.andrutstudio.velora.data.local.db.AddressBookEntity
+import com.andrutstudio.velora.data.local.db.SavedMemoEntity
 import com.andrutstudio.velora.domain.usecase.SendTransactionUseCase
 import com.andrutstudio.velora.presentation.components.formatPacInput
 import javax.inject.Inject
@@ -29,6 +33,8 @@ import javax.inject.Inject
 class SendViewModel @Inject constructor(
     private val walletRepository: WalletRepository,
     private val blockchainRepository: BlockchainRepository,
+    private val addressBookRepository: AddressBookRepository,
+    private val savedMemoRepository: SavedMemoRepository,
     private val sendTransaction: SendTransactionUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -53,6 +59,10 @@ class SendViewModel @Inject constructor(
         val password: String = "",
         val passwordError: String? = null,
         val isBiometricEnabled: Boolean = false,
+        val addressBook: List<AddressBookEntity> = emptyList(),
+        val isAddressBookVisible: Boolean = false,
+        val savedMemos: List<SavedMemoEntity> = emptyList(),
+        val isSavedMemosVisible: Boolean = false,
     ) {
         val parsedAmount: Amount?
             get() = amountText.toDoubleOrNull()?.takeIf { it > 0 }?.let { Amount.fromPac(it) }
@@ -87,6 +97,24 @@ class SendViewModel @Inject constructor(
             _state.update { it.copy(toAddress = prefilledTo, amountText = prefilledAmount) }
         }
         loadWallet()
+        observeAddressBook()
+        observeSavedMemos()
+    }
+
+    private fun observeAddressBook() {
+        viewModelScope.launch {
+            addressBookRepository.getAddresses().collect { list ->
+                _state.update { it.copy(addressBook = list) }
+            }
+        }
+    }
+
+    private fun observeSavedMemos() {
+        viewModelScope.launch {
+            savedMemoRepository.getMemos().collect { list ->
+                _state.update { it.copy(savedMemos = list) }
+            }
+        }
     }
 
     private fun loadWallet() {
@@ -158,6 +186,54 @@ class SendViewModel @Inject constructor(
 
     fun onPasswordChange(value: String) {
         _state.update { it.copy(password = value, passwordError = null) }
+    }
+
+    fun onAddressBookClick() {
+        _state.update { it.copy(isAddressBookVisible = true) }
+    }
+
+    fun onDismissAddressBook() {
+        _state.update { it.copy(isAddressBookVisible = false) }
+    }
+
+    fun onSelectAddress(address: String) {
+        _state.update { it.copy(toAddress = address, isAddressBookVisible = false, toAddressError = null) }
+    }
+
+    fun onAddAddress(label: String, address: String) {
+        viewModelScope.launch {
+            addressBookRepository.addAddress(label, address)
+        }
+    }
+
+    fun onDeleteAddress(entity: AddressBookEntity) {
+        viewModelScope.launch {
+            addressBookRepository.deleteAddress(entity)
+        }
+    }
+
+    fun onSavedMemosClick() {
+        _state.update { it.copy(isSavedMemosVisible = true) }
+    }
+
+    fun onDismissSavedMemos() {
+        _state.update { it.copy(isSavedMemosVisible = false) }
+    }
+
+    fun onSelectMemo(text: String) {
+        _state.update { it.copy(memo = text, isSavedMemosVisible = false) }
+    }
+
+    fun onAddMemo(text: String) {
+        viewModelScope.launch {
+            savedMemoRepository.addMemo(text)
+        }
+    }
+
+    fun onDeleteMemo(entity: SavedMemoEntity) {
+        viewModelScope.launch {
+            savedMemoRepository.deleteMemo(entity)
+        }
     }
 
     private fun scheduleFeeEstimate() {

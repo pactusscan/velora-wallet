@@ -60,7 +60,7 @@ fun generateVersionCode(): Int {
 
 // CRITICAL: Store suffix in a variable to ensure consistency across the build process
 val buildSuffix = getVersionSuffix()
-val fullVersionName = "0.1.3$buildSuffix"
+val fullVersionName = "0.1.4$buildSuffix"
 
 // ---------------------------------------
 

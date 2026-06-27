@@ -12,8 +12,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         BookmarkEntity::class,
         BalanceAlertEntity::class,
         MonitoredNodeEntity::class,
+        AddressBookEntity::class,
+        SavedMemoEntity::class,
     ],
-    version = 5,
+    version = 7,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -21,8 +23,33 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun browserDao(): BrowserDao
     abstract fun balanceAlertDao(): BalanceAlertDao
     abstract fun monitoredNodeDao(): MonitoredNodeDao
+    abstract fun addressBookDao(): AddressBookDao
+    abstract fun savedMemoDao(): SavedMemoDao
 
     companion object {
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """CREATE TABLE IF NOT EXISTS saved_memos (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        text TEXT NOT NULL,
+                        addedAt INTEGER NOT NULL
+                    )"""
+                )
+            }
+        }
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """CREATE TABLE IF NOT EXISTS address_book (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        label TEXT NOT NULL,
+                        address TEXT NOT NULL,
+                        addedAt INTEGER NOT NULL
+                    )"""
+                )
+            }
+        }
         val MIGRATION_4_5 = object : Migration(4, 5) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(

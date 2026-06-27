@@ -13,6 +13,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.automirrored.rounded.Notes
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -39,6 +41,8 @@ import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.presentation.components.FromAccountSection
 import com.andrutstudio.velora.presentation.components.formatPac
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
+import com.andrutstudio.velora.presentation.send.components.AddressBookSheet
+import com.andrutstudio.velora.presentation.send.components.SavedMemoSheet
 import dagger.hilt.android.EntryPointAccessors
 import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.launch
@@ -112,13 +116,35 @@ fun SendScreen(
         onFeeChange = viewModel::onFeeChange,
         onResetFee = viewModel::onResetFee,
         onMemoChange = viewModel::onMemoChange,
+        onSavedMemosClick = viewModel::onSavedMemosClick,
         onPreview = viewModel::onPreview,
         onScanClick = { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) },
+        onAddressBookClick = viewModel::onAddressBookClick,
         onDismissConfirm = viewModel::onDismissConfirm,
         onConfirmSend = viewModel::onConfirmSend,
         onPasswordChange = viewModel::onPasswordChange,
         onSelectAccount = viewModel::onSelectAccount
     )
+
+    if (state.isAddressBookVisible) {
+        AddressBookSheet(
+            addresses = state.addressBook,
+            onSelect = viewModel::onSelectAddress,
+            onAdd = viewModel::onAddAddress,
+            onDelete = viewModel::onDeleteAddress,
+            onDismiss = viewModel::onDismissAddressBook
+        )
+    }
+
+    if (state.isSavedMemosVisible) {
+        SavedMemoSheet(
+            memos = state.savedMemos,
+            onSelect = viewModel::onSelectMemo,
+            onAdd = viewModel::onAddMemo,
+            onDelete = viewModel::onDeleteMemo,
+            onDismiss = viewModel::onDismissSavedMemos
+        )
+    }
 
     if (successTxId != null) {
         TransactionSuccessDialog(
@@ -245,8 +271,10 @@ private fun SendScreenContent(
     onFeeChange: (String) -> Unit,
     onResetFee: () -> Unit,
     onMemoChange: (String) -> Unit,
+    onSavedMemosClick: () -> Unit,
     onPreview: () -> Unit,
     onScanClick: () -> Unit,
+    onAddressBookClick: () -> Unit,
     onDismissConfirm: () -> Unit,
     onConfirmSend: () -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -267,7 +295,7 @@ private fun SendScreenContent(
                 title = { Text(stringResource(R.string.send_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Rounded.ArrowBack, contentDescription = stringResource(R.string.action_back))
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -320,8 +348,13 @@ private fun SendScreenContent(
                     label = { Text(stringResource(R.string.send_to_label)) },
                     placeholder = { Text(stringResource(R.string.send_to_placeholder)) },
                     trailingIcon = {
-                        IconButton(onClick = onScanClick) {
-                            Icon(Icons.Rounded.QrCodeScanner, contentDescription = stringResource(R.string.send_scan_qr))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(onClick = onAddressBookClick) {
+                                Icon(Icons.Rounded.Contacts, contentDescription = stringResource(R.string.send_address_book))
+                            }
+                            IconButton(onClick = onScanClick) {
+                                Icon(Icons.Rounded.QrCodeScanner, contentDescription = stringResource(R.string.send_scan_qr))
+                            }
                         }
                     },
                     isError = state.toAddressError != null,
@@ -384,6 +417,11 @@ private fun SendScreenContent(
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text(stringResource(R.string.send_memo_label)) },
                     placeholder = { Text(stringResource(R.string.send_memo_placeholder)) },
+                    trailingIcon = {
+                        IconButton(onClick = onSavedMemosClick) {
+                            Icon(Icons.AutoMirrored.Rounded.Notes, contentDescription = stringResource(R.string.send_saved_memos))
+                        }
+                    },
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Sentences,
                         imeAction = ImeAction.Done,
@@ -438,8 +476,10 @@ private fun SendScreenPreview() {
             onFeeChange = {},
             onResetFee = {},
             onMemoChange = {},
+            onSavedMemosClick = {},
             onPreview = {},
             onScanClick = {},
+            onAddressBookClick = {},
             onDismissConfirm = {},
             onConfirmSend = {},
             onPasswordChange = {},

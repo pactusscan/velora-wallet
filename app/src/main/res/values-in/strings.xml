@@ -73,6 +73,16 @@
     <string name="send_to_label">Alamat tujuan</string>
     <string name="send_to_placeholder">pc1z…</string>
     <string name="send_scan_qr">Pindai QR</string>
+    <string name="send_address_book">Buku Alamat</string>
+    <string name="address_book_empty">Buku alamat Anda kosong.</string>
+    <string name="address_book_add_title">Tambah ke Buku Alamat</string>
+    <string name="address_book_label_hint">Label (misal: Bursa Saya)</string>
+    <string name="address_book_address_hint">Alamat Pactus</string>
+    <string name="address_book_save">Simpan ke Kontak</string>
+    <string name="send_saved_memos">Memo Tersimpan</string>
+    <string name="memos_empty">Belum ada memo tersimpan.</string>
+    <string name="memos_add_title">Simpan Memo</string>
+    <string name="memos_text_hint">Masukkan teks memo</string>
     <string name="send_amount_label">Jumlah</string>
     <string name="send_amount_nanopac">Jumlah dalam NanoPAC</string>
     <string name="send_amount_pac">Jumlah dalam PAC</string>
