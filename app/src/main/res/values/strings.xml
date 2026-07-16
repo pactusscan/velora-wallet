@@ -212,6 +212,11 @@
     <string name="settings_about">About Velora Wallet</string>
     <string name="settings_about_subtitle">Version, links, and legal</string>
     <string name="settings_tap_to_rename">Tap to rename</string>
+    <string name="settings_connected_sites">Connected sites</string>
+    <string name="settings_connected_sites_subtitle">dApps allowed to see your wallet address</string>
+    <string name="sites_empty">No sites connected.</string>
+    <string name="sites_connected_on">Connected %1$s</string>
+    <string name="action_revoke">Revoke</string>
 
     <!-- Security settings -->
     <string name="security_title">Security</string>

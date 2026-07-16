@@ -40,5 +40,6 @@ sealed class Screen(val route: String) {
     data object SecuritySettings : Screen("settings/security")
     data object NetworkSettings : Screen("settings/network")
     data object BackupSettings : Screen("settings/backup")
+    data object ConnectedSites : Screen("settings/sites")
     data object AboutSettings : Screen("settings/about")
 }

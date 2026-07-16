@@ -52,6 +52,7 @@ fun SettingsScreen(
     onSecuritySettings: () -> Unit,
     onNetworkSettings: () -> Unit,
     onBackupSettings: () -> Unit,
+    onConnectedSites: () -> Unit,
     onAboutSettings: () -> Unit,
     onWalletReset: () -> Unit = {},
 ) {
@@ -233,6 +234,12 @@ fun SettingsScreen(
                         onCheckedChange = viewModel::onToggleBiometric,
                     )
                 }
+                SettingsItem(
+                    icon = Icons.Rounded.Public,
+                    title = stringResource(R.string.settings_connected_sites),
+                    subtitle = stringResource(R.string.settings_connected_sites_subtitle),
+                    onClick = onConnectedSites,
+                )
 
                 SettingsItem(
                     icon = Icons.Rounded.Translate,

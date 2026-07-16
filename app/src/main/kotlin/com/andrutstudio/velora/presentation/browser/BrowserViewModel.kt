@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import com.andrutstudio.velora.data.local.db.BookmarkEntity
 import com.andrutstudio.velora.data.local.db.BrowserDao
 import com.andrutstudio.velora.data.local.db.BrowserHistoryEntity
+import com.andrutstudio.velora.data.local.db.ConnectedSiteEntity
 import com.andrutstudio.velora.domain.model.Account
 import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.domain.model.Network
@@ -45,8 +46,16 @@ class BrowserViewModel @Inject constructor(
         val history: List<BrowserHistoryEntity> = emptyList(),
         val bookmarks: List<BookmarkEntity> = emptyList(),
         val isDrawerOpen: Boolean = false,
+        val pendingConnectRequest: PendingConnectRequest? = null,
         val pendingSignRequest: PendingSignRequest? = null,
+        val pendingSignMessageRequest: PendingSignMessageRequest? = null,
         val isSigning: Boolean = false,
+    )
+
+    data class PendingConnectRequest(
+        val requestId: String,
+        val host: String,
+        val address: String,
     )
 
     data class PendingSignRequest(
@@ -58,12 +67,19 @@ class BrowserViewModel @Inject constructor(
         val memo: String,
     )
 
+    data class PendingSignMessageRequest(
+        val requestId: String,
+        val fromAddress: String,
+        val message: String,
+    )
+
     sealed interface Effect {
         data class LoadUrl(val url: String) : Effect
         data object GoBack : Effect
         data object GoForward : Effect
         data object Reload : Effect
         data class OpenExternal(val url: String) : Effect
+        data class ResolveConnect(val requestId: String) : Effect
         data class ResolveSign(val requestId: String, val txId: String) : Effect
         data class RejectSign(val requestId: String, val error: String) : Effect
         data class ShowSnackbar(val message: String) : Effect
@@ -206,6 +222,43 @@ class BrowserViewModel @Inject constructor(
         return _state.value.network.name.lowercase()
     }
 
+    // dApp asked to connect (window.pactus.connect()). Hosts the user already
+    // approved (Settings > Connected sites) are auto-approved; anyone else gets
+    // the approval sheet. Approving hands the accounts back to
+    // the page and remembers the host.
+    fun onConnectRequest(requestId: String) {
+        val address = _state.value.accounts.firstOrNull()?.address ?: run {
+            viewModelScope.launch { _effect.send(Effect.RejectSign(requestId, "No account available")) }
+            return
+        }
+        val host = runCatching { java.net.URI(_state.value.url).host }.getOrNull()
+            ?: _state.value.url
+        viewModelScope.launch {
+            if (host.isNotBlank() && browserDao.isSiteConnected(host)) {
+                _effect.send(Effect.ResolveConnect(requestId))
+            } else {
+                _state.update {
+                    it.copy(pendingConnectRequest = PendingConnectRequest(requestId, host.orEmpty(), address))
+                }
+            }
+        }
+    }
+
+    fun onConfirmConnect() {
+        val req = _state.value.pendingConnectRequest ?: return
+        _state.update { it.copy(pendingConnectRequest = null) }
+        viewModelScope.launch {
+            if (req.host.isNotBlank()) browserDao.insertConnectedSite(ConnectedSiteEntity(host = req.host))
+            _effect.send(Effect.ResolveConnect(req.requestId))
+        }
+    }
+
+    fun onCancelConnect() {
+        val req = _state.value.pendingConnectRequest ?: return
+        _state.update { it.copy(pendingConnectRequest = null) }
+        viewModelScope.launch { _effect.send(Effect.RejectSign(req.requestId, "User rejected")) }
+    }
+
     fun onSignRequest(requestId: String, to: String, amountNanoPac: String, feeNanoPac: String, memo: String) {
         val fromAddress = _state.value.accounts.firstOrNull()?.address ?: run {
             viewModelScope.launch { _effect.send(Effect.RejectSign(requestId, "No account available")) }
@@ -222,6 +275,22 @@ class BrowserViewModel @Inject constructor(
                     amountNanoPac = amount,
                     feeNanoPac = fee,
                     memo = memo,
+                )
+            )
+        }
+    }
+
+    fun onSignMessageRequest(requestId: String, message: String) {
+        val fromAddress = _state.value.accounts.firstOrNull()?.address ?: run {
+            viewModelScope.launch { _effect.send(Effect.RejectSign(requestId, "No account available")) }
+            return
+        }
+        _state.update {
+            it.copy(
+                pendingSignMessageRequest = PendingSignMessageRequest(
+                    requestId = requestId,
+                    fromAddress = fromAddress,
+                    message = message,
                 )
             )
         }
@@ -250,10 +319,31 @@ class BrowserViewModel @Inject constructor(
         }
     }
 
+    fun onConfirmSignMessage() {
+        val req = _state.value.pendingSignMessageRequest ?: return
+        _state.update { it.copy(isSigning = true) }
+        viewModelScope.launch {
+            runCatching {
+                walletRepository.signMessage(req.message, req.fromAddress)
+            }.onSuccess { signature ->
+                _state.update { it.copy(isSigning = false, pendingSignMessageRequest = null) }
+                _effect.send(Effect.ResolveSign(req.requestId, signature))
+            }.onFailure { e ->
+                _state.update { it.copy(isSigning = false, pendingSignMessageRequest = null) }
+                _effect.send(Effect.RejectSign(req.requestId, e.message ?: "Signing failed"))
+                _effect.send(Effect.ShowSnackbar(e.message ?: "Signing failed"))
+            }
+        }
+    }
+
     fun onCancelSign() {
-        val req = _state.value.pendingSignRequest ?: return
-        _state.update { it.copy(pendingSignRequest = null) }
-        viewModelScope.launch { _effect.send(Effect.RejectSign(req.requestId, "User rejected")) }
+        val req = _state.value.pendingSignRequest
+        val msgReq = _state.value.pendingSignMessageRequest
+        
+        _state.update { it.copy(pendingSignRequest = null, pendingSignMessageRequest = null) }
+        
+        val id = req?.requestId ?: msgReq?.requestId ?: return
+        viewModelScope.launch { _effect.send(Effect.RejectSign(id, "User rejected")) }
     }
 
     private fun sanitizeUrl(input: String): String {

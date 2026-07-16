@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.andrutstudio.velora.R
 import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.domain.model.Network
@@ -103,15 +104,21 @@ fun BalanceCard(
                 if (isLoading) {
                     CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
                 } else {
-                    Row(verticalAlignment = Alignment.Bottom) {
-                        AnimatedBalance(totalBalance)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom
+                    ) {
+                        Box(modifier = Modifier.weight(1f, fill = false)) {
+                            AnimatedBalance(totalBalance)
+                        }
                         Spacer(Modifier.width(8.dp))
                         Text(
                             stringResource(R.string.send_unit_pac),
                             style = MaterialTheme.typography.titleMedium,
                             color = Color.White.copy(alpha = 0.9f),
                             modifier = Modifier.padding(bottom = 4.dp),
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1
                         )
                     }
 
@@ -138,7 +145,9 @@ private fun AnimatedBalance(balance: Amount) {
         style = MaterialTheme.typography.headlineLarge,
         color = Color.White,
         fontWeight = FontWeight.Bold,
-        fontSize = 32.sp
+        fontSize = 32.sp,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
     )
 }
 

@@ -33,4 +33,18 @@ interface BrowserDao {
 
     @Query("SELECT COUNT(*) FROM bookmarks")
     suspend fun bookmarkCount(): Int
+
+    // Connected sites (dApp connect() approvals)
+
+    @Query("SELECT * FROM connected_sites ORDER BY connectedAt DESC")
+    fun observeConnectedSites(): Flow<List<ConnectedSiteEntity>>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM connected_sites WHERE host = :host)")
+    suspend fun isSiteConnected(host: String): Boolean
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertConnectedSite(site: ConnectedSiteEntity)
+
+    @Query("DELETE FROM connected_sites WHERE host = :host")
+    suspend fun deleteConnectedSite(host: String)
 }

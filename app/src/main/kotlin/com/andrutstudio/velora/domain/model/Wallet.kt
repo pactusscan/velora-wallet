@@ -30,18 +30,21 @@ enum class AccountType {
 enum class Network(
     val coinType: Int,
     val rpcUrl: String,
+    val explorerUrl: String,
     val displayName: String,
     val hrp: String,
 ) {
     MAINNET(
         coinType = 21888,
         rpcUrl = "https://bootstrap1.pactus.org/jsonrpc",
+        explorerUrl = "https://pactusscan.com",
         displayName = "Mainnet",
         hrp = "pc",
     ),
     TESTNET(
         coinType = 21777,
         rpcUrl = "https://testnet1.pactus.org/jsonrpc",
+        explorerUrl = "https://phoenix.pactusscan.com",
         displayName = "Testnet",
         hrp = "tpc",
     ),

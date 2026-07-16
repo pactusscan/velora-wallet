@@ -71,4 +71,8 @@ interface WalletRepository {
     suspend fun revealMnemonic(password: String): String
     fun setBiometricEnabled(enabled: Boolean)
     fun isBiometricEnabled(): Boolean
+    /** Update and persist account balances locally. */
+    suspend fun updateBalances(balances: Map<String, com.andrutstudio.velora.domain.model.Amount>)
+    /** Signs an arbitrary message (text) with the private key of the given address. */
+    suspend fun signMessage(message: String, fromAddress: String): String
 }

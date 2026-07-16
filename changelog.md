@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.1.5] - 2026-07-16
+
+### Added
+- **dApp Connection Approval**: dApps can now request a connection via `window.pactus.connect()`. A native approval sheet shows the site and your account before anything is shared, and approved sites connect automatically on the next visit.
+- **Connected Sites Management**: New "Connected sites" screen in Settings (matching the Velora browser extension) to review every dApp you have approved and revoke access with one tap.
+- **Instant Provider Detection**: The `window.pactus` provider is now injected before any page script runs, so dApps like play.pactusscan detect Velora immediately instead of missing it during startup.
+- **Wallet Discovery Protocol**: The browser now answers the multi-wallet announce protocol (`pactus:requestProvider` / `pactus:announceProvider`), presenting itself as "Velora Wallet" with the official logo in dApp wallet pickers.
+- **Web3 Authentication (Sign-In with Pactus)**: Added support for signing arbitrary messages, enabling users to log in to decentralized applications (dApps) securely without spending coins.
+- **Enhanced JavaScript Bridge**: Expanded the `window.pactus` API with `connect`, `signMessage`, `signTransaction`, and `getAccounts` to allow deep integration for web-based Pactus tools.
+- **Global Deep Linking**: Implemented a comprehensive deep link system (`pactus://`) to trigger wallet actions like sending coins, staking, or opening the browser from external links. Websites opened in Chrome can hand themselves over to Velora's dApp browser through `pactus://browser`.
+- **Offline Balance Caching**: The app now stores and displays your last known balance even when offline, providing immediate feedback instead of showing zero.
+
+### Fixed & Improved
+- **Multi-Network Compatibility**: Fixed an issue where the coin type was hardcoded to Mainnet (21888) in `PactusKeyManager`; key derivation now correctly uses dynamic coin types, enabling full support for Testnet accounts.
+- **Dynamic Explorer Integration**: Added automatic explorer switching; the app now correctly points to `phoenix.pactusscan.com` when on Testnet and `pactusscan.com` on Mainnet for accurate transaction history.
+- **Intelligent Layout Scaling**: Fixed a UI issue where extremely long PAC balances would cause text overlapping on the main dashboard card.
+- **Background Robustness**: Improved the reliability of balance updates to ensure they happen quietly in the background without UI flickering.
+- **Developer Guide**: Included a technical integration guide for dApp developers to easily connect their web applications to Velora Wallet.
+- **Safe Database Upgrade**: Local database migrated to version 8 for connected-site storage with a proper migration path, keeping bookmarks, history, and contacts intact when updating from older versions.
+
 ## [0.1.4] - 2026-06-27
 
 ### Added

@@ -395,6 +395,46 @@ class WalletRepositoryImpl @Inject constructor(
 
     fun getUnlockedMnemonic(): String = requireUnlocked()
 
+    override suspend fun updateBalances(balances: Map<String, com.andrutstudio.velora.domain.model.Amount>) = withContext(Dispatchers.IO) {
+        val vault = vaultStorage.loadVault() ?: return@withContext
+        val updatedAccounts = vault.accounts.map { acc ->
+            val newBalance = balances[acc.address]
+            if (newBalance != null) acc.copy(balanceNanoPac = newBalance.nanoPac) else acc
+        }
+        if (updatedAccounts != vault.accounts) {
+            vaultStorage.saveVault(vault.copy(accounts = updatedAccounts))
+            publishState()
+        }
+    }
+
+    override suspend fun signMessage(message: String, fromAddress: String): String = withContext(Dispatchers.IO) {
+        val secret = requireUnlocked()
+        val vault = vaultStorage.loadVault() ?: error("No vault found")
+        val vaultAccount = vault.accounts.find { it.address == fromAddress }
+            ?: error("Account not found: $fromAddress")
+        val network = Network.valueOf(vault.network)
+        val type = AccountType.valueOf(vaultAccount.type)
+
+        val privateKeyBytes = if (vault.isPrivateKeyImport) {
+            secret.hexDecode()
+        } else {
+            keyManager.derivePrivateKeyBytes(secret, network, type, vaultAccount.derivationIndex)
+        }
+
+        val messageBytes = message.toByteArray(Charsets.UTF_8)
+        val signature = keyManager.sign(messageBytes, privateKeyBytes, type)
+        val publicKey = if (vault.isPrivateKeyImport) {
+            keyManager.publicKeyBytesFromPrivateKey(privateKeyBytes)
+        } else {
+            keyManager.deriveAccount(secret, network, type, vaultAccount.derivationIndex).publicKeyBytes
+        }
+        
+        privateKeyBytes.fill(0)
+        
+        // Return format: signature_hex + public_key_hex (common in simple signMessage implementations)
+        signature.hexEncode() + publicKey.hexEncode()
+    }
+
     private fun requireUnlocked(): String =
         unlockedMnemonic ?: error("Wallet is locked. Call unlockWallet() first.")
 
@@ -430,6 +470,7 @@ class WalletRepositoryImpl @Inject constructor(
                     label = it.label,
                     type = type,
                     derivationIndex = it.derivationIndex,
+                    balanceNanoPac = it.balanceNanoPac,
                 )
             },
             createdAt = createdAt,

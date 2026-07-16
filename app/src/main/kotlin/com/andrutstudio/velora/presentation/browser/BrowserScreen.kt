@@ -62,6 +62,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.webkit.WebViewCompat
+import androidx.webkit.WebViewFeature
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -150,15 +152,26 @@ fun BrowserScreen(
         PactusJsBridge(
             onGetAccounts = { viewModel.getAccountsJson() },
             onGetNetwork = { viewModel.getNetworkName() },
+            onConnectRequest = { id -> viewModel.onConnectRequest(id) },
             onSignRequest = { id, to, amount, fee, memo ->
-                viewModel.onSignRequest(id, to, amount, fee, memo)
-            },
-        )
-    }
+            viewModel.onSignRequest(id, to, amount, fee, memo)
+        },
+        onSignMessageRequest = { id, message ->
+            viewModel.onSignMessageRequest(id, message)
+        },
+    )
+}
 
     // Handle WebView lifecycle and JS interfaces
     DisposableEffect(webView) {
         webView.addJavascriptInterface(bridge, "PactusAndroid")
+
+        // Inject window.pactus BEFORE any page script runs, so
+        // dApps that probe for the provider during startup detect Velora. Falls
+        // back to onPageStarted/onPageFinished injection on older WebViews.
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+            WebViewCompat.addDocumentStartJavaScript(webView, PactusJsBridge.JS_BRIDGE, setOf("*"))
+        }
 
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
@@ -169,6 +182,8 @@ fun BrowserScreen(
         webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 url?.let { viewModel.onPageStarted(it) }
+                // Early-injection fallback; the script bails if window.pactus exists.
+                view?.evaluateJavascript(PactusJsBridge.JS_BRIDGE, null)
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
@@ -224,6 +239,9 @@ fun BrowserScreen(
                 is BrowserViewModel.Effect.OpenExternal -> {
                     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(effect.url)))
                 }
+                is BrowserViewModel.Effect.ResolveConnect -> {
+                    webView.evaluateJavascript("window.pactus._resolveConnect('${effect.requestId}')", null)
+                }
                 is BrowserViewModel.Effect.ResolveSign -> {
                     webView.evaluateJavascript("window.pactus._resolve('${effect.requestId}','${effect.txId}')", null)
                 }
@@ -238,12 +256,30 @@ fun BrowserScreen(
         }
     }
 
+    // Display dApp connect approval sheet
+    if (state.pendingConnectRequest != null) {
+        ConnectRequestSheet(
+            request = state.pendingConnectRequest!!,
+            onConfirm = viewModel::onConfirmConnect,
+            onCancel = viewModel::onCancelConnect,
+        )
+    }
+
     // Display transaction signing request sheet
     if (state.pendingSignRequest != null) {
         SignRequestSheet(
             request = state.pendingSignRequest!!,
             isSigning = state.isSigning,
             onConfirm = viewModel::onConfirmSign,
+            onCancel = viewModel::onCancelSign,
+        )
+    }
+
+    if (state.pendingSignMessageRequest != null) {
+        SignMessageRequestSheet(
+            request = state.pendingSignMessageRequest!!,
+            isSigning = state.isSigning,
+            onConfirm = viewModel::onConfirmSignMessage,
             onCancel = viewModel::onCancelSign,
         )
     }
@@ -596,6 +632,55 @@ private fun BrowserTopBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+private fun ConnectRequestSheet(
+    request: BrowserViewModel.PendingConnectRequest,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit,
+) {
+    ModalBottomSheet(
+        onDismissRequest = onCancel,
+        sheetState = rememberModalBottomSheetState(),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text("Connect to this site?", style = MaterialTheme.typography.titleLarge)
+
+            Text(
+                "This site is asking to see your wallet address. It cannot move funds without your approval on each transaction.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
+            SignRow("Site", request.host)
+            SignRow("Account", request.address)
+
+            HorizontalDivider()
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                OutlinedButton(
+                    onClick = onCancel,
+                    modifier = Modifier.weight(1f),
+                ) { Text(stringResource(R.string.action_reject)) }
+
+                Button(
+                    onClick = onConfirm,
+                    modifier = Modifier.weight(1f),
+                ) { Text("Connect") }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 private fun SignRequestSheet(
     request: BrowserViewModel.PendingSignRequest,
     isSigning: Boolean,
@@ -621,6 +706,75 @@ private fun SignRequestSheet(
             SignRow(stringResource(R.string.browser_sign_fee), "%.6f PAC".format(Amount.fromNanoPac(request.feeNanoPac).pac))
             if (request.memo.isNotBlank()) {
                 SignRow(stringResource(R.string.browser_sign_memo), request.memo)
+            }
+
+            HorizontalDivider()
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                OutlinedButton(
+                    onClick = onCancel,
+                    modifier = Modifier.weight(1f),
+                    enabled = !isSigning,
+                ) { Text(stringResource(R.string.action_reject)) }
+
+                Button(
+                    onClick = onConfirm,
+                    modifier = Modifier.weight(1f),
+                    enabled = !isSigning,
+                ) {
+                    if (isSigning) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp),
+                            strokeWidth = 2.dp,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                        )
+                    } else {
+                        Text(stringResource(R.string.action_confirm))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SignMessageRequestSheet(
+    request: BrowserViewModel.PendingSignMessageRequest,
+    isSigning: Boolean,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit,
+) {
+    ModalBottomSheet(
+        onDismissRequest = onCancel,
+        sheetState = rememberModalBottomSheetState(),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(stringResource(R.string.browser_sign_title), style = MaterialTheme.typography.titleLarge)
+
+            SignRow("From", request.fromAddress)
+            
+            Spacer(Modifier.height(8.dp))
+            Text("Message to Sign:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = request.message,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(12.dp)
+                )
             }
 
             HorizontalDivider()
