@@ -14,11 +14,14 @@ import com.andrutstudio.velora.data.local.model.MultiVault
 import com.andrutstudio.velora.data.local.model.VaultAccount
 import com.andrutstudio.velora.data.local.model.WalletVault
 import com.andrutstudio.velora.data.rpc.NetworkProvider
+import com.andrutstudio.velora.data.rpc.RpcCaller
+import com.andrutstudio.velora.data.rpc.RpcException
 import com.andrutstudio.velora.domain.model.Account
 import com.andrutstudio.velora.domain.model.AccountType
 import com.andrutstudio.velora.domain.model.Network
 import com.andrutstudio.velora.domain.model.Wallet
 import com.andrutstudio.velora.domain.repository.WalletRepository
+import com.andrutstudio.velora.domain.usecase.AddressRecovery
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,6 +32,7 @@ class WalletRepositoryImpl @Inject constructor(
     private val keyManager: PactusKeyManager,
     private val networkProvider: NetworkProvider,
     private val biometricHelper: BiometricHelper,
+    private val rpcCaller: RpcCaller,
 ) : WalletRepository {
 
     // Active wallet — null when locked or no wallet exists.
@@ -99,7 +103,64 @@ class WalletRepositoryImpl @Inject constructor(
         name: String,
         mnemonic: String,
         password: String,
-    ): Wallet = createWallet(name, mnemonic, password)
+    ): Wallet = withContext(Dispatchers.IO) {
+        val wallet = createWallet(name, mnemonic, password)
+        // PIP-41 discovery is best-effort: restoring while offline still
+        // succeeds with the first account, and the scan can be re-run later
+        // from Settings.
+        runCatching { recoverAccounts() }
+            .onFailure { Log.w("Pactus", "PIP-41 recovery skipped: ${it.message}") }
+        vaultStorage.loadVault()?.toDomain() ?: wallet
+    }
+
+    override suspend fun recoverAccounts(): Int = withContext(Dispatchers.IO) {
+        val vault = vaultStorage.loadVault() ?: error("No vault found")
+        if (vault.isPrivateKeyImport || vault.isWatchOnly) return@withContext 0
+        val mnemonic = requireUnlocked()
+        val network = Network.valueOf(vault.network)
+        val type = AccountType.ED25519
+
+        val knownAddresses = vault.accounts
+            .filter { it.type == type.name }
+            .associate { it.derivationIndex to it.address }
+        val derivedAddresses = mutableMapOf<Int, String>()
+
+        val recoveredCount = AddressRecovery.discoverRecoveredCount { index ->
+            val address = knownAddresses[index] ?: derivedAddresses.getOrPut(index) {
+                keyManager.deriveAccount(mnemonic, network, type, index).address
+            }
+            isAccountIndexed(address)
+        }
+
+        val existingCount = vault.accounts.count { it.type == type.name }
+        if (recoveredCount <= existingCount) return@withContext 0
+
+        val recoveredAccounts = (existingCount until recoveredCount).map { index ->
+            val derived = keyManager.deriveAccount(mnemonic, network, type, index)
+            VaultAccount(
+                address = derived.address,
+                label = "Account ${index + 1}",
+                type = type.name,
+                derivationPath = derived.derivationPath,
+                derivationIndex = index,
+            )
+        }
+        vaultStorage.saveVault(vault.copy(accounts = vault.accounts + recoveredAccounts))
+        publishState()
+        recoveredAccounts.size
+    }
+
+    // The node answers get_account with a JSON-RPC error for addresses never
+    // seen on chain — that is the PIP-41 "inactive" signal. Transport failures
+    // surface as other exception types and abort the scan instead of being
+    // mistaken for inactive addresses.
+    private suspend fun isAccountIndexed(address: String): Boolean =
+        try {
+            rpcCaller.getAccount(address)
+            true
+        } catch (e: RpcException) {
+            false
+        }
 
     override suspend fun importPrivateKey(
         name: String,

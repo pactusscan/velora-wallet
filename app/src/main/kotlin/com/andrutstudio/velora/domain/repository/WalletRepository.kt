@@ -75,4 +75,13 @@ interface WalletRepository {
     suspend fun updateBalances(balances: Map<String, com.andrutstudio.velora.domain.model.Amount>)
     /** Signs an arbitrary message (text) with the private key of the given address. */
     suspend fun signMessage(message: String, fromAddress: String): String
+
+    /**
+     * PIP-41 address recovery: derives addresses in order and checks each
+     * against the chain, stopping after 8 consecutive unused addresses. Adds
+     * recovered accounts missing from the vault and returns how many were
+     * added. Wallet must be unlocked; no-op for imported-key and watch-only
+     * wallets.
+     */
+    suspend fun recoverAccounts(): Int
 }

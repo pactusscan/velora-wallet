@@ -294,6 +294,16 @@ fun SettingsScreen(
                     subtitle = stringResource(R.string.settings_backup_phrase_subtitle),
                     onClick = onBackupSettings,
                 )
+                SettingsItem(
+                    icon = Icons.Rounded.Restore,
+                    title = stringResource(R.string.settings_recover_addresses),
+                    subtitle = if (state.isRecoveringAccounts) {
+                        stringResource(R.string.settings_recover_addresses_scanning)
+                    } else {
+                        stringResource(R.string.settings_recover_addresses_subtitle)
+                    },
+                    onClick = viewModel::onRecoverAccounts,
+                )
 
                 Spacer(Modifier.height(4.dp))
 
@@ -732,6 +742,12 @@ private fun SettingsScreenPreview() {
                         icon = Icons.Rounded.Shield,
                         title = "Backup Phrase",
                         subtitle = "View your 12-word recovery phrase",
+                        onClick = {},
+                    )
+                    SettingsItem(
+                        icon = Icons.Rounded.Restore,
+                        title = "Recover addresses",
+                        subtitle = "Scan the chain for previously used accounts (PIP-41)",
                         onClick = {},
                     )
 

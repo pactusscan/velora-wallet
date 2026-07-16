@@ -11,6 +11,7 @@
 - **Enhanced JavaScript Bridge**: Expanded the `window.pactus` API with `connect`, `signMessage`, `signTransaction`, and `getAccounts` to allow deep integration for web-based Pactus tools.
 - **Global Deep Linking**: Implemented a comprehensive deep link system (`pactus://`) to trigger wallet actions like sending coins, staking, or opening the browser from external links. Websites opened in Chrome can hand themselves over to Velora's dApp browser through `pactus://browser`.
 - **Offline Balance Caching**: The app now stores and displays your last known balance even when offline, providing immediate feedback instead of showing zero.
+- **PIP-41 Address Recovery**: Restoring a wallet from a mnemonic now automatically rediscovers previously used accounts by scanning the chain (gap limit 8, per [PIP-41](https://pips.pactus.org/PIPs/pip-41)). A manual "Recover addresses" scan is also available in Settings for wallets restored while offline.
 
 ### Fixed & Improved
 - **Multi-Network Compatibility**: Fixed an issue where the coin type was hardcoded to Mainnet (21888) in `PactusKeyManager`; key derivation now correctly uses dynamic coin types, enabling full support for Testnet accounts.
