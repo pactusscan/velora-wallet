@@ -23,6 +23,7 @@ import com.andrutstudio.velora.domain.repository.BlockchainRepository
 import com.andrutstudio.velora.domain.repository.WalletRepository
 import com.andrutstudio.velora.domain.repository.AddressBookRepository
 import com.andrutstudio.velora.domain.repository.SavedMemoRepository
+import com.andrutstudio.velora.data.crypto.PactusAddress
 import com.andrutstudio.velora.data.local.db.AddressBookEntity
 import com.andrutstudio.velora.data.local.db.SavedMemoEntity
 import com.andrutstudio.velora.domain.usecase.SendTransactionUseCase
@@ -376,19 +377,9 @@ class SendViewModel @Inject constructor(
         return null
     }
 
-    /**
-     * Pactus addresses are bech32-encoded.
-     * pc1r... = Account (Ed25519)
-     * pc1p... = Validator (BLS)
-     * pc1z... = Account (BLS)
-     */
-    private fun isValidAccountAddress(address: String): Boolean {
-        val lower = address.lowercase()
-        if (lower.length !in 41..63) return false
-        if (!lower.startsWith("pc1r") && !lower.startsWith("pc1z") && !lower.startsWith("pc1p")) return false
-        val charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l".toSet()
-        return lower.drop(4).all { it in charset }
-    }
+    // Accepts pc1p / pc1z / pc1r / pc1y with full bech32m checksum validation.
+    private fun isValidAccountAddress(address: String): Boolean =
+        PactusAddress.isValidAccountAddress(address)
 }
 
 

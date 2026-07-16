@@ -14,6 +14,7 @@
 - **PIP-41 Address Recovery**: Restoring a wallet from a mnemonic now automatically rediscovers previously used accounts by scanning the chain (gap limit 8, per [PIP-41](https://pips.pactus.org/PIPs/pip-41)). A manual "Recover addresses" scan is also available in Settings for wallets restored while offline.
 
 ### Fixed & Improved
+- **secp256k1 (pc1y) Recipient Support**: Sending to the new secp256k1 addresses (`pc1y…`, introduced in Pactus 1.16.0 via PIP-53) now works. Recipient validation was also upgraded from a prefix check to full bech32m checksum validation, catching typos before a transaction is built.
 - **Multi-Network Compatibility**: Fixed an issue where the coin type was hardcoded to Mainnet (21888) in `PactusKeyManager`; key derivation now correctly uses dynamic coin types, enabling full support for Testnet accounts.
 - **Dynamic Explorer Integration**: Added automatic explorer switching; the app now correctly points to `phoenix.pactusscan.com` when on Testnet and `pactusscan.com` on Mainnet for accurate transaction history.
 - **Intelligent Layout Scaling**: Fixed a UI issue where extremely long PAC balances would cause text overlapping on the main dashboard card.
