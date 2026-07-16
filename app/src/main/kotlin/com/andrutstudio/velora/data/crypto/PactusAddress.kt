@@ -9,7 +9,9 @@ package com.andrutstudio.velora.data.crypto
  *  3 — Ed25519 Account (pc1r…)
  *  4 — secp256k1 Account (pc1y…), PIP-53
  *
- * Type 0 (treasury, pc1q…) is not a valid transfer recipient.
+ * Type 0 is reserved for the treasury, which pactus-core never renders as
+ * bech32m — it is special-cased as the literal string of 42 zeros — so type 0
+ * is rejected here along with anything that fails to decode.
  */
 object PactusAddress {
 

@@ -30,8 +30,17 @@ class PactusAddressTest {
     }
 
     @Test
-    fun `rejects treasury type 0 address`() {
+    fun `rejects type 0 even when bech32m-encoded`() {
+        // Type 0 is reserved for the treasury. Core renders the treasury as a
+        // literal zero string, so a pc1q address should never exist — reject
+        // the synthetic encoding anyway.
         assertFalse(PactusAddress.isValidAccountAddress("pc1qqqqsyqcyq5rqwzqfpg9scrgwpugpzysn7zvrsx"))
+    }
+
+    @Test
+    fun `rejects the literal treasury address`() {
+        // pactus-core special-cases the treasury as 42 zeros, not bech32m.
+        assertFalse(PactusAddress.isValidAccountAddress("000000000000000000000000000000000000000000"))
     }
 
     @Test
