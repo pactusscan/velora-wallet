@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import com.andrutstudio.velora.data.local.db.BookmarkEntity
 import com.andrutstudio.velora.data.local.db.BrowserDao
 import com.andrutstudio.velora.data.local.db.BrowserHistoryEntity
+import com.andrutstudio.velora.data.crypto.SignGuard
 import com.andrutstudio.velora.data.local.db.ConnectedSiteEntity
 import com.andrutstudio.velora.domain.model.Account
 import com.andrutstudio.velora.domain.model.Amount
@@ -58,8 +59,13 @@ class BrowserViewModel @Inject constructor(
         val address: String,
     )
 
+    // needsConnect mirrors the extension: a sign request from a host the user
+    // has not approved yet becomes a combined connect + sign approval, and the
+    // host is granted only after the user confirms.
     data class PendingSignRequest(
         val requestId: String,
+        val host: String,
+        val needsConnect: Boolean,
         val fromAddress: String,
         val to: String,
         val amountNanoPac: Long,
@@ -69,6 +75,8 @@ class BrowserViewModel @Inject constructor(
 
     data class PendingSignMessageRequest(
         val requestId: String,
+        val host: String,
+        val needsConnect: Boolean,
         val fromAddress: String,
         val message: String,
     )
@@ -231,18 +239,20 @@ class BrowserViewModel @Inject constructor(
             viewModelScope.launch { _effect.send(Effect.RejectSign(requestId, "No account available")) }
             return
         }
-        val host = runCatching { java.net.URI(_state.value.url).host }.getOrNull()
-            ?: _state.value.url
+        val host = currentHost()
         viewModelScope.launch {
             if (host.isNotBlank() && browserDao.isSiteConnected(host)) {
                 _effect.send(Effect.ResolveConnect(requestId))
             } else {
                 _state.update {
-                    it.copy(pendingConnectRequest = PendingConnectRequest(requestId, host.orEmpty(), address))
+                    it.copy(pendingConnectRequest = PendingConnectRequest(requestId, host, address))
                 }
             }
         }
     }
+
+    private fun currentHost(): String =
+        runCatching { java.net.URI(_state.value.url).host }.getOrNull() ?: _state.value.url
 
     fun onConfirmConnect() {
         val req = _state.value.pendingConnectRequest ?: return
@@ -266,33 +276,54 @@ class BrowserViewModel @Inject constructor(
         }
         val amount = amountNanoPac.toLongOrNull() ?: 0L
         val fee = feeNanoPac.toLongOrNull() ?: 0L
-        _state.update {
-            it.copy(
-                pendingSignRequest = PendingSignRequest(
-                    requestId = requestId,
-                    fromAddress = fromAddress,
-                    to = to,
-                    amountNanoPac = amount,
-                    feeNanoPac = fee,
-                    memo = memo,
+        val host = currentHost()
+        viewModelScope.launch {
+            val connected = host.isNotBlank() && browserDao.isSiteConnected(host)
+            _state.update {
+                it.copy(
+                    pendingSignRequest = PendingSignRequest(
+                        requestId = requestId,
+                        host = host,
+                        needsConnect = !connected,
+                        fromAddress = fromAddress,
+                        to = to,
+                        amountNanoPac = amount,
+                        feeNanoPac = fee,
+                        memo = memo,
+                    )
                 )
-            )
+            }
         }
     }
 
     fun onSignMessageRequest(requestId: String, message: String) {
+        // Refuse non-text messages: they could be transaction bytes smuggled
+        // through the (prefix-less) message signer to bypass the transaction
+        // approval flow.
+        if (!SignGuard.isSignableMessage(message)) {
+            viewModelScope.launch {
+                _effect.send(Effect.RejectSign(requestId, "Message contains non-text characters and cannot be signed"))
+            }
+            return
+        }
         val fromAddress = _state.value.accounts.firstOrNull()?.address ?: run {
             viewModelScope.launch { _effect.send(Effect.RejectSign(requestId, "No account available")) }
             return
         }
-        _state.update {
-            it.copy(
-                pendingSignMessageRequest = PendingSignMessageRequest(
-                    requestId = requestId,
-                    fromAddress = fromAddress,
-                    message = message,
+        val host = currentHost()
+        viewModelScope.launch {
+            val connected = host.isNotBlank() && browserDao.isSiteConnected(host)
+            _state.update {
+                it.copy(
+                    pendingSignMessageRequest = PendingSignMessageRequest(
+                        requestId = requestId,
+                        host = host,
+                        needsConnect = !connected,
+                        fromAddress = fromAddress,
+                        message = message,
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -300,6 +331,9 @@ class BrowserViewModel @Inject constructor(
         val req = _state.value.pendingSignRequest ?: return
         _state.update { it.copy(isSigning = true) }
         viewModelScope.launch {
+            if (req.needsConnect && req.host.isNotBlank()) {
+                browserDao.insertConnectedSite(ConnectedSiteEntity(host = req.host))
+            }
             runCatching {
                 sendTransaction(
                     from = req.fromAddress,
@@ -323,6 +357,9 @@ class BrowserViewModel @Inject constructor(
         val req = _state.value.pendingSignMessageRequest ?: return
         _state.update { it.copy(isSigning = true) }
         viewModelScope.launch {
+            if (req.needsConnect && req.host.isNotBlank()) {
+                browserDao.insertConnectedSite(ConnectedSiteEntity(host = req.host))
+            }
             runCatching {
                 walletRepository.signMessage(req.message, req.fromAddress)
             }.onSuccess { signature ->

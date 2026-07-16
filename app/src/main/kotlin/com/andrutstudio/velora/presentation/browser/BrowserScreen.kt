@@ -691,49 +691,68 @@ private fun SignRequestSheet(
         onDismissRequest = onCancel,
         sheetState = rememberModalBottomSheetState(),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 32.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+        SignRequestSheetContent(request, isSigning, onConfirm, onCancel)
+    }
+}
+
+@Composable
+private fun SignRequestSheetContent(
+    request: BrowserViewModel.PendingSignRequest,
+    isSigning: Boolean,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 32.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Text(stringResource(R.string.browser_sign_title), style = MaterialTheme.typography.titleLarge)
+
+        if (request.needsConnect) {
+            Text(
+                "This site is not connected to your wallet yet. Approving will also connect it.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        SignRow("Site", request.host)
+        SignRow(stringResource(R.string.browser_sign_from), request.fromAddress)
+        SignRow(stringResource(R.string.browser_sign_to), request.to)
+        SignRow(stringResource(R.string.browser_sign_amount), "%.6f PAC".format(Amount.fromNanoPac(request.amountNanoPac).pac))
+        SignRow(stringResource(R.string.browser_sign_fee), "%.6f PAC".format(Amount.fromNanoPac(request.feeNanoPac).pac))
+        if (request.memo.isNotBlank()) {
+            SignRow(stringResource(R.string.browser_sign_memo), request.memo)
+        }
+
+        HorizontalDivider()
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(stringResource(R.string.browser_sign_title), style = MaterialTheme.typography.titleLarge)
+            OutlinedButton(
+                onClick = onCancel,
+                modifier = Modifier.weight(1f),
+                enabled = !isSigning,
+            ) { Text(stringResource(R.string.action_reject)) }
 
-            SignRow(stringResource(R.string.browser_sign_from), request.fromAddress)
-            SignRow(stringResource(R.string.browser_sign_to), request.to)
-            SignRow(stringResource(R.string.browser_sign_amount), "%.6f PAC".format(Amount.fromNanoPac(request.amountNanoPac).pac))
-            SignRow(stringResource(R.string.browser_sign_fee), "%.6f PAC".format(Amount.fromNanoPac(request.feeNanoPac).pac))
-            if (request.memo.isNotBlank()) {
-                SignRow(stringResource(R.string.browser_sign_memo), request.memo)
-            }
-
-            HorizontalDivider()
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            Button(
+                onClick = onConfirm,
+                modifier = Modifier.weight(1f),
+                enabled = !isSigning,
             ) {
-                OutlinedButton(
-                    onClick = onCancel,
-                    modifier = Modifier.weight(1f),
-                    enabled = !isSigning,
-                ) { Text(stringResource(R.string.action_reject)) }
-
-                Button(
-                    onClick = onConfirm,
-                    modifier = Modifier.weight(1f),
-                    enabled = !isSigning,
-                ) {
-                    if (isSigning) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(18.dp),
-                            strokeWidth = 2.dp,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                        )
-                    } else {
-                        Text(stringResource(R.string.action_confirm))
-                    }
+                if (isSigning) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                } else {
+                    Text(stringResource(R.string.action_confirm))
                 }
             }
         }
@@ -752,57 +771,76 @@ private fun SignMessageRequestSheet(
         onDismissRequest = onCancel,
         sheetState = rememberModalBottomSheetState(),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 32.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+        SignMessageSheetContent(request, isSigning, onConfirm, onCancel)
+    }
+}
+
+@Composable
+private fun SignMessageSheetContent(
+    request: BrowserViewModel.PendingSignMessageRequest,
+    isSigning: Boolean,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 32.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Text(stringResource(R.string.browser_sign_title), style = MaterialTheme.typography.titleLarge)
+
+        if (request.needsConnect) {
+            Text(
+                "This site is not connected to your wallet yet. Approving will also connect it.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        SignRow("Site", request.host)
+        SignRow("From", request.fromAddress)
+
+        Spacer(Modifier.height(8.dp))
+        Text("Message to Sign:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+            shape = RoundedCornerShape(12.dp)
         ) {
-            Text(stringResource(R.string.browser_sign_title), style = MaterialTheme.typography.titleLarge)
+            Text(
+                text = request.message,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(12.dp)
+            )
+        }
 
-            SignRow("From", request.fromAddress)
-            
-            Spacer(Modifier.height(8.dp))
-            Text("Message to Sign:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                shape = RoundedCornerShape(12.dp)
+        HorizontalDivider()
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            OutlinedButton(
+                onClick = onCancel,
+                modifier = Modifier.weight(1f),
+                enabled = !isSigning,
+            ) { Text(stringResource(R.string.action_reject)) }
+
+            Button(
+                onClick = onConfirm,
+                modifier = Modifier.weight(1f),
+                enabled = !isSigning,
             ) {
-                Text(
-                    text = request.message,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(12.dp)
-                )
-            }
-
-            HorizontalDivider()
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                OutlinedButton(
-                    onClick = onCancel,
-                    modifier = Modifier.weight(1f),
-                    enabled = !isSigning,
-                ) { Text(stringResource(R.string.action_reject)) }
-
-                Button(
-                    onClick = onConfirm,
-                    modifier = Modifier.weight(1f),
-                    enabled = !isSigning,
-                ) {
-                    if (isSigning) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(18.dp),
-                            strokeWidth = 2.dp,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                        )
-                    } else {
-                        Text(stringResource(R.string.action_confirm))
-                    }
+                if (isSigning) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                } else {
+                    Text(stringResource(R.string.action_confirm))
                 }
             }
         }
@@ -873,5 +911,46 @@ private fun SignRowPreview() {
 private fun BrowserHomePreview() {
     VeloraTheme {
         BrowserHome(onUrlSubmit = {})
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SignRequestSheetContentPreview() {
+    VeloraTheme {
+        SignRequestSheetContent(
+            request = BrowserViewModel.PendingSignRequest(
+                requestId = "1",
+                host = "play.pactusscan.com",
+                needsConnect = true,
+                fromAddress = "pc1rmv39cmjlexample27l5jg5wv67am5hy2velora",
+                to = "pc1r0hrct8eycrceqm5g0examplezc4vf59d80vg7",
+                amountNanoPac = 10_000_000_000L,
+                feeNanoPac = 100_000L,
+                memo = "Marketplace order",
+            ),
+            isSigning = false,
+            onConfirm = {},
+            onCancel = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SignMessageSheetContentPreview() {
+    VeloraTheme {
+        SignMessageSheetContent(
+            request = BrowserViewModel.PendingSignMessageRequest(
+                requestId = "1",
+                host = "play.pactusscan.com",
+                needsConnect = false,
+                fromAddress = "pc1rmv39cmjlexample27l5jg5wv67am5hy2velora",
+                message = "Sign in to PactusScan Play\nNonce: 8f3a2c",
+            ),
+            isSigning = false,
+            onConfirm = {},
+            onCancel = {},
+        )
     }
 }

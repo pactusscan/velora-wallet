@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import com.andrutstudio.velora.data.crypto.PactusKeyManager
+import com.andrutstudio.velora.data.crypto.SignGuard
 import com.andrutstudio.velora.data.local.BiometricHelper
 import com.andrutstudio.velora.data.local.VaultStorage
 import com.andrutstudio.velora.data.local.WrongPasswordException
@@ -408,6 +409,9 @@ class WalletRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signMessage(message: String, fromAddress: String): String = withContext(Dispatchers.IO) {
+        // Pactus message signing is prefix-less raw UTF-8, so refuse anything
+        // that could smuggle transaction bytes through the message signer.
+        SignGuard.assertSignableMessage(message)
         val secret = requireUnlocked()
         val vault = vaultStorage.loadVault() ?: error("No vault found")
         val vaultAccount = vault.accounts.find { it.address == fromAddress }
