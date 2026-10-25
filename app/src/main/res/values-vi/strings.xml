@@ -167,9 +167,18 @@
     <string name="settings_section_backup">Sao lưu</string>
     <string name="settings_backup_phrase">Cụm từ sao lưu</string>
     <string name="settings_backup_phrase_subtitle">Xem cụm từ khôi phục 12 từ của bạn</string>
+    <string name="settings_recover_addresses">Khôi phục địa chỉ</string>
+    <string name="settings_recover_addresses_subtitle">Quét chuỗi để tìm các tài khoản đã dùng trước đây (PIP-41)</string>
+    <string name="settings_recover_addresses_scanning">Đang quét chuỗi…</string>
+    <string name="theme_selector">Giao diện</string>
     <string name="settings_section_about">Giới thiệu</string>
     <string name="settings_about">Về Velora Wallet</string>
     <string name="settings_about_subtitle">Phiên bản, liên kết và pháp lý</string>
+    <string name="settings_connected_sites">Trang đã kết nối</string>
+    <string name="settings_connected_sites_subtitle">dApp được phép xem địa chỉ ví của bạn</string>
+    <string name="sites_empty">Chưa có trang nào được kết nối.</string>
+    <string name="sites_connected_on">Đã kết nối %1$s</string>
+    <string name="action_revoke">Thu hồi</string>
 
     <!-- Security settings -->
     <string name="security_title">Bảo mật</string>
