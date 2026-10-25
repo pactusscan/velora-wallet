@@ -799,7 +799,7 @@ private fun SignMessageSheetContent(
             .padding(bottom = 32.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text(stringResource(R.string.browser_sign_title), style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(R.string.browser_sign_message_title), style = MaterialTheme.typography.titleLarge)
 
         if (request.needsConnect) {
             Text(

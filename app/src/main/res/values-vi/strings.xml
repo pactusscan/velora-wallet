@@ -146,6 +146,7 @@
     <string name="browser_sign_amount">Số lượng</string>
     <string name="browser_sign_fee">Phí</string>
     <string name="browser_sign_memo">Ghi chú</string>
+    <string name="browser_sign_message_title">Ký Tin Nhắn</string>
     <string name="browser_sign_message_signer">Tài khoản ký</string>
     <string name="browser_sign_message_signer_requested">Do trang này yêu cầu</string>
     <string name="browser_bookmarks_header">Dấu trang</string>

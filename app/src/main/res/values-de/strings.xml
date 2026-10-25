@@ -170,6 +170,7 @@
     <string name="browser_sign_amount">Betrag</string>
     <string name="browser_sign_fee">Gebühr</string>
     <string name="browser_sign_memo">Memo</string>
+    <string name="browser_sign_message_title">Nachricht signieren</string>
     <string name="browser_sign_message_signer">Signierendes Konto</string>
     <string name="browser_sign_message_signer_requested">Von dieser Website angefordert</string>
     <string name="browser_bookmarks_header">Lesezeichen</string>
