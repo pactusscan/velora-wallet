@@ -16,12 +16,16 @@ on:
 
 permissions:
   contents: write
+  packages: read # Trust Wallet Core is served from GitHub Packages
 
 concurrency:
   group: release-${{ github.ref_name }}
   cancel-in-progress: false
 
 env:
+  # Credentials for the GitHub Packages Maven repo in settings.gradle.kts
+  GITHUB_USER: ${{ github.actor }}
+  GITHUB_TOKEN: ${{ github.token }}
   # SHA-256 of the certificate that signed every published release so far.
   # A different key would stop updates from installing over existing versions.
   EXPECTED_CERT_SHA256: 553e611fe6fea29f75bc01ade9cc028480dfb5ad7c265a346ad48ade59f2d09d
