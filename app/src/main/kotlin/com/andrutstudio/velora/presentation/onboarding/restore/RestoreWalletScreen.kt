@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.onboarding.restore
 
+import com.andrutstudio.velora.presentation.components.asString
 import android.app.Activity
 import android.view.WindowManager
 import androidx.compose.foundation.background
@@ -149,7 +150,7 @@ fun RestoreWalletScreen(
             if (state.mnemonicError != null) {
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = state.mnemonicError,
+                    text = state.mnemonicError.asString(),
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center

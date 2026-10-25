@@ -1,5 +1,10 @@
 package com.andrutstudio.velora.presentation.stake
 
+import com.andrutstudio.velora.presentation.components.formatPac
+import com.andrutstudio.velora.presentation.components.uiText
+import com.andrutstudio.velora.R
+import com.andrutstudio.velora.presentation.components.toUiText
+import com.andrutstudio.velora.presentation.components.UiText
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,16 +49,16 @@ class StakeViewModel @Inject constructor(
         val feeText: String = "",
         val isFeeManual: Boolean = false,
         val isFeeLoading: Boolean = false,
-        val validatorAddressError: String? = null,
-        val amountError: String? = null,
-        val feeError: String? = null,
+        val validatorAddressError: UiText? = null,
+        val amountError: UiText? = null,
+        val feeError: UiText? = null,
         val isConfirmVisible: Boolean = false,
         val isStaking: Boolean = false,
         val isLoading: Boolean = true,
         val password: String = "",
-        val passwordError: String? = null,
+        val passwordError: UiText? = null,
         // Shown inside the confirm sheet; a snackbar would be hidden behind the modal sheet.
-        val stakeError: String? = null,
+        val stakeError: UiText? = null,
         val isBiometricEnabled: Boolean = false,
     ) {
         val parsedAmount: Amount?
@@ -69,7 +74,7 @@ class StakeViewModel @Inject constructor(
 
     sealed interface Effect {
         data class ShowSuccess(val txId: String) : Effect
-        data class ShowError(val message: String) : Effect
+        data class ShowError(val message: UiText) : Effect
         data object NavigateBack : Effect
         data object RequestBiometricUnlock : Effect
     }
@@ -204,7 +209,7 @@ class StakeViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isFeeLoading = false,
-                        feeError = "Estimation failed — enter fee manually",
+                        feeError = UiText.Res(R.string.error_fee_estimation),
                     )
                 }
             }
@@ -216,20 +221,20 @@ class StakeViewModel @Inject constructor(
         var hasError = false
 
         if (current.validatorAddress.isBlank() || !current.validatorAddress.startsWith("pc1p")) {
-            _state.update { it.copy(validatorAddressError = "Invalid validator address (pc1p...)") }
+            _state.update { it.copy(validatorAddressError = UiText.Res(R.string.stake_error_invalid_validator)) }
             hasError = true
         }
 
         val amount = current.parsedAmount
         if (amount == null) {
-            _state.update { it.copy(amountError = "Enter a valid amount") }
+            _state.update { it.copy(amountError = UiText.Res(R.string.error_enter_valid_amount)) }
             hasError = true
         }
 
         val fee = current.parsedFee
         if (fee == null) {
             if (!current.isFeeLoading) {
-                _state.update { it.copy(feeError = "Enter a fee amount") }
+                _state.update { it.copy(feeError = UiText.Res(R.string.error_enter_fee)) }
                 hasError = true
             }
         }
@@ -237,7 +242,7 @@ class StakeViewModel @Inject constructor(
         if (!hasError && amount != null && fee != null) {
             val total = amount.nanoPac + fee.nanoPac
             if (total > current.availableBalance.nanoPac) {
-                _state.update { it.copy(amountError = "Insufficient balance for amount + fee") }
+                _state.update { it.copy(amountError = UiText.Res(R.string.error_insufficient_balance)) }
                 return
             }
 
@@ -246,7 +251,7 @@ class StakeViewModel @Inject constructor(
                 if (currentStake.nanoPac + amount.nanoPac > 1_000_000_000_000L) {
                     val remaining = Amount.fromNanoPac(1_000_000_000_000L - currentStake.nanoPac)
                     _state.update { it.copy(
-                        amountError = "limit_exceeded", // Signal to UI to use string resource with arg
+                        amountError = uiText(R.string.stake_max_error, formatPac(remaining)),
                         maxStakableAmount = remaining
                     ) }
                     return
@@ -275,7 +280,7 @@ class StakeViewModel @Inject constructor(
             if (current.isBiometricEnabled) {
                 viewModelScope.launch { _effect.send(Effect.RequestBiometricUnlock) }
             } else {
-                _state.update { it.copy(passwordError = "Enter your wallet password") }
+                _state.update { it.copy(passwordError = UiText.Res(R.string.error_enter_wallet_password)) }
             }
             return
         }
@@ -298,7 +303,7 @@ class StakeViewModel @Inject constructor(
             try {
                 val unlocked = walletRepository.unlockWallet(password)
                 if (!unlocked) {
-                    _state.update { it.copy(isStaking = false, passwordError = "Incorrect password") }
+                    _state.update { it.copy(isStaking = false, passwordError = UiText.Res(R.string.error_incorrect_password)) }
                     return@launch
                 }
                 
@@ -323,7 +328,7 @@ class StakeViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _state.update { it.copy(isStaking = false, stakeError = e.message ?: "Staking failed") }
+                _state.update { it.copy(isStaking = false, stakeError = e.toUiText(R.string.error_staking_failed)) }
             }
         }
     }

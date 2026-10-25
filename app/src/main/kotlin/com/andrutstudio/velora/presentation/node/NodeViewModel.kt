@@ -1,5 +1,7 @@
 package com.andrutstudio.velora.presentation.node
 
+import com.andrutstudio.velora.presentation.components.uiText
+import com.andrutstudio.velora.presentation.components.UiText
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,7 +33,7 @@ class NodeViewModel @Inject constructor(
         val peerData: Map<String, PeerLoadState> = emptyMap(),
         val showAddDialog: Boolean = false,
         val addInput: String = "",
-        val addError: String? = null,
+        val addError: UiText? = null,
         val addLoading: Boolean = false,
     )
 
@@ -52,7 +54,7 @@ class NodeViewModel @Inject constructor(
     }
 
     sealed interface Effect {
-        data class ShowSnackbar(val message: String) : Effect
+        data class ShowSnackbar(val message: UiText) : Effect
     }
 
     private var currentNodes: List<MonitoredNodeEntity> = emptyList()
@@ -148,7 +150,7 @@ class NodeViewModel @Inject constructor(
                         if (node.lastKnownOnline) {
                             viewModelScope.launch {
                                 nodeDao.update(node.copy(lastKnownOnline = false))
-                                _effect.send(Effect.ShowSnackbar("Node ${node.validatorAddress.take(8)}... is offline"))
+                                _effect.send(Effect.ShowSnackbar(uiText(R.string.notification_node_offline_text, node.validatorAddress.take(8) + "…")))
                             }
                         }
                     }
@@ -162,12 +164,12 @@ class NodeViewModel @Inject constructor(
         val isPeerId = input.length >= 30 && !input.contains(" ")
 
         if (!isValidator && !isPeerId) {
-            _state.update { it.copy(addError = "Invalid input (must be a validator address or PeerID)") }
+            _state.update { it.copy(addError = UiText.Res(R.string.node_error_invalid_input)) }
             return
         }
 
         if (_state.value.nodes.contains(input)) {
-            _state.update { it.copy(addError = "Node already added") }
+            _state.update { it.copy(addError = UiText.Res(R.string.node_error_already_added)) }
             return
         }
         viewModelScope.launch {
@@ -190,9 +192,9 @@ class NodeViewModel @Inject constructor(
                 }
                 .onFailure { err ->
                     val message = when (err) {
-                        is java.net.ConnectException -> context.getString(R.string.node_error_daemon_down)
-                        is retrofit2.HttpException -> context.getString(R.string.node_error_server_code, err.code())
-                        else -> context.getString(R.string.node_error_not_found)
+                        is java.net.ConnectException -> uiText(R.string.node_error_daemon_down)
+                        is retrofit2.HttpException -> uiText(R.string.node_error_server_code, err.code())
+                        else -> uiText(R.string.node_error_not_found)
                     }
                     _state.update { it.copy(
                         addLoading = false,
