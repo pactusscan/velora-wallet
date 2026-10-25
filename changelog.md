@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.5] - 2026-07-16
+## [0.1.5] - 2026-10-25
 
 ### Added
 - **dApp Connection Approval**: dApps can now request a connection via `window.pactus.connect()`. A native approval sheet shows the site and your account before anything is shared, and approved sites connect automatically on the next visit.
@@ -14,6 +14,7 @@
 - **PIP-41 Address Recovery**: Restoring a wallet from a mnemonic now automatically rediscovers previously used accounts by scanning the chain (gap limit 8, per [PIP-41](https://pips.pactus.org/PIPs/pip-41)). A manual "Recover addresses" scan is also available in Settings for wallets restored while offline.
 
 ### Fixed & Improved
+- **Visible Send and Stake Errors**: When a transaction fails, the reason is now shown inside the confirmation sheet instead of a snackbar hidden behind it, so you can read it and retry or cancel.
 - **Imported Private Key Wallets Can Send Again**: Unlocking a wallet imported from a private key treated the key as a seed phrase and failed, so every send (and stake) from that wallet stopped at the password step. The address is now computed from the key itself, also when switching networks, and "Add account" is hidden for these single-account wallets.
 - **secp256k1 (pc1y) Recipient Support**: Sending to the new secp256k1 addresses (`pc1y…`, introduced in Pactus 1.16.0 via PIP-53) now works. Recipient validation was also upgraded from a prefix check to full bech32m checksum validation, catching typos before a transaction is built.
 - **Multi-Network Compatibility**: Fixed an issue where the coin type was hardcoded to Mainnet (21888) in `PactusKeyManager`; key derivation now correctly uses dynamic coin types, enabling full support for Testnet accounts.
