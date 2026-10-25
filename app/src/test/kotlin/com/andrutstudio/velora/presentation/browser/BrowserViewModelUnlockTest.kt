@@ -106,7 +106,7 @@ class BrowserViewModelUnlockTest {
     }
 
     @Test
-    fun `dismissing the dialog keeps the request so the user can reject it`() = runTest {
+    fun `rejecting from the unlock dialog rejects the request`() = runTest {
         val vm = viewModel()
         val effects = mutableListOf<BrowserViewModel.Effect>()
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { vm.effect.collect { effects += it } }
@@ -114,12 +114,11 @@ class BrowserViewModelUnlockTest {
         vm.onConfirmSignMessage()
 
         vm.onDismissUnlock()
-        assertFalse(vm.state.value.showUnlockDialog)
-        assertNotNull(vm.state.value.pendingSignMessageRequest)
 
-        vm.onCancelSign()
+        assertFalse(vm.state.value.showUnlockDialog)
         assertNull(vm.state.value.pendingSignMessageRequest)
         assertTrue(effects.contains(BrowserViewModel.Effect.RejectSign("m1", "User rejected")))
+        coVerify(exactly = 0) { walletRepository.signMessage(any(), any()) }
     }
 
     @Test

@@ -478,11 +478,11 @@ class BrowserViewModel @Inject constructor(
         _state.update { it.copy(showUnlockDialog = true, unlockError = null) }
     }
 
+    // The unlock dialog's dismiss action is labelled "Reject", so leaving it
+    // rejects the dApp request as well instead of leaving a half-approved sheet.
     fun onDismissUnlock() {
         if (_state.value.isUnlocking) return
-        // The sign sheet stays open, so the user can still reject the request.
-        approvedBeforeUnlock = null
-        _state.update { it.copy(showUnlockDialog = false, unlockError = null) }
+        onCancelSign()
     }
 
     fun onBiometricUnlockTriggered() {
