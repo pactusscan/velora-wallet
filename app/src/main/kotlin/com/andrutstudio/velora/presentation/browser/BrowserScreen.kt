@@ -378,11 +378,11 @@ fun BrowserScreen(
 @Composable
 private fun BrowserHome(onUrlSubmit: (String) -> Unit) {
     val ecosystemLinks = listOf(
-        EcosystemLink("Pactus Website", "https://pactus.org", "The official website of Pactus blockchain."),
-        EcosystemLink("Pactus Scan", "https://pactusscan.com", "The primary block explorer for the Pactus network."),
-        EcosystemLink("Pactus Documentation", "https://docs.pactus.org", "Comprehensive guides and technical documentation."),
-        EcosystemLink("Pactus GitHub", "https://github.com/pactus-project/pactus", "Source code and development activity."),
-        EcosystemLink("Pactus PIPS", "https://pips.pactus.org", "Pactus Improvement Proposals and standards.")
+        EcosystemLink(stringResource(R.string.browser_eco_website_title), "https://pactus.org", stringResource(R.string.browser_eco_website_desc)),
+        EcosystemLink("Pactus Scan", "https://pactusscan.com", stringResource(R.string.browser_eco_scan_desc)),
+        EcosystemLink(stringResource(R.string.browser_eco_docs_title), "https://docs.pactus.org", stringResource(R.string.browser_eco_docs_desc)),
+        EcosystemLink("Pactus GitHub", "https://github.com/pactus-project/pactus", stringResource(R.string.browser_eco_github_desc)),
+        EcosystemLink("Pactus PIPS", "https://pips.pactus.org", stringResource(R.string.browser_eco_pips_desc))
     )
 
     Column(
@@ -685,16 +685,16 @@ private fun ConnectRequestSheet(
                 .padding(bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text("Connect to this site?", style = MaterialTheme.typography.titleLarge)
+            Text(stringResource(R.string.browser_connect_title), style = MaterialTheme.typography.titleLarge)
 
             Text(
-                "This site is asking to see your wallet address. It cannot move funds without your approval on each transaction.",
+                stringResource(R.string.browser_connect_message),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
-            SignRow("Site", request.host)
-            SignRow("Account", request.address)
+            SignRow(stringResource(R.string.browser_site), request.host)
+            SignRow(stringResource(R.string.browser_account), request.address)
 
             HorizontalDivider()
 
@@ -710,7 +710,7 @@ private fun ConnectRequestSheet(
                 Button(
                     onClick = onConfirm,
                     modifier = Modifier.weight(1f),
-                ) { Text("Connect") }
+                ) { Text(stringResource(R.string.browser_connect_button)) }
             }
         }
     }
@@ -750,13 +750,13 @@ private fun SignRequestSheetContent(
 
         if (request.needsConnect) {
             Text(
-                "This site is not connected to your wallet yet. Approving will also connect it.",
+                stringResource(R.string.browser_not_connected_note),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
-        SignRow("Site", request.host)
+        SignRow(stringResource(R.string.browser_site), request.host)
         SignRow(stringResource(R.string.browser_sign_from), request.fromAddress)
         SignRow(stringResource(R.string.browser_sign_to), request.to)
         SignRow(stringResource(R.string.browser_sign_amount), "%.6f PAC".format(Amount.fromNanoPac(request.amountNanoPac).pac))
@@ -833,13 +833,13 @@ private fun SignMessageSheetContent(
 
         if (request.needsConnect) {
             Text(
-                "This site is not connected to your wallet yet. Approving will also connect it.",
+                stringResource(R.string.browser_not_connected_note),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
-        SignRow("Site", request.host)
+        SignRow(stringResource(R.string.browser_site), request.host)
         when {
             request.signerFixed -> {
                 SignRow(stringResource(R.string.browser_sign_from), request.fromAddress)
@@ -860,7 +860,7 @@ private fun SignMessageSheetContent(
         }
 
         Spacer(Modifier.height(8.dp))
-        Text("Message to Sign:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(stringResource(R.string.browser_message_to_sign), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),

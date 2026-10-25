@@ -135,7 +135,7 @@ fun ReceiveScreen(
                         if (qrBitmap != null) {
                             Image(
                                 bitmap = qrBitmap!!.asImageBitmap(),
-                                contentDescription = "QR code",
+                                contentDescription = stringResource(R.string.receive_qr_desc),
                                 modifier = Modifier.fillMaxSize()
                             )
                             

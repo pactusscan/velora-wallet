@@ -53,7 +53,7 @@ fun SavedMemoSheet(
                     fontWeight = FontWeight.Bold
                 )
                 IconButton(onClick = { showAddDialog = true }) {
-                    Icon(Icons.Rounded.Add, contentDescription = "Add")
+                    Icon(Icons.Rounded.Add, contentDescription = stringResource(R.string.action_add))
                 }
             }
 
@@ -98,7 +98,7 @@ fun SavedMemoSheet(
                                 IconButton(onClick = { onDelete(entry) }) {
                                     Icon(
                                         Icons.Rounded.Delete,
-                                        contentDescription = "Delete",
+                                        contentDescription = stringResource(R.string.action_delete),
                                         tint = MaterialTheme.colorScheme.error,
                                         modifier = Modifier.size(20.dp)
                                     )

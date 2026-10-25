@@ -215,7 +215,7 @@ private fun TransactionSuccessDialog(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                stringResource(R.string.browser_sign_fee).split(":")[0].replace("Fee", "Transaction ID"), // Better to add tx_id string
+                                stringResource(R.string.send_tx_id_label),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -228,7 +228,7 @@ private fun TransactionSuccessDialog(
                         IconButton(onClick = onCopyId, modifier = Modifier.size(32.dp)) {
                             Icon(
                                 Icons.Rounded.ContentCopy,
-                                contentDescription = "Copy",
+                                contentDescription = stringResource(R.string.action_copy),
                                 modifier = Modifier.size(16.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )

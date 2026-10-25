@@ -1,5 +1,7 @@
 package com.andrutstudio.velora.presentation.components
 
+import com.andrutstudio.velora.R
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,7 +46,7 @@ fun SwipeRevealCard(
     modifier: Modifier = Modifier,
     onCustom: (() -> Unit)? = null,
     customIcon: ImageVector = Icons.Rounded.Edit,
-    customLabel: String = "Custom",
+    customLabel: String = stringResource(R.string.swipe_custom),
     customColor: Color = Color(0xFF1F8FE5),
     actionWidth: androidx.compose.ui.unit.Dp = 80.dp,
     content: @Composable () -> Unit,
@@ -99,7 +101,7 @@ fun SwipeRevealCard(
                     }
                     RevealAction(
                         icon = Icons.Rounded.Edit,
-                        label = "Edit",
+                        label = stringResource(R.string.action_edit),
                         container = Color(0xFF1F8FE5),
                         onClick = {
                             onEdit()
@@ -116,7 +118,7 @@ fun SwipeRevealCard(
                 if (currentOffset < 0) {
                     RevealAction(
                         icon = Icons.Rounded.Delete,
-                        label = "Delete",
+                        label = stringResource(R.string.action_delete),
                         container = Color(0xFFE53935),
                         onClick = {
                             onDelete()

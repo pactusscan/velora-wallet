@@ -122,7 +122,7 @@ fun TransactionDetailScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = state.error ?: "Unknown error",
+                    text = state.error ?: stringResource(R.string.common_unknown_error),
                     color = MaterialTheme.colorScheme.error,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(24.dp),
@@ -138,7 +138,7 @@ fun TransactionDetailScreen(
                     val clipboard =
                         context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     clipboard.setPrimaryClip(ClipData.newPlainText("TX ID", id))
-                    scope.launch { snackbarHostState.showSnackbar("Transaction ID copied") }
+                    scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.send_tx_id_copied)) }
                 },
                 onViewExplorer = { id ->
                     val url = "https://pactusscan.com/transaction/$id"
@@ -216,9 +216,9 @@ private fun TxDetailContent(
                 )
                 Text(
                     text = when (tx.direction) {
-                        1 -> "Received"
-                        2 -> "Sent"
-                        else -> "Self"
+                        1 -> stringResource(R.string.history_direction_received)
+                        2 -> stringResource(R.string.history_direction_sent)
+                        else -> stringResource(R.string.history_direction_self)
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -235,10 +235,10 @@ private fun TxDetailContent(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                DetailRow(label = "Status") {
+                DetailRow(label = stringResource(R.string.history_detail_status)) {
                     StatusBadge(tx.status)
                 }
-                DetailRow(label = "Type") {
+                DetailRow(label = stringResource(R.string.history_detail_type)) {
                     Text(
                         text = tx.type.name.lowercase().replace('_', ' ').replaceFirstChar { it.uppercase() },
                         style = MaterialTheme.typography.bodyMedium,
@@ -246,7 +246,7 @@ private fun TxDetailContent(
                     )
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                DetailRow(label = "From") {
+                DetailRow(label = stringResource(R.string.history_detail_from)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -265,7 +265,7 @@ private fun TxDetailContent(
                         ) {
                             Icon(
                                 Icons.Rounded.ContentCopy,
-                                contentDescription = "Copy From Address",
+                                contentDescription = stringResource(R.string.history_copy_from_address),
                                 modifier = Modifier.size(16.dp),
                                 tint = MaterialTheme.colorScheme.primary,
                             )
@@ -273,7 +273,7 @@ private fun TxDetailContent(
                     }
                 }
                 if (tx.to != null) {
-                    DetailRow(label = "To") {
+                    DetailRow(label = stringResource(R.string.history_detail_to)) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -292,7 +292,7 @@ private fun TxDetailContent(
                             ) {
                                 Icon(
                                     Icons.Rounded.ContentCopy,
-                                    contentDescription = "Copy To Address",
+                                    contentDescription = stringResource(R.string.history_copy_to_address),
                                     modifier = Modifier.size(16.dp),
                                     tint = MaterialTheme.colorScheme.primary,
                                 )
@@ -301,21 +301,21 @@ private fun TxDetailContent(
                     }
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                DetailRow(label = "Fee") {
+                DetailRow(label = stringResource(R.string.history_detail_fee)) {
                     Text(
                         text = formatPac(tx.fee),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
-                DetailRow(label = "Block") {
+                DetailRow(label = stringResource(R.string.history_detail_block)) {
                     Text(
                         text = "#${tx.blockHeight}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
-                DetailRow(label = "Date") {
+                DetailRow(label = stringResource(R.string.history_detail_date)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -331,7 +331,7 @@ private fun TxDetailContent(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.History,
-                                contentDescription = "Toggle Date Mode",
+                                contentDescription = stringResource(R.string.history_toggle_date_mode),
                                 modifier = Modifier.size(16.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
@@ -340,7 +340,7 @@ private fun TxDetailContent(
                 }
                 if (tx.memo != null) {
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                    DetailRow(label = "Memo") {
+                    DetailRow(label = stringResource(R.string.history_detail_memo)) {
                         Text(
                             text = tx.memo,
                             style = MaterialTheme.typography.bodyMedium,
@@ -374,7 +374,7 @@ private fun TxDetailContent(
                     ) {
                         Icon(
                             Icons.Rounded.ContentCopy,
-                            contentDescription = "Copy TX ID",
+                            contentDescription = stringResource(R.string.history_copy_tx_id),
                             modifier = Modifier.size(16.dp),
                             tint = MaterialTheme.colorScheme.primary,
                         )
@@ -419,9 +419,9 @@ private fun DetailRow(label: String, content: @Composable () -> Unit) {
 @Composable
 private fun StatusBadge(status: TransactionStatus) {
     val (label, color) = when (status) {
-        TransactionStatus.CONFIRMED -> "Confirmed" to BrandTeal
-        TransactionStatus.PENDING -> "Pending" to MaterialTheme.colorScheme.secondary
-        TransactionStatus.FAILED -> "Failed" to MaterialTheme.colorScheme.error
+        TransactionStatus.CONFIRMED -> stringResource(R.string.history_status_confirmed) to BrandTeal
+        TransactionStatus.PENDING -> stringResource(R.string.history_status_pending) to MaterialTheme.colorScheme.secondary
+        TransactionStatus.FAILED -> stringResource(R.string.history_status_failed) to MaterialTheme.colorScheme.error
     }
     Surface(
         color = color.copy(alpha = 0.15f),

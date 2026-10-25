@@ -1,5 +1,8 @@
 package com.andrutstudio.velora.presentation.components
 
+import androidx.annotation.StringRes
+import com.andrutstudio.velora.R
+import androidx.compose.ui.res.stringResource
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,11 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
 
-enum class PasswordStrength(val label: String, val fraction: Float) {
-    WEAK("Weak", 0.25f),
-    FAIR("Fair", 0.5f),
-    STRONG("Strong", 0.75f),
-    VERY_STRONG("Very strong", 1f),
+enum class PasswordStrength(@StringRes val labelRes: Int, val fraction: Float) {
+    WEAK(R.string.password_strength_weak, 0.25f),
+    FAIR(R.string.password_strength_fair, 0.5f),
+    STRONG(R.string.password_strength_strong, 0.75f),
+    VERY_STRONG(R.string.password_strength_very_strong, 1f),
 }
 
 fun evaluateStrength(password: String): PasswordStrength? {
@@ -73,7 +76,7 @@ fun PasswordTextField(
                 IconButton(onClick = { visible = !visible }) {
                     Icon(
                         imageVector = if (visible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
-                        contentDescription = if (visible) "Hide password" else "Show password",
+                        contentDescription = stringResource(if (visible) R.string.password_hide else R.string.password_show),
                     )
                 }
             },
@@ -117,7 +120,7 @@ private fun StrengthMeter(strength: PasswordStrength) {
     }
     Spacer(Modifier.height(2.dp))
     Text(
-        text = strength.label,
+        text = stringResource(strength.labelRes),
         style = MaterialTheme.typography.labelSmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )

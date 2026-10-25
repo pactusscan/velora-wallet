@@ -4,6 +4,13 @@
 
     <!-- Widget -->
     <string name="widget_description">Displays your PAC balance on the home screen</string>
+    <string name="app_logo_desc">Velora logo</string>
+    <string name="password_strength_weak">Weak</string>
+    <string name="password_strength_fair">Fair</string>
+    <string name="password_strength_strong">Strong</string>
+    <string name="password_strength_very_strong">Very strong</string>
+    <string name="password_show">Show password</string>
+    <string name="password_hide">Hide password</string>
     <string name="widget_tap_to_open">Tap to open wallet</string>
 
     <!-- Bottom navigation -->
@@ -27,10 +34,14 @@
     <string name="action_hide">Hide</string>
     <string name="action_add">Add</string>
     <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
+    <string name="swipe_custom">More</string>
     <string name="action_switch_wallet">Switch wallet</string>
     <string name="common_balance">Balance: %1$s</string>
     <string name="common_amount_placeholder">0.00</string>
     <string name="common_fee_placeholder">0.01</string>
+    <string name="common_unknown">Unknown</string>
+    <string name="common_unknown_error">Unknown error</string>
     <string name="balance_total_label">Total Balance</string>
     <string name="balance_usd_estimate">≈ $%1$s</string>
 
@@ -61,6 +72,7 @@
     <string name="stake_validator_pubkey_placeholder">Only if it\'s not your validator</string>
     <string name="stake_amount_label">Stake amount</string>
     <string name="stake_fee_label">Network fee</string>
+    <string name="stake_fee_auto">Estimate fee automatically</string>
     <string name="stake_memo_label">Memo (Optional)</string>
     <string name="stake_memo_placeholder">Optional message</string>
     <string name="stake_preview_button">Review Bond/Stake</string>
@@ -77,6 +89,9 @@
     <string name="home_my_wallets">My Wallets</string>
     <string name="home_add_new">Add New</string>
     <string name="home_add_new_wallet">Add New Wallet</string>
+    <string name="home_default_wallet_name">Main Wallet</string>
+    <string name="home_alert_action">Alert</string>
+    <string name="wallet_picker_active">Active</string>
     <string name="home_accounts_count">%1$d account</string>
     <string name="home_accounts_count_plural">%1$d accounts</string>
     <string name="home_reset_wallet_title">Reset Wallet?</string>
@@ -138,6 +153,7 @@
     <string name="send_success_title">Transfer Successful</string>
     <string name="send_success_message">Your PAC has been sent to the network and is being processed.</string>
     <string name="send_tx_id_copied">Transaction ID copied</string>
+    <string name="send_tx_id_label">Transaction ID</string>
     <string name="send_success">Transaction sent! ID: %1$s…</string>
     <string name="send_unit_pac">PAC</string>
     <string name="send_unit_npac">nPAC</string>
@@ -162,6 +178,21 @@
     <string name="history_select_account">Select Account</string>
     <string name="history_transaction_detail">Transaction Detail</string>
     <string name="history_tx_id">TX ID</string>
+    <string name="history_direction_received">Received</string>
+    <string name="history_direction_sent">Sent</string>
+    <string name="history_direction_self">Self</string>
+    <string name="history_detail_status">Status</string>
+    <string name="history_detail_type">Type</string>
+    <string name="history_detail_from">From</string>
+    <string name="history_detail_to">To</string>
+    <string name="history_detail_fee">Fee</string>
+    <string name="history_detail_block">Block</string>
+    <string name="history_detail_date">Date</string>
+    <string name="history_detail_memo">Memo</string>
+    <string name="history_copy_from_address">Copy sender address</string>
+    <string name="history_copy_to_address">Copy recipient address</string>
+    <string name="history_copy_tx_id">Copy transaction ID</string>
+    <string name="history_toggle_date_mode">Switch between local time and UTC</string>
     <string name="history_empty_title">No transactions yet</string>
     <string name="history_empty_subtitle">Your transaction history will appear here</string>
 
@@ -176,12 +207,26 @@
     <string name="browser_search_placeholder">Search or enter URL</string>
     <string name="browser_ecosystem_title">Pactus Ecosystem</string>
     <string name="browser_ecosystem_subtitle">Discover decentralized world of Pactus</string>
+    <string name="browser_eco_website_title">Pactus Website</string>
+    <string name="browser_eco_website_desc">The official website of the Pactus blockchain.</string>
+    <string name="browser_eco_scan_desc">The primary block explorer for the Pactus network.</string>
+    <string name="browser_eco_docs_title">Pactus Documentation</string>
+    <string name="browser_eco_docs_desc">Comprehensive guides and technical documentation.</string>
+    <string name="browser_eco_github_desc">Source code and development activity.</string>
+    <string name="browser_eco_pips_desc">Pactus Improvement Proposals and standards.</string>
     <string name="browser_sign_title">Sign Transaction</string>
     <string name="browser_sign_from">From</string>
     <string name="browser_sign_to">To</string>
     <string name="browser_sign_amount">Amount</string>
     <string name="browser_sign_fee">Fee</string>
     <string name="browser_sign_memo">Memo</string>
+    <string name="browser_connect_title">Connect to this site?</string>
+    <string name="browser_connect_message">This site is asking to see your wallet address. It cannot move funds without your approval on each transaction.</string>
+    <string name="browser_connect_button">Connect</string>
+    <string name="browser_site">Site</string>
+    <string name="browser_account">Account</string>
+    <string name="browser_not_connected_note">This site is not connected to your wallet yet. Approving will also connect it.</string>
+    <string name="browser_message_to_sign">Message to sign</string>
     <string name="browser_sign_message_title">Sign Message</string>
     <string name="browser_sign_message_signer">Signing account</string>
     <string name="browser_sign_message_signer_requested">Requested by this site</string>
@@ -352,6 +397,9 @@
     <string name="node_protocol">Protocol v%1$s</string>
     <string name="node_peer_id">PeerID: %1$s…%2$s</string>
     <string name="node_add_confirm">Add</string>
+    <string name="node_peer_info_missing">Peer information missing</string>
+    <string name="node_avg_score_label">Avg score</string>
+    <string name="node_add_input_label">Validator address or PeerID</string>
 
     <!-- Language selection -->
     <string name="language_select">Select Language</string>

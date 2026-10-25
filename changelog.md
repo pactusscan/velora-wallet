@@ -6,6 +6,7 @@
 - **Unlock Dialog Wording**: The unlock dialog on Home and Settings now offers "Cancel" instead of "Reject". In the dApp browser it still says "Reject", because there it also declines the site's request.
 - **All Languages in System Settings**: German, Portuguese (Brazil), Russian and Chinese can now also be chosen in Android's per-app language settings (Android 13+), and the Settings screen shows their name instead of "English".
 - **Complete Indonesian Translation**: The 94 texts that still appeared in English in Indonesian (Settings, dApp browser, Stake, balance alerts, Receive) are now translated, and Recover addresses, Connected sites and the theme selector are translated in every language.
+- **Translatable Screens**: Transaction details, history filters and status badges, the dApp connect sheet, password strength, node monitor labels and several buttons were hardcoded in English and can now be translated. In the Send and Stake confirmation, addresses are shortened and shown in monospace in every language (previously this only worked for some English labels).
 
 ## [0.1.6] - 2026-10-25
 

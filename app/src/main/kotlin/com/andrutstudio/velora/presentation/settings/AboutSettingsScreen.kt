@@ -36,8 +36,8 @@ fun AboutSettingsScreen(
         } else {
             @Suppress("DEPRECATION")
             context.packageManager.getPackageInfo(context.packageName, 0)
-        }.versionName ?: "Unknown"
-    }.getOrDefault("Unknown")
+        }.versionName ?: context.getString(R.string.common_unknown)
+    }.getOrDefault(context.getString(R.string.common_unknown))
 
     fun openUrl(url: String) {
         context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
