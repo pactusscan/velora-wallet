@@ -5,6 +5,9 @@
 ### Added
 - **Choose the Account That Signs a Message**: dApps can ask for a signature from a specific address with `window.pactus.signMessage(message, { address })`, for example to prove ownership of that account. The approval sheet shows the requested account and it cannot be changed; if the wallet does not hold it, the request is refused. Without an address, the sheet now lets you pick which account signs (the first one is preselected).
 
+### Fixed & Improved
+- **dApp Signing After Opening the App**: Approving a dApp message or transaction right after opening Velora failed with "Wallet is locked". The approval now asks for your password (or fingerprint, when enabled) first and then completes the signing.
+
 ## [0.1.5] - 2026-10-25
 
 ### Added

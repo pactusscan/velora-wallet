@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -52,6 +53,12 @@ class BrowserViewModel @Inject constructor(
         val pendingSignRequest: PendingSignRequest? = null,
         val pendingSignMessageRequest: PendingSignMessageRequest? = null,
         val isSigning: Boolean = false,
+        // Signing needs the unlocked wallet. When it is still locked, confirming a
+        // sign sheet opens the unlock dialog and resumes the signing afterwards.
+        val showUnlockDialog: Boolean = false,
+        val isUnlocking: Boolean = false,
+        val unlockError: String? = null,
+        val isBiometricEnabled: Boolean = false,
     )
 
     data class PendingConnectRequest(
@@ -98,6 +105,7 @@ class BrowserViewModel @Inject constructor(
         data class ResolveSign(val requestId: String, val txId: String) : Effect
         data class RejectSign(val requestId: String, val error: String) : Effect
         data class ShowSnackbar(val message: String) : Effect
+        data object RequestBiometricUnlock : Effect
     }
 
     private val _state = MutableStateFlow(State())
@@ -114,7 +122,13 @@ class BrowserViewModel @Inject constructor(
 
         viewModelScope.launch {
             walletRepository.observeWallet().filterNotNull().first().let { wallet ->
-                _state.update { it.copy(accounts = wallet.accounts, network = wallet.network) }
+                _state.update {
+                    it.copy(
+                        accounts = wallet.accounts,
+                        network = wallet.network,
+                        isBiometricEnabled = walletRepository.isBiometricEnabled(),
+                    )
+                }
             }
         }
 
@@ -361,6 +375,10 @@ class BrowserViewModel @Inject constructor(
 
     fun onConfirmSign() {
         val req = _state.value.pendingSignRequest ?: return
+        if (!walletRepository.isUnlocked()) {
+            requestUnlock()
+            return
+        }
         _state.update { it.copy(isSigning = true) }
         viewModelScope.launch {
             if (req.needsConnect && req.host.isNotBlank()) {
@@ -387,6 +405,10 @@ class BrowserViewModel @Inject constructor(
 
     fun onConfirmSignMessage() {
         val req = _state.value.pendingSignMessageRequest ?: return
+        if (!walletRepository.isUnlocked()) {
+            requestUnlock()
+            return
+        }
         _state.update { it.copy(isSigning = true) }
         viewModelScope.launch {
             if (req.needsConnect && req.host.isNotBlank()) {
@@ -420,10 +442,57 @@ class BrowserViewModel @Inject constructor(
         val req = _state.value.pendingSignRequest
         val msgReq = _state.value.pendingSignMessageRequest
         
-        _state.update { it.copy(pendingSignRequest = null, pendingSignMessageRequest = null) }
+        _state.update {
+            it.copy(
+                pendingSignRequest = null,
+                pendingSignMessageRequest = null,
+                showUnlockDialog = false,
+                unlockError = null,
+            )
+        }
         
         val id = req?.requestId ?: msgReq?.requestId ?: return
         viewModelScope.launch { _effect.send(Effect.RejectSign(id, "User rejected")) }
+    }
+
+    private fun requestUnlock() {
+        _state.update { it.copy(showUnlockDialog = true, unlockError = null) }
+    }
+
+    fun onDismissUnlock() {
+        if (_state.value.isUnlocking) return
+        // The sign sheet stays open, so the user can still reject the request.
+        _state.update { it.copy(showUnlockDialog = false, unlockError = null) }
+    }
+
+    fun onBiometricUnlockTriggered() {
+        viewModelScope.launch { _effect.send(Effect.RequestBiometricUnlock) }
+    }
+
+    fun onBiometricUnlockSuccess(password: String) {
+        onUnlock(password)
+    }
+
+    fun onUnlock(password: String) {
+        viewModelScope.launch {
+            _state.update { it.copy(isUnlocking = true, unlockError = null) }
+            try {
+                if (!walletRepository.unlockWallet(password)) {
+                    _state.update { it.copy(isUnlocking = false, unlockError = "Incorrect password") }
+                    return@launch
+                }
+                _state.update { it.copy(isUnlocking = false, showUnlockDialog = false) }
+                // Resume the request the user already approved.
+                when {
+                    _state.value.pendingSignRequest != null -> onConfirmSign()
+                    _state.value.pendingSignMessageRequest != null -> onConfirmSignMessage()
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _state.update { it.copy(isUnlocking = false, unlockError = e.message ?: "Unlock failed") }
+            }
+        }
     }
 
     private fun sanitizeUrl(input: String): String {
