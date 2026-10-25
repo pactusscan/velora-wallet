@@ -14,8 +14,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         MonitoredNodeEntity::class,
         AddressBookEntity::class,
         SavedMemoEntity::class,
+        ConnectedSiteEntity::class,
     ],
-    version = 7,
+    version = 8,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -27,6 +28,16 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun savedMemoDao(): SavedMemoDao
 
     companion object {
+        val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """CREATE TABLE IF NOT EXISTS connected_sites (
+                        host TEXT PRIMARY KEY NOT NULL,
+                        connectedAt INTEGER NOT NULL
+                    )"""
+                )
+            }
+        }
         val MIGRATION_6_7 = object : Migration(6, 7) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(

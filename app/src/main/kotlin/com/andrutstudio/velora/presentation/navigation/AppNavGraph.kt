@@ -30,6 +30,7 @@ import com.andrutstudio.velora.presentation.browser.BrowserScreen
 import com.andrutstudio.velora.presentation.history.TransactionDetailScreen
 import com.andrutstudio.velora.presentation.settings.AboutSettingsScreen
 import com.andrutstudio.velora.presentation.settings.BackupSettingsScreen
+import com.andrutstudio.velora.presentation.settings.ConnectedSitesScreen
 import com.andrutstudio.velora.presentation.settings.NetworkSettingsScreen
 import com.andrutstudio.velora.presentation.settings.SecuritySettingsScreen
 import com.andrutstudio.velora.presentation.settings.SettingsScreen
@@ -360,7 +361,12 @@ fun AppNavGraph(
             )
         }
 
-        composable(Screen.Stake.route) {
+        composable(
+            route = Screen.Stake.route,
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "pactus://stake?to={validator}" },
+            ),
+        ) {
             StakeScreen(
                 navController = navController,
                 onNavigateBack = { navController.popBackStack() }
@@ -374,6 +380,9 @@ fun AppNavGraph(
         composable(
             route = Screen.TransactionDetail.route,
             arguments = listOf(navArgument("txId") { type = NavType.StringType }),
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "pactus://tx/{txId}" },
+            ),
         ) {
             TransactionDetailScreen(navController = navController)
         }
@@ -381,6 +390,9 @@ fun AppNavGraph(
         composable(
             route = Screen.Browser.route,
             arguments = listOf(navArgument("url") { type = NavType.StringType; defaultValue = "" }),
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "pactus://browser?url={url}" },
+            ),
         ) {
             BrowserScreen(
                 navController = navController,
@@ -403,6 +415,7 @@ fun AppNavGraph(
                     onSecuritySettings = { navController.navigate(Screen.SecuritySettings.route) },
                     onNetworkSettings = { navController.navigate(Screen.NetworkSettings.route) },
                     onBackupSettings = { navController.navigate(Screen.BackupSettings.route) },
+                    onConnectedSites = { navController.navigate(Screen.ConnectedSites.route) },
                     onAboutSettings = { navController.navigate(Screen.AboutSettings.route) },
                     onWalletReset = {
                         navController.navigate(ONBOARDING_GRAPH) {
@@ -435,6 +448,12 @@ fun AppNavGraph(
                 val vm: SettingsViewModel = hiltViewModel(parentEntry)
                 BackupSettingsScreen(
                     viewModel = vm,
+                    onNavigateBack = { navController.popBackStack() },
+                )
+            }
+
+            composable(Screen.ConnectedSites.route) {
+                ConnectedSitesScreen(
                     onNavigateBack = { navController.popBackStack() },
                 )
             }

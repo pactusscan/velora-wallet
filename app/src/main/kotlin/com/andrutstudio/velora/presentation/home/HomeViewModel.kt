@@ -206,6 +206,10 @@ class HomeViewModel @Inject constructor(
                     _effect.send(Effect.RequestBiometricUnlock)
                 }
                 if (active != null) {
+                    // Pre-fill from cached balances in Account models to avoid flicker/zeros when offline
+                    val cachedBalances = active.accounts.associate { it.address to Amount.fromNanoPac(it.balanceNanoPac) }
+                    _state.update { it.copy(balances = cachedBalances) }
+
                     fetchBalances(active, isRefreshing = false)
                     fetchMarketPrice()
                 } else _state.update { it.copy(balances = emptyMap()) }
@@ -445,6 +449,11 @@ class HomeViewModel @Inject constructor(
         try {
             val balances = refreshBalances(wallet)
             _state.update { it.copy(balances = balances, isRefreshing = false, error = null, isOffline = false) }
+            
+            // Persist balances locally in the vault for offline viewing
+            viewModelScope.launch {
+                walletRepository.updateBalances(balances)
+            }
             widgetUpdater.update(
                 totalBalanceNanoPac = balances.values.sumOf { it.nanoPac },
                 walletName = wallet.name,

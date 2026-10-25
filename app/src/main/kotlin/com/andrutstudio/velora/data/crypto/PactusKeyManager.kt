@@ -56,7 +56,7 @@ class PactusKeyManager @Inject constructor() {
         type: AccountType,
         index: Int,
     ): ByteArray {
-        val path = derivationPath(type, 21888, index)
+        val path = derivationPath(type, network.coinType, index)
         return HDWallet(mnemonic, "").use { wallet ->
             wallet.getKey(CoinType.PACTUS, path).data().copyOf()
         }

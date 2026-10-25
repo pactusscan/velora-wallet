@@ -28,6 +28,7 @@ import com.andrutstudio.velora.domain.model.Account
 import com.andrutstudio.velora.domain.model.AccountType
 import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
+import com.andrutstudio.velora.presentation.components.TxErrorBox
 import com.andrutstudio.velora.presentation.components.formatPac
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -150,6 +151,11 @@ fun ConfirmSendSheet(
                 Spacer(Modifier.height(20.dp))
             }
 
+            state.sendError?.let { error ->
+                TxErrorBox(message = error)
+                Spacer(Modifier.height(16.dp))
+            }
+
             Button(
                 onClick = onConfirm,
                 modifier = Modifier.fillMaxWidth(),
@@ -234,6 +240,31 @@ private fun ConfirmSendSheetPreview() {
                 amountText = "42.5",
                 feeText = "0.01",
                 memo = "Dinner split 🍕",
+                isConfirmVisible = true
+            ),
+            onDismiss = {},
+            onConfirm = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ConfirmSendSheetErrorPreview() {
+    VeloraTheme {
+        ConfirmSendSheet(
+            state = SendViewModel.State(
+                selectedAccount = Account(
+                    address = "pc1rmv39cmjl7hknrxn27l5jg5wv67am5hy2velora",
+                    label = "Account 1",
+                    type = AccountType.ED25519,
+                    derivationIndex = 0
+                ),
+                toAddress = "pc1z...",
+                amountText = "42.5",
+                feeText = "0.01",
+                password = "secret",
+                sendError = "invalid transaction: insufficient fee",
                 isConfirmVisible = true
             ),
             onDismiss = {},

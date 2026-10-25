@@ -52,6 +52,7 @@ fun SettingsScreen(
     onSecuritySettings: () -> Unit,
     onNetworkSettings: () -> Unit,
     onBackupSettings: () -> Unit,
+    onConnectedSites: () -> Unit,
     onAboutSettings: () -> Unit,
     onWalletReset: () -> Unit = {},
 ) {
@@ -233,6 +234,12 @@ fun SettingsScreen(
                         onCheckedChange = viewModel::onToggleBiometric,
                     )
                 }
+                SettingsItem(
+                    icon = Icons.Rounded.Public,
+                    title = stringResource(R.string.settings_connected_sites),
+                    subtitle = stringResource(R.string.settings_connected_sites_subtitle),
+                    onClick = onConnectedSites,
+                )
 
                 SettingsItem(
                     icon = Icons.Rounded.Translate,
@@ -286,6 +293,16 @@ fun SettingsScreen(
                     title = stringResource(R.string.settings_backup_phrase),
                     subtitle = stringResource(R.string.settings_backup_phrase_subtitle),
                     onClick = onBackupSettings,
+                )
+                SettingsItem(
+                    icon = Icons.Rounded.Restore,
+                    title = stringResource(R.string.settings_recover_addresses),
+                    subtitle = if (state.isRecoveringAccounts) {
+                        stringResource(R.string.settings_recover_addresses_scanning)
+                    } else {
+                        stringResource(R.string.settings_recover_addresses_subtitle)
+                    },
+                    onClick = viewModel::onRecoverAccounts,
                 )
 
                 Spacer(Modifier.height(4.dp))
@@ -725,6 +742,12 @@ private fun SettingsScreenPreview() {
                         icon = Icons.Rounded.Shield,
                         title = "Backup Phrase",
                         subtitle = "View your 12-word recovery phrase",
+                        onClick = {},
+                    )
+                    SettingsItem(
+                        icon = Icons.Rounded.Restore,
+                        title = "Recover addresses",
+                        subtitle = "Scan the chain for previously used accounts (PIP-41)",
                         onClick = {},
                     )
 

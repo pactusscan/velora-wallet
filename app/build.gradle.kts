@@ -60,7 +60,7 @@ fun generateVersionCode(): Int {
 
 // CRITICAL: Store suffix in a variable to ensure consistency across the build process
 val buildSuffix = getVersionSuffix()
-val fullVersionName = "0.1.4$buildSuffix"
+val fullVersionName = "0.1.5$buildSuffix"
 
 // ---------------------------------------
 
@@ -173,6 +173,8 @@ dependencies {
     // UI & Core
     implementation(libs.androidx.core.ktx)
     implementation("androidx.appcompat:appcompat:1.7.0")
+    // WebViewCompat.addDocumentStartJavaScript (inject window.pactus before page scripts)
+    implementation("androidx.webkit:webkit:1.11.0")
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.splashscreen)
     implementation(libs.material)

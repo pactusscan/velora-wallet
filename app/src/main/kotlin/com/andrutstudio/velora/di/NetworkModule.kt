@@ -64,11 +64,30 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun providePactusScanApiService(okHttpClient: OkHttpClient): PactusScanApiService =
-        Retrofit.Builder()
-            .baseUrl("https://api.pactusscan.com/")
-            .client(okHttpClient)
+    fun providePactusScanApiService(okHttpClient: OkHttpClient, networkProvider: com.andrutstudio.velora.data.rpc.NetworkProvider): PactusScanApiService {
+        val interceptor = okhttp3.Interceptor { chain ->
+            val network = networkProvider.current
+            val baseUrl = if (network == com.andrutstudio.velora.domain.model.Network.MAINNET) {
+                "https://api.pactusscan.com/"
+            } else {
+                "https://api.phoenix.pactusscan.com/"
+            }
+            
+            val newRequest = chain.request().newBuilder()
+                .url(chain.request().url.newBuilder().host(baseUrl.removePrefix("https://").removeSuffix("/")).build())
+                .build()
+            chain.proceed(newRequest)
+        }
+
+        val dynamicClient = okHttpClient.newBuilder()
+            .addInterceptor(interceptor)
+            .build()
+
+        return Retrofit.Builder()
+            .baseUrl("https://api.pactusscan.com/") // Default, will be overridden by interceptor
+            .client(dynamicClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(PactusScanApiService::class.java)
+    }
 }

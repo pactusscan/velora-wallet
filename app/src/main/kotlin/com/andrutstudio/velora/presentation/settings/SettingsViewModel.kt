@@ -46,6 +46,8 @@ class SettingsViewModel @Inject constructor(
         val backupPassword: String = "",
         val backupError: String? = null,
         val isBackupLoading: Boolean = false,
+        // PIP-41 address recovery
+        val isRecoveringAccounts: Boolean = false,
         // Network
         val isNetworkLoading: Boolean = false,
         val showUnlockForNetwork: Boolean = false,
@@ -389,6 +391,28 @@ class SettingsViewModel @Inject constructor(
 
     fun onClearBackupForm() {
         _state.update { it.copy(backupPassword = "", backupError = null) }
+    }
+
+    // ── PIP-41 Address Recovery ──────────────────────────────────────────────
+
+    fun onRecoverAccounts() {
+        if (_state.value.isRecoveringAccounts) return
+        _state.update { it.copy(isRecoveringAccounts = true) }
+        viewModelScope.launch {
+            runCatching { walletRepository.recoverAccounts() }
+                .onSuccess { added ->
+                    val message = when {
+                        added > 0 -> "Recovered $added account(s)"
+                        else -> "No new accounts found"
+                    }
+                    _effect.send(Effect.ShowSnackbar(message))
+                }
+                .onFailure { e ->
+                    if (e is CancellationException) throw e
+                    _effect.send(Effect.ShowSnackbar(e.message ?: "Address recovery failed"))
+                }
+            _state.update { it.copy(isRecoveringAccounts = false) }
+        }
     }
 
     // ── Wallet Rename ────────────────────────────────────────────────────────

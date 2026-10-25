@@ -36,6 +36,7 @@ data class VaultAccount(
     val type: String,
     val derivationPath: String,
     val derivationIndex: Int,
+    val balanceNanoPac: Long = 0L,
 )
 
 /**

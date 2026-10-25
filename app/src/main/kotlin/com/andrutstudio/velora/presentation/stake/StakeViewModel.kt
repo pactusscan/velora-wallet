@@ -52,6 +52,8 @@ class StakeViewModel @Inject constructor(
         val isLoading: Boolean = true,
         val password: String = "",
         val passwordError: String? = null,
+        // Shown inside the confirm sheet; a snackbar would be hidden behind the modal sheet.
+        val stakeError: String? = null,
         val isBiometricEnabled: Boolean = false,
     ) {
         val parsedAmount: Amount?
@@ -175,7 +177,7 @@ class StakeViewModel @Inject constructor(
     }
 
     fun onPasswordChange(value: String) {
-        _state.update { it.copy(password = value, passwordError = null) }
+        _state.update { it.copy(password = value, passwordError = null, stakeError = null) }
     }
 
     private fun scheduleFeeEstimate() {
@@ -251,13 +253,13 @@ class StakeViewModel @Inject constructor(
                 }
             }
 
-            _state.update { it.copy(isConfirmVisible = true, password = "", passwordError = null, maxStakableAmount = null) }
+            _state.update { it.copy(isConfirmVisible = true, password = "", passwordError = null, stakeError = null, maxStakableAmount = null) }
         }
     }
 
     fun onDismissConfirm() {
         if (_state.value.isStaking) return
-        _state.update { it.copy(isConfirmVisible = false, password = "", passwordError = null) }
+        _state.update { it.copy(isConfirmVisible = false, password = "", passwordError = null, stakeError = null) }
     }
 
     fun onConfirmStake() {
@@ -291,7 +293,7 @@ class StakeViewModel @Inject constructor(
     }
 
     private fun doStake(from: String, to: String, pubKey: String, amount: Amount, fee: Amount, memo: String, password: String) {
-        _state.update { it.copy(isStaking = true, passwordError = null) }
+        _state.update { it.copy(isStaking = true, passwordError = null, stakeError = null) }
         viewModelScope.launch {
             try {
                 val unlocked = walletRepository.unlockWallet(password)
@@ -321,8 +323,7 @@ class StakeViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _state.update { it.copy(isStaking = false) }
-                _effect.send(Effect.ShowError(e.message ?: "Staking failed"))
+                _state.update { it.copy(isStaking = false, stakeError = e.message ?: "Staking failed") }
             }
         }
     }

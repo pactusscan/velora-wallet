@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.1.5] - 2026-10-25
+
+### Added
+- **dApp Connection Approval**: dApps can now request a connection via `window.pactus.connect()`. A native approval sheet shows the site and your account before anything is shared, and approved sites connect automatically on the next visit.
+- **Connected Sites Management**: New "Connected sites" screen in Settings (matching the Velora browser extension) to review every dApp you have approved and revoke access with one tap.
+- **Instant Provider Detection**: The `window.pactus` provider is now injected before any page script runs, so dApps like play.pactusscan detect Velora immediately instead of missing it during startup.
+- **Wallet Discovery Protocol**: The browser now answers the multi-wallet announce protocol (`pactus:requestProvider` / `pactus:announceProvider`), presenting itself as "Velora Wallet" with the official logo in dApp wallet pickers.
+- **Web3 Authentication (Sign-In with Pactus)**: Added support for signing arbitrary messages, enabling users to log in to decentralized applications (dApps) securely without spending coins.
+- **Enhanced JavaScript Bridge**: Expanded the `window.pactus` API with `connect`, `signMessage`, `signTransaction`, and `getAccounts` to allow deep integration for web-based Pactus tools.
+- **Global Deep Linking**: Implemented a comprehensive deep link system (`pactus://`) to trigger wallet actions like sending coins, staking, or opening the browser from external links. Websites opened in Chrome can hand themselves over to Velora's dApp browser through `pactus://browser`.
+- **Offline Balance Caching**: The app now stores and displays your last known balance even when offline, providing immediate feedback instead of showing zero.
+- **PIP-41 Address Recovery**: Restoring a wallet from a mnemonic now automatically rediscovers previously used accounts by scanning the chain (gap limit 8, per [PIP-41](https://pips.pactus.org/PIPs/pip-41)). A manual "Recover addresses" scan is also available in Settings for wallets restored while offline.
+
+### Fixed & Improved
+- **Visible Send and Stake Errors**: When a transaction fails, the reason is now shown inside the confirmation sheet instead of a snackbar hidden behind it, so you can read it and retry or cancel.
+- **Imported Private Key Wallets Can Send Again**: Unlocking a wallet imported from a private key treated the key as a seed phrase and failed, so every send (and stake) from that wallet stopped at the password step. The address is now computed from the key itself, also when switching networks, and "Add account" is hidden for these single-account wallets.
+- **secp256k1 (pc1y) Recipient Support**: Sending to the new secp256k1 addresses (`pc1y…`, introduced in Pactus 1.16.0 via PIP-53) now works. Recipient validation was also upgraded from a prefix check to full bech32m checksum validation, catching typos before a transaction is built.
+- **Multi-Network Compatibility**: Fixed an issue where the coin type was hardcoded to Mainnet (21888) in `PactusKeyManager`; key derivation now correctly uses dynamic coin types, enabling full support for Testnet accounts.
+- **Dynamic Explorer Integration**: Added automatic explorer switching; the app now correctly points to `phoenix.pactusscan.com` when on Testnet and `pactusscan.com` on Mainnet for accurate transaction history.
+- **Intelligent Layout Scaling**: Fixed a UI issue where extremely long PAC balances would cause text overlapping on the main dashboard card.
+- **Background Robustness**: Improved the reliability of balance updates to ensure they happen quietly in the background without UI flickering.
+- **Developer Guide**: Included a technical integration guide for dApp developers to easily connect their web applications to Velora Wallet.
+- **Safe Database Upgrade**: Local database migrated to version 8 for connected-site storage with a proper migration path, keeping bookmarks, history, and contacts intact when updating from older versions.
+
 ## [0.1.4] - 2026-06-27
 
 ### Added

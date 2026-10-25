@@ -23,6 +23,7 @@ import com.andrutstudio.velora.domain.repository.BlockchainRepository
 import com.andrutstudio.velora.domain.repository.WalletRepository
 import com.andrutstudio.velora.domain.repository.AddressBookRepository
 import com.andrutstudio.velora.domain.repository.SavedMemoRepository
+import com.andrutstudio.velora.data.crypto.PactusAddress
 import com.andrutstudio.velora.data.local.db.AddressBookEntity
 import com.andrutstudio.velora.data.local.db.SavedMemoEntity
 import com.andrutstudio.velora.domain.usecase.SendTransactionUseCase
@@ -58,6 +59,8 @@ class SendViewModel @Inject constructor(
         val isLoading: Boolean = true,
         val password: String = "",
         val passwordError: String? = null,
+        // Shown inside the confirm sheet; a snackbar would be hidden behind the modal sheet.
+        val sendError: String? = null,
         val isBiometricEnabled: Boolean = false,
         val addressBook: List<AddressBookEntity> = emptyList(),
         val isAddressBookVisible: Boolean = false,
@@ -185,7 +188,7 @@ class SendViewModel @Inject constructor(
     }
 
     fun onPasswordChange(value: String) {
-        _state.update { it.copy(password = value, passwordError = null) }
+        _state.update { it.copy(password = value, passwordError = null, sendError = null) }
     }
 
     fun onAddressBookClick() {
@@ -295,13 +298,13 @@ class SendViewModel @Inject constructor(
                 _state.update { it.copy(amountError = "Insufficient balance for amount + fee") }
                 return
             }
-            _state.update { it.copy(isConfirmVisible = true, password = "", passwordError = null) }
+            _state.update { it.copy(isConfirmVisible = true, password = "", passwordError = null, sendError = null) }
         }
     }
 
     fun onDismissConfirm() {
         if (_state.value.isSending) return
-        _state.update { it.copy(isConfirmVisible = false, password = "", passwordError = null) }
+        _state.update { it.copy(isConfirmVisible = false, password = "", passwordError = null, sendError = null) }
     }
 
     fun onConfirmSend() {
@@ -335,7 +338,7 @@ class SendViewModel @Inject constructor(
     }
 
     private fun doSend(from: String, to: String, amount: Amount, fee: Amount, memo: String, password: String) {
-        _state.update { it.copy(isSending = true, passwordError = null) }
+        _state.update { it.copy(isSending = true, passwordError = null, sendError = null) }
         viewModelScope.launch {
             try {
                 val unlocked = walletRepository.unlockWallet(password)
@@ -361,8 +364,7 @@ class SendViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _state.update { it.copy(isSending = false) }
-                _effect.send(Effect.ShowError(e.message ?: "Transaction failed"))
+                _state.update { it.copy(isSending = false, sendError = e.message ?: "Transaction failed") }
             }
         }
     }
@@ -376,19 +378,9 @@ class SendViewModel @Inject constructor(
         return null
     }
 
-    /**
-     * Pactus addresses are bech32-encoded.
-     * pc1r... = Account (Ed25519)
-     * pc1p... = Validator (BLS)
-     * pc1z... = Account (BLS)
-     */
-    private fun isValidAccountAddress(address: String): Boolean {
-        val lower = address.lowercase()
-        if (lower.length !in 41..63) return false
-        if (!lower.startsWith("pc1r") && !lower.startsWith("pc1z") && !lower.startsWith("pc1p")) return false
-        val charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l".toSet()
-        return lower.drop(4).all { it in charset }
-    }
+    // Accepts pc1p / pc1z / pc1r / pc1y with full bech32m checksum validation.
+    private fun isValidAccountAddress(address: String): Boolean =
+        PactusAddress.isValidAccountAddress(address)
 }
 
 

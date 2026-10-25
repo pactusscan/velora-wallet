@@ -200,6 +200,9 @@
     <string name="settings_section_backup">Backup</string>
     <string name="settings_backup_phrase">Backup Phrase</string>
     <string name="settings_backup_phrase_subtitle">View your 12-word recovery phrase</string>
+    <string name="settings_recover_addresses">Recover addresses</string>
+    <string name="settings_recover_addresses_subtitle">Scan the chain for previously used accounts (PIP-41)</string>
+    <string name="settings_recover_addresses_scanning">Scanning the chain…</string>
     <string name="settings_section_appearance">Appearance</string>
     <string name="settings_theme">Theme</string>
     <string name="settings_theme_subtitle">Choose your preferred theme</string>
@@ -212,6 +215,11 @@
     <string name="settings_about">About Velora Wallet</string>
     <string name="settings_about_subtitle">Version, links, and legal</string>
     <string name="settings_tap_to_rename">Tap to rename</string>
+    <string name="settings_connected_sites">Connected sites</string>
+    <string name="settings_connected_sites_subtitle">dApps allowed to see your wallet address</string>
+    <string name="sites_empty">No sites connected.</string>
+    <string name="sites_connected_on">Connected %1$s</string>
+    <string name="action_revoke">Revoke</string>
 
     <!-- Security settings -->
     <string name="security_title">Security</string>
