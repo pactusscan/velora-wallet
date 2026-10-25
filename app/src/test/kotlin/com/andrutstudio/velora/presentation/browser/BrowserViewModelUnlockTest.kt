@@ -145,6 +145,45 @@ class BrowserViewModelUnlockTest {
         coVerify(exactly = 1) { walletRepository.signMessage("hello", account.address) }
     }
 
+    @Test
+    fun `a new request while one is pending is rejected and cannot replace it`() = runTest {
+        val vm = viewModel()
+        val effects = mutableListOf<BrowserViewModel.Effect>()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { vm.effect.collect { effects += it } }
+        vm.onSignMessageRequest("m1", "hello", "")
+        vm.onConfirmSignMessage()
+
+        // The page fires another request behind the unlock dialog.
+        vm.onSignMessageRequest("m2", "swapped", "")
+        vm.onSignRequest("r2", "pc1rattacker", "1000", "10", "")
+        assertTrue(effects.contains(BrowserViewModel.Effect.RejectSign("m2", BrowserViewModel.ERR_REQUEST_PENDING)))
+        assertTrue(effects.contains(BrowserViewModel.Effect.RejectSign("r2", BrowserViewModel.ERR_REQUEST_PENDING)))
+        assertNull(vm.state.value.pendingSignRequest)
+
+        vm.onUnlock(PASSWORD)
+
+        coVerify(exactly = 1) { walletRepository.signMessage("hello", account.address) }
+        coVerify(exactly = 0) { walletRepository.signMessage("swapped", any()) }
+        coVerify(exactly = 0) { sendTransaction(any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `unlock does not resume when the approved request changed`() {
+        val second = Account("pc1rsecond", "Account 2", AccountType.ED25519, 1)
+        every { walletRepository.observeWallet() } returns
+            flowOf(Wallet(name = "Test", accounts = listOf(account, second)))
+        val vm = viewModel()
+        vm.onSignMessageRequest("m1", "hello", "")
+        vm.onConfirmSignMessage()
+
+        vm.onSelectMessageSigner(second.address)
+        vm.onUnlock(PASSWORD)
+
+        assertFalse(vm.state.value.showUnlockDialog)
+        assertNotNull(vm.state.value.pendingSignMessageRequest)
+        coVerify(exactly = 0) { walletRepository.signMessage(any(), any()) }
+    }
+
     private companion object {
         const val PASSWORD = "correct horse"
         const val SIGNATURE = "sig"

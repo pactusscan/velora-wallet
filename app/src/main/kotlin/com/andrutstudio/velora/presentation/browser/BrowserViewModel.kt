@@ -114,6 +114,10 @@ class BrowserViewModel @Inject constructor(
     private val _effect = Channel<Effect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
+    // The exact request the user confirmed before the unlock dialog opened.
+    // Signing resumes after unlock only if that same request is still pending.
+    private var approvedBeforeUnlock: Any? = null
+
     init {
         val initialUrl = savedStateHandle.get<String>("url").orEmpty()
         val startUrl = initialUrl.ifBlank { HOME_URL }
@@ -300,6 +304,10 @@ class BrowserViewModel @Inject constructor(
         val host = currentHost()
         viewModelScope.launch {
             val connected = host.isNotBlank() && browserDao.isSiteConnected(host)
+            if (hasPendingSignRequest()) {
+                _effect.send(Effect.RejectSign(requestId, ERR_REQUEST_PENDING))
+                return@launch
+            }
             _state.update {
                 it.copy(
                     pendingSignRequest = PendingSignRequest(
@@ -346,6 +354,10 @@ class BrowserViewModel @Inject constructor(
                 _effect.send(Effect.RejectSign(requestId, "No account available"))
                 return@launch
             }
+            if (hasPendingSignRequest()) {
+                _effect.send(Effect.RejectSign(requestId, ERR_REQUEST_PENDING))
+                return@launch
+            }
             _state.update {
                 it.copy(
                     pendingSignMessageRequest = PendingSignMessageRequest(
@@ -376,7 +388,7 @@ class BrowserViewModel @Inject constructor(
     fun onConfirmSign() {
         val req = _state.value.pendingSignRequest ?: return
         if (!walletRepository.isUnlocked()) {
-            requestUnlock()
+            requestUnlock(req)
             return
         }
         _state.update { it.copy(isSigning = true) }
@@ -406,7 +418,7 @@ class BrowserViewModel @Inject constructor(
     fun onConfirmSignMessage() {
         val req = _state.value.pendingSignMessageRequest ?: return
         if (!walletRepository.isUnlocked()) {
-            requestUnlock()
+            requestUnlock(req)
             return
         }
         _state.update { it.copy(isSigning = true) }
@@ -441,6 +453,7 @@ class BrowserViewModel @Inject constructor(
     fun onCancelSign() {
         val req = _state.value.pendingSignRequest
         val msgReq = _state.value.pendingSignMessageRequest
+        approvedBeforeUnlock = null
         
         _state.update {
             it.copy(
@@ -455,13 +468,20 @@ class BrowserViewModel @Inject constructor(
         viewModelScope.launch { _effect.send(Effect.RejectSign(id, "User rejected")) }
     }
 
-    private fun requestUnlock() {
+    // Only one sign request at a time: a page must not be able to swap the
+    // request under the user's finger or behind the unlock dialog.
+    private fun hasPendingSignRequest(): Boolean =
+        _state.value.pendingSignRequest != null || _state.value.pendingSignMessageRequest != null
+
+    private fun requestUnlock(approved: Any) {
+        approvedBeforeUnlock = approved
         _state.update { it.copy(showUnlockDialog = true, unlockError = null) }
     }
 
     fun onDismissUnlock() {
         if (_state.value.isUnlocking) return
         // The sign sheet stays open, so the user can still reject the request.
+        approvedBeforeUnlock = null
         _state.update { it.copy(showUnlockDialog = false, unlockError = null) }
     }
 
@@ -482,10 +502,15 @@ class BrowserViewModel @Inject constructor(
                     return@launch
                 }
                 _state.update { it.copy(isUnlocking = false, showUnlockDialog = false) }
-                // Resume the request the user already approved.
+                // Resume only the exact request the user confirmed; if anything
+                // changed, the sheet stays open and the user confirms again.
+                val approved = approvedBeforeUnlock
+                approvedBeforeUnlock = null
+                val current = _state.value
                 when {
-                    _state.value.pendingSignRequest != null -> onConfirmSign()
-                    _state.value.pendingSignMessageRequest != null -> onConfirmSignMessage()
+                    approved == null -> Unit
+                    approved == current.pendingSignRequest -> onConfirmSign()
+                    approved == current.pendingSignMessageRequest -> onConfirmSignMessage()
                 }
             } catch (e: CancellationException) {
                 throw e
@@ -506,5 +531,6 @@ class BrowserViewModel @Inject constructor(
 
     companion object {
         const val HOME_URL = "about:blank"
+        const val ERR_REQUEST_PENDING = "Another request is pending"
     }
 }
