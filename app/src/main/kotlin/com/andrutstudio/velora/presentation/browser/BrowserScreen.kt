@@ -317,6 +317,7 @@ fun BrowserScreen(
             onBiometricClick = viewModel::onBiometricUnlockTriggered,
             onDismiss = viewModel::onDismissUnlock,
             onUnlock = viewModel::onUnlock,
+            dismissLabel = stringResource(R.string.action_reject),
         )
     }
 

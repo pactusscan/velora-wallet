@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed & Improved
+- **Unlock Dialog Wording**: The unlock dialog on Home and Settings now offers "Cancel" instead of "Reject". In the dApp browser it still says "Reject", because there it also declines the site's request.
+
 ## [0.1.6] - 2026-10-25
 
 This release hardens how dApps ask for signatures. If you use the in-app dApp browser, updating is recommended.

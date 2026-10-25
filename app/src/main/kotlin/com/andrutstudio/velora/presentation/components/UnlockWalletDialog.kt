@@ -22,6 +22,9 @@ fun UnlockWalletDialog(
     onUnlock: (password: String) -> Unit,
     isBiometricEnabled: Boolean = false,
     onBiometricClick: () -> Unit = {},
+    // "Cancel" just closes the dialog; callers whose dismiss also rejects a
+    // pending request (the dApp browser) pass "Reject".
+    dismissLabel: String = stringResource(R.string.action_cancel),
 ) {
     var password by remember { mutableStateOf("") }
 
@@ -79,7 +82,7 @@ fun UnlockWalletDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss, enabled = !isLoading) {
-                Text(stringResource(R.string.action_reject))
+                Text(dismissLabel)
             }
         },
     )
@@ -95,6 +98,20 @@ private fun UnlockWalletDialogPreview() {
             onDismiss = {},
             onUnlock = {},
             isBiometricEnabled = true
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun UnlockWalletDialogRejectPreview() {
+    VeloraTheme {
+        UnlockWalletDialog(
+            isLoading = false,
+            error = "Incorrect password",
+            onDismiss = {},
+            onUnlock = {},
+            dismissLabel = stringResource(R.string.action_reject),
         )
     }
 }
