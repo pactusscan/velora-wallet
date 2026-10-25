@@ -149,6 +149,7 @@
     <string name="browser_sign_amount">Jumlah</string>
     <string name="browser_sign_fee">Yuran</string>
     <string name="browser_sign_memo">Memo</string>
+    <string name="browser_sign_message_title">Tandatangani Mesej</string>
     <string name="browser_sign_message_signer">Akaun penandatangan</string>
     <string name="browser_sign_message_signer_requested">Diminta oleh laman ini</string>
     <string name="browser_bookmarks_header">Penanda Buku</string>

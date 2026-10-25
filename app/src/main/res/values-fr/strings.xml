@@ -151,6 +151,7 @@
     <string name="browser_sign_amount">Montant</string>
     <string name="browser_sign_fee">Frais</string>
     <string name="browser_sign_memo">Note</string>
+    <string name="browser_sign_message_title">Signer le message</string>
     <string name="browser_sign_message_signer">Compte signataire</string>
     <string name="browser_sign_message_signer_requested">Demandé par ce site</string>
     <string name="browser_bookmarks_header">Favoris</string>

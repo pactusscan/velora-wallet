@@ -182,6 +182,7 @@
     <string name="browser_sign_amount">Amount</string>
     <string name="browser_sign_fee">Fee</string>
     <string name="browser_sign_memo">Memo</string>
+    <string name="browser_sign_message_title">Sign Message</string>
     <string name="browser_sign_message_signer">Signing account</string>
     <string name="browser_sign_message_signer_requested">Requested by this site</string>
     <string name="browser_bookmarks_header">Bookmarks</string>
