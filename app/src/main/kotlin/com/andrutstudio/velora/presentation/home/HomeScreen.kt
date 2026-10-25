@@ -346,14 +346,17 @@ private fun WalletTab(
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
-                    TextButton(onClick = onShowAddAccount) {
-                        Icon(
-                            Icons.Rounded.Add,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                        )
-                        Spacer(Modifier.width(4.dp))
-                        Text(stringResource(R.string.home_add_account), style = MaterialTheme.typography.labelMedium)
+                    // An imported private key is a single account; only seed wallets derive more
+                    if (state.wallet?.isPrivateKeyImport != true) {
+                        TextButton(onClick = onShowAddAccount) {
+                            Icon(
+                                Icons.Rounded.Add,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                            )
+                            Spacer(Modifier.width(4.dp))
+                            Text(stringResource(R.string.home_add_account), style = MaterialTheme.typography.labelMedium)
+                        }
                     }
                 }
             }
@@ -478,6 +481,37 @@ fun HomeScreenPreview() {
                 }
             }
         }
+    }
+}
+
+@Preview(showSystemUi = true, name = "Home – Imported private key")
+@Composable
+fun HomeScreenPrivateKeyPreview() {
+    val wallet = Wallet(
+        name = "Imported Wallet",
+        network = Network.MAINNET,
+        isPrivateKeyImport = true,
+        accounts = listOf(
+            Account(
+                address = "pc1rmv39cmjl7hknrxn27l5jg5wv67am5hy2velora",
+                label = "Imported Account",
+                type = AccountType.ED25519,
+                derivationIndex = 0,
+            ),
+        ),
+    )
+    VeloraTheme {
+        WalletTab(
+            state = HomeViewModel.State(
+                wallet = wallet,
+                balances = mapOf(wallet.accounts[0].address to Amount.fromPac(12.0)),
+                isLoading = false,
+            ),
+            onRefresh = {},
+            onCopyAddress = {},
+            onStake = {},
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
 

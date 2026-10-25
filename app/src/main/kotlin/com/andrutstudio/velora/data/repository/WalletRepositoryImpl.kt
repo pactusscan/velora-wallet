@@ -270,6 +270,9 @@ class WalletRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             val mnemonic = requireUnlocked()
             val vault = vaultStorage.loadVault() ?: error("No vault found")
+            if (vault.isWatchOnly || vault.isPrivateKeyImport) {
+                error("Only wallets created from a seed phrase can add accounts")
+            }
             val network = Network.valueOf(vault.network)
 
             val nextIndex = vault.accounts.count { it.type == type.name }
@@ -350,10 +353,7 @@ class WalletRepositoryImpl @Inject constructor(
                 
                 // Fix legacy addresses if needed
                 val network = Network.valueOf(vault.network)
-                val updatedAccounts = vault.accounts.map { acc ->
-                    val derived = keyManager.deriveAccount(mnemonic, network, AccountType.valueOf(acc.type), acc.derivationIndex)
-                    acc.copy(address = derived.address)
-                }
+                val updatedAccounts = accountsFor(vault, mnemonic, network)
                 if (updatedAccounts != vault.accounts) {
                     val updatedVault = vault.copy(accounts = updatedAccounts)
                     vaultStorage.saveVault(updatedVault)
@@ -431,12 +431,7 @@ class WalletRepositoryImpl @Inject constructor(
         val vault = vaultStorage.loadVault() ?: error("No vault")
         if (Network.valueOf(vault.network) == network) return@withContext
         val mnemonic = requireUnlocked()
-        val reDerived = vault.accounts.map { acc ->
-            val type = AccountType.valueOf(acc.type)
-            val derived = keyManager.deriveAccount(mnemonic, network, type, acc.derivationIndex)
-            acc.copy(address = derived.address, derivationPath = derived.derivationPath)
-        }
-        val updated = vault.copy(network = network.name, accounts = reDerived)
+        val updated = vault.copy(network = network.name, accounts = accountsFor(vault, mnemonic, network))
         vaultStorage.saveVault(updated)
         publishState()
     }
@@ -498,6 +493,29 @@ class WalletRepositoryImpl @Inject constructor(
         
         // Return format: signature_hex + public_key_hex (common in simple signMessage implementations)
         signature.hexEncode() + publicKey.hexEncode()
+    }
+
+    /**
+     * Recomputes the stored addresses from the wallet secret for [network].
+     * For an imported private key the secret is the key itself, not a
+     * mnemonic, so its single address comes straight from the key; treating it
+     * as a mnemonic throws and used to break unlocking (and so every send).
+     */
+    private fun accountsFor(vault: WalletVault, secret: String, network: Network): List<VaultAccount> {
+        if (vault.isPrivateKeyImport) {
+            val keyBytes = secret.hexDecode()
+            try {
+                return vault.accounts.map { acc ->
+                    acc.copy(address = keyManager.addressFromPrivateKey(keyBytes, network, AccountType.valueOf(acc.type)))
+                }
+            } finally {
+                keyBytes.fill(0)
+            }
+        }
+        return vault.accounts.map { acc ->
+            val derived = keyManager.deriveAccount(secret, network, AccountType.valueOf(acc.type), acc.derivationIndex)
+            acc.copy(address = derived.address, derivationPath = derived.derivationPath)
+        }
     }
 
     private fun requireUnlocked(): String =
