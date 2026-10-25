@@ -12,11 +12,11 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(keystorePropertiesFile.inputStream())
 }
 
-// Load local properties for sensitive signing information
-val localProperties = Properties().apply {
-    val f = rootProject.file("local.properties")
-    if (f.exists()) f.inputStream().use { load(it) }
-}
+// Signing values come from environment variables on CI (see .github/workflows/release.yml)
+// and fall back to velora.keystore for local builds.
+fun signingValue(envName: String, propKey: String): String? =
+    System.getenv(envName)?.takeIf { it.isNotBlank() }
+        ?: (keystoreProperties[propKey] as? String)?.trim()
 
 // --- Helper functions for versioning ---
 
@@ -60,7 +60,9 @@ fun generateVersionCode(): Int {
 
 // CRITICAL: Store suffix in a variable to ensure consistency across the build process
 val buildSuffix = getVersionSuffix()
-val fullVersionName = "0.1.5$buildSuffix"
+// Release tags must match this value; the release workflow checks it.
+val baseVersionName = "0.1.5"
+val fullVersionName = "$baseVersionName$buildSuffix"
 
 // ---------------------------------------
 
@@ -107,10 +109,10 @@ android {
             keyPassword = keystoreProperties["keyPassword"] as? String ?: ""
         }
         create("release") {
-            storeFile = localProperties.getProperty("signing.storeFile")?.let { file(it) }
-            storePassword = localProperties.getProperty("signing.storePassword") ?: ""
-            keyAlias = localProperties.getProperty("signing.keyAlias") ?: ""
-            keyPassword = localProperties.getProperty("signing.keyPassword") ?: ""
+            storeFile = signingValue("VELORA_KEYSTORE_FILE", "storeFile")?.let { file(it) }
+            storePassword = signingValue("VELORA_KEYSTORE_PASSWORD", "storePassword") ?: ""
+            keyAlias = signingValue("VELORA_KEY_ALIAS", "keyAlias") ?: ""
+            keyPassword = signingValue("VELORA_KEY_PASSWORD", "keyPassword") ?: ""
         }
     }
 
