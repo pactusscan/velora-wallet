@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,6 +46,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -75,6 +79,8 @@ import kotlinx.coroutines.launch
 import com.andrutstudio.velora.R
 import com.andrutstudio.velora.data.local.db.BookmarkEntity
 import com.andrutstudio.velora.data.local.db.BrowserHistoryEntity
+import com.andrutstudio.velora.domain.model.Account
+import com.andrutstudio.velora.domain.model.AccountType
 import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.presentation.components.MainBottomNavigation
 import com.andrutstudio.velora.presentation.navigation.Screen
@@ -156,8 +162,8 @@ fun BrowserScreen(
             onSignRequest = { id, to, amount, fee, memo ->
             viewModel.onSignRequest(id, to, amount, fee, memo)
         },
-        onSignMessageRequest = { id, message ->
-            viewModel.onSignMessageRequest(id, message)
+        onSignMessageRequest = { id, message, address ->
+            viewModel.onSignMessageRequest(id, message, address)
         },
     )
 }
@@ -279,6 +285,7 @@ fun BrowserScreen(
         SignMessageRequestSheet(
             request = state.pendingSignMessageRequest!!,
             isSigning = state.isSigning,
+            onSelectSigner = viewModel::onSelectMessageSigner,
             onConfirm = viewModel::onConfirmSignMessage,
             onCancel = viewModel::onCancelSign,
         )
@@ -764,6 +771,7 @@ private fun SignRequestSheetContent(
 private fun SignMessageRequestSheet(
     request: BrowserViewModel.PendingSignMessageRequest,
     isSigning: Boolean,
+    onSelectSigner: (String) -> Unit,
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
 ) {
@@ -771,7 +779,7 @@ private fun SignMessageRequestSheet(
         onDismissRequest = onCancel,
         sheetState = rememberModalBottomSheetState(),
     ) {
-        SignMessageSheetContent(request, isSigning, onConfirm, onCancel)
+        SignMessageSheetContent(request, isSigning, onSelectSigner, onConfirm, onCancel)
     }
 }
 
@@ -779,12 +787,14 @@ private fun SignMessageRequestSheet(
 private fun SignMessageSheetContent(
     request: BrowserViewModel.PendingSignMessageRequest,
     isSigning: Boolean,
+    onSelectSigner: (String) -> Unit,
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp)
             .padding(bottom = 32.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -800,7 +810,24 @@ private fun SignMessageSheetContent(
         }
 
         SignRow("Site", request.host)
-        SignRow("From", request.fromAddress)
+        when {
+            request.signerFixed -> {
+                SignRow(stringResource(R.string.browser_sign_from), request.fromAddress)
+                Text(
+                    stringResource(R.string.browser_sign_message_signer_requested),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.align(Alignment.End),
+                )
+            }
+            request.signerOptions.size > 1 -> SignerPicker(
+                options = request.signerOptions,
+                selected = request.fromAddress,
+                enabled = !isSigning,
+                onSelect = onSelectSigner,
+            )
+            else -> SignRow(stringResource(R.string.browser_sign_from), request.fromAddress)
+        }
 
         Spacer(Modifier.height(8.dp))
         Text("Message to Sign:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -846,6 +873,59 @@ private fun SignMessageSheetContent(
         }
     }
 }
+
+@Composable
+private fun SignerPicker(
+    options: List<Account>,
+    selected: String,
+    enabled: Boolean,
+    onSelect: (String) -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(
+            stringResource(R.string.browser_sign_message_signer),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Column(modifier = Modifier.selectableGroup()) {
+            options.forEach { account ->
+                val isSelected = account.address == selected
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(
+                            if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
+                            else Color.Transparent
+                        )
+                        .selectable(
+                            selected = isSelected,
+                            enabled = enabled,
+                            role = Role.RadioButton,
+                            onClick = { onSelect(account.address) },
+                        )
+                        .padding(horizontal = 4.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    RadioButton(selected = isSelected, onClick = null, enabled = enabled)
+                    Spacer(Modifier.width(8.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(account.label, style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            account.address.truncateMiddle(),
+                            style = MaterialTheme.typography.bodySmall,
+                            fontFamily = FontFamily.Monospace,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+private fun String.truncateMiddle(): String =
+    if (length > 20) "${take(10)}…${takeLast(8)}" else this
 
 @Composable
 private fun SignRow(label: String, value: String) {
@@ -949,6 +1029,54 @@ private fun SignMessageSheetContentPreview() {
                 message = "Sign in to PactusScan Play\nNonce: 8f3a2c",
             ),
             isSigning = false,
+            onSelectSigner = {},
+            onConfirm = {},
+            onCancel = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SignMessageSheetPickerPreview() {
+    val options = listOf(
+        Account("pc1rmv39cmjlexample27l5jg5wv67am5hy2velora", "Account 1", AccountType.ED25519, 0),
+        Account("pc1r0hrct8eycrceqm5g0examplezc4vf59d80vg7", "Account 2", AccountType.ED25519, 1),
+        Account("pc1r7ldx2examplefq8wcn3h0yl9k5tq6zp4am2xs", "Savings", AccountType.ED25519, 2),
+    )
+    VeloraTheme {
+        SignMessageSheetContent(
+            request = BrowserViewModel.PendingSignMessageRequest(
+                requestId = "1",
+                host = "play.pactusscan.com",
+                needsConnect = true,
+                fromAddress = options[1].address,
+                message = "Sign in to PactusScan Play\nNonce: 8f3a2c",
+                signerOptions = options,
+            ),
+            isSigning = false,
+            onSelectSigner = {},
+            onConfirm = {},
+            onCancel = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SignMessageSheetRequestedPreview() {
+    VeloraTheme {
+        SignMessageSheetContent(
+            request = BrowserViewModel.PendingSignMessageRequest(
+                requestId = "1",
+                host = "pactusscan.com",
+                needsConnect = false,
+                fromAddress = "pc1r0hrct8eycrceqm5g0examplezc4vf59d80vg7",
+                message = "I own pc1r0hrct8eycrceqm5g0examplezc4vf59d80vg7\nClaim ID: 4821",
+                signerFixed = true,
+            ),
+            isSigning = false,
+            onSelectSigner = {},
             onConfirm = {},
             onCancel = {},
         )

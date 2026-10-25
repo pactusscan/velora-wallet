@@ -324,4 +324,6 @@
     <string name="security_setup_biometric_title">Aktifkan buka kunci biometrik</string>
     <string name="security_setup_biometric_subtitle">Gunakan sidik jari atau wajah untuk membuka kunci tanpa kata sandi</string>
     <string name="security_setup_create">Buat Dompet</string>
+    <string name="browser_sign_message_signer">Akun penanda tangan</string>
+    <string name="browser_sign_message_signer_requested">Diminta oleh situs ini</string>
 </resources>

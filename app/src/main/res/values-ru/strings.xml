@@ -168,6 +168,8 @@
     <string name="browser_sign_amount">Сумма</string>
     <string name="browser_sign_fee">Комиссия</string>
     <string name="browser_sign_memo">Примечание</string>
+    <string name="browser_sign_message_signer">Аккаунт для подписи</string>
+    <string name="browser_sign_message_signer_requested">Запрошен этим сайтом</string>
     <string name="browser_bookmarks_header">Закладки</string>
     <string name="browser_bookmarks_empty">Закладок пока нет</string>
     <string name="browser_history_header">История</string>
