@@ -244,14 +244,10 @@ fun SettingsScreen(
                 SettingsItem(
                     icon = Icons.Rounded.Translate,
                     title = stringResource(R.string.settings_language),
-                    subtitle = when (state.currentLanguage) {
-                        "in" -> stringResource(R.string.language_indonesian)
-                        "ms" -> stringResource(R.string.language_malay)
-                        "vi" -> stringResource(R.string.language_vietnamese)
-                        "fr" -> stringResource(R.string.language_french)
-                        "es" -> stringResource(R.string.language_spanish)
-                        else -> stringResource(R.string.language_english)
-                    },
+                    subtitle = stringResource(
+                        AppLanguages.firstOrNull { languageOf(it.first) == state.currentLanguage }?.second
+                            ?: R.string.language_english
+                    ),
                     onClick = viewModel::onShowLanguageSelector,
                 )
 
@@ -488,18 +484,9 @@ private fun LanguageSelectorDialog(
     onLanguageChange: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val languages = listOf(
-        "en" to stringResource(R.string.language_english),
-        "es" to stringResource(R.string.language_spanish),
-        "fr" to stringResource(R.string.language_french),
-        "in" to stringResource(R.string.language_indonesian),
-        "ms" to stringResource(R.string.language_malay),
-        "vi" to stringResource(R.string.language_vietnamese),
-        "de" to stringResource(R.string.language_german),
-        "pt" to stringResource(R.string.language_portuguese),
-        "ru" to stringResource(R.string.language_russian),
-        "zh" to stringResource(R.string.language_chinese),
-    ).sortedBy { it.second }
+    val languages = AppLanguages
+        .map { (tag, name) -> tag to stringResource(name) }
+        .sortedBy { it.second }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -509,7 +496,7 @@ private fun LanguageSelectorDialog(
                 languages.forEach { (code, name) ->
                     LanguageOption(
                         title = name,
-                        selected = currentLanguage == code,
+                        selected = currentLanguage == languageOf(code),
                         onClick = { onLanguageChange(code) }
                     )
                 }

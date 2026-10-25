@@ -4,6 +4,7 @@
 
 ### Fixed & Improved
 - **Unlock Dialog Wording**: The unlock dialog on Home and Settings now offers "Cancel" instead of "Reject". In the dApp browser it still says "Reject", because there it also declines the site's request.
+- **All Languages in System Settings**: German, Portuguese (Brazil), Russian and Chinese can now also be chosen in Android's per-app language settings (Android 13+), and the Settings screen shows their name instead of "English".
 
 ## [0.1.6] - 2026-10-25
 
