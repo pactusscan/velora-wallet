@@ -191,10 +191,14 @@
     <string name="settings_section_backup">Backup</string>
     <string name="settings_backup_phrase">Backup-Phrase</string>
     <string name="settings_backup_phrase_subtitle">Ihre 12-Wort-Wiederherstellungsphrase ansehen</string>
+    <string name="settings_recover_addresses">Adressen wiederherstellen</string>
+    <string name="settings_recover_addresses_subtitle">Blockchain nach früher genutzten Konten durchsuchen (PIP-41)</string>
+    <string name="settings_recover_addresses_scanning">Blockchain wird durchsucht…</string>
     <string name="settings_section_appearance">Erscheinungsbild</string>
     <string name="settings_theme">Thema</string>
     <string name="settings_theme_subtitle">Wählen Sie Ihr bevorzugtes Thema</string>
     <string name="theme_select">Thema wählen</string>
+    <string name="theme_selector">Design</string>
     <string name="theme_system">System-Standard</string>
     <string name="theme_light">Hell</string>
     <string name="theme_dark">Dunkel</string>
@@ -202,6 +206,11 @@
     <string name="settings_about">Über Velora Wallet</string>
     <string name="settings_about_subtitle">Version, Links und Rechtliches</string>
     <string name="settings_tap_to_rename">Zum Umbenennen tippen</string>
+    <string name="settings_connected_sites">Verbundene Websites</string>
+    <string name="settings_connected_sites_subtitle">dApps, die deine Wallet-Adresse sehen dürfen</string>
+    <string name="sites_empty">Keine Websites verbunden.</string>
+    <string name="sites_connected_on">Verbunden am %1$s</string>
+    <string name="action_revoke">Widerrufen</string>
 
     <!-- Security settings -->
     <string name="security_title">Sicherheit</string>

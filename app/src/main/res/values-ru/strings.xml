@@ -189,16 +189,25 @@
     <string name="settings_section_backup">Резервная копия</string>
     <string name="settings_backup_phrase">Сид-фраза</string>
     <string name="settings_backup_phrase_subtitle">Просмотр вашей фразы из 12 слов</string>
+    <string name="settings_recover_addresses">Восстановить адреса</string>
+    <string name="settings_recover_addresses_subtitle">Найти в блокчейне ранее использованные аккаунты (PIP-41)</string>
+    <string name="settings_recover_addresses_scanning">Поиск в блокчейне…</string>
     <string name="settings_section_appearance">Внешний вид</string>
     <string name="settings_theme">Тема</string>
     <string name="settings_theme_subtitle">Выберите цветовую схему</string>
     <string name="theme_select">Выбор темы</string>
+    <string name="theme_selector">Тема</string>
     <string name="theme_system">Системная тема</string>
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Темная</string>
     <string name="settings_section_about">О приложении</string>
     <string name="settings_about">О кошельке Velora</string>
     <string name="settings_about_subtitle">Версия, ссылки и информация</string>
+    <string name="settings_connected_sites">Подключённые сайты</string>
+    <string name="settings_connected_sites_subtitle">dApps, которым разрешено видеть адрес вашего кошелька</string>
+    <string name="sites_empty">Нет подключённых сайтов.</string>
+    <string name="sites_connected_on">Подключён %1$s</string>
+    <string name="action_revoke">Отозвать</string>
 
     <!-- Security settings -->
     <string name="security_title">Безопасность</string>

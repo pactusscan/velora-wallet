@@ -189,16 +189,25 @@
     <string name="settings_section_backup">备份</string>
     <string name="settings_backup_phrase">备份助记词</string>
     <string name="settings_backup_phrase_subtitle">查看您的 12 字恢复助记词</string>
+    <string name="settings_recover_addresses">恢复地址</string>
+    <string name="settings_recover_addresses_subtitle">在链上扫描以前使用过的账户 (PIP-41)</string>
+    <string name="settings_recover_addresses_scanning">正在扫描链…</string>
     <string name="settings_section_appearance">外观</string>
     <string name="settings_theme">主题</string>
     <string name="settings_theme_subtitle">选择您的首选主题</string>
     <string name="theme_select">选择主题</string>
+    <string name="theme_selector">主题</string>
     <string name="theme_system">系统默认</string>
     <string name="theme_light">浅色</string>
     <string name="theme_dark">深色</string>
     <string name="settings_section_about">关于</string>
     <string name="settings_about">关于 Velora 钱包</string>
     <string name="settings_about_subtitle">版本、链接和法律信息</string>
+    <string name="settings_connected_sites">已连接的网站</string>
+    <string name="settings_connected_sites_subtitle">允许查看您钱包地址的 dApp</string>
+    <string name="sites_empty">没有已连接的网站。</string>
+    <string name="sites_connected_on">连接于 %1$s</string>
+    <string name="action_revoke">撤销</string>
 
     <!-- Security settings -->
     <string name="security_title">安全</string>

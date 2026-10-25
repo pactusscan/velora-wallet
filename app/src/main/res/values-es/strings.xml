@@ -189,13 +189,22 @@
     <string name="settings_section_backup">Respaldo</string>
     <string name="settings_backup_phrase">Frase de respaldo</string>
     <string name="settings_backup_phrase_subtitle">Vea su frase de recuperación de 12 palabras</string>
+    <string name="settings_recover_addresses">Recuperar direcciones</string>
+    <string name="settings_recover_addresses_subtitle">Buscar en la cadena cuentas usadas anteriormente (PIP-41)</string>
+    <string name="settings_recover_addresses_scanning">Buscando en la cadena…</string>
     <string name="settings_section_appearance">Apariencia</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_subtitle">Elige tu tema preferido</string>
+    <string name="theme_selector">Tema</string>
     <string name="settings_section_about">Acerca de</string>
     <string name="settings_about">Acerca de Velora Wallet</string>
     <string name="settings_about_subtitle">Versión, enlaces y legal</string>
     <string name="settings_tap_to_rename">Toca para renombrar</string>
+    <string name="settings_connected_sites">Sitios conectados</string>
+    <string name="settings_connected_sites_subtitle">dApps que pueden ver la dirección de tu billetera</string>
+    <string name="sites_empty">No hay sitios conectados.</string>
+    <string name="sites_connected_on">Conectado el %1$s</string>
+    <string name="action_revoke">Revocar</string>
 
     <!-- Security settings -->
     <string name="security_title">Seguridad</string>

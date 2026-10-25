@@ -170,13 +170,22 @@
     <string name="settings_section_backup">Sandaran</string>
     <string name="settings_backup_phrase">Frasa Sandaran</string>
     <string name="settings_backup_phrase_subtitle">Lihat frasa pemulihan 12 perkataan anda</string>
+    <string name="settings_recover_addresses">Pulihkan alamat</string>
+    <string name="settings_recover_addresses_subtitle">Imbas rantaian untuk akaun yang pernah digunakan (PIP-41)</string>
+    <string name="settings_recover_addresses_scanning">Mengimbas rantaian…</string>
     <string name="settings_section_appearance">Penampilan</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_subtitle">Pilih tema kegemaran anda</string>
+    <string name="theme_selector">Tema</string>
     <string name="settings_section_about">Perihal</string>
     <string name="settings_about">Perihal Velora Wallet</string>
     <string name="settings_about_subtitle">Versi, pautan, dan perundangan</string>
     <string name="settings_tap_to_rename">Ketik untuk menukar nama</string>
+    <string name="settings_connected_sites">Laman disambungkan</string>
+    <string name="settings_connected_sites_subtitle">dApp yang dibenarkan melihat alamat dompet anda</string>
+    <string name="sites_empty">Tiada laman disambungkan.</string>
+    <string name="sites_connected_on">Disambungkan %1$s</string>
+    <string name="action_revoke">Batalkan akses</string>
 
     <!-- Security settings -->
     <string name="security_title">Keselamatan</string>
