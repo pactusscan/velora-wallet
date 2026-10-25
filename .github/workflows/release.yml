@@ -1,6 +1,6 @@
 # Builds a signed release APK and publishes a GitHub Release when a version tag
-# (e.g. 0.1.5) is pushed. The tag must match baseVersionName in app/build.gradle.kts
-# and have a matching "## [x.y.z]" section in changelog.md.
+# (e.g. 0.1.5) is pushed. The tag becomes the app's version name, and changelog.md
+# must have a matching "## [x.y.z]" section for the release notes.
 #
 # Required repository secrets:
 #   VELORA_KEYSTORE_BASE64    base64 of the release keystore file
@@ -35,14 +35,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-
-      - name: Check tag matches app version
-        run: |
-          version=$(sed -n 's/^val baseVersionName = "\(.*\)"/\1/p' app/build.gradle.kts)
-          if [ "$version" != "$GITHUB_REF_NAME" ]; then
-            echo "::error::Tag $GITHUB_REF_NAME does not match baseVersionName $version in app/build.gradle.kts"
-            exit 1
-          fi
 
       - name: Extract release notes from changelog
         run: |
@@ -82,6 +74,7 @@ jobs:
           VELORA_KEYSTORE_PASSWORD: ${{ secrets.VELORA_KEYSTORE_PASSWORD }}
           VELORA_KEY_ALIAS: ${{ secrets.VELORA_KEY_ALIAS }}
           VELORA_KEY_PASSWORD: ${{ secrets.VELORA_KEY_PASSWORD }}
+          VELORA_VERSION_NAME: ${{ github.ref_name }}
         run: ./gradlew --no-daemon assembleRelease
 
       - name: Verify signing certificate

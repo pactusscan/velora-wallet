@@ -60,8 +60,23 @@ fun generateVersionCode(): Int {
 
 // CRITICAL: Store suffix in a variable to ensure consistency across the build process
 val buildSuffix = getVersionSuffix()
-// Release tags must match this value; the release workflow checks it.
-val baseVersionName = "0.1.5"
+/**
+ * Returns the most recent git tag (e.g. 0.1.5), or null when git or tags are unavailable.
+ */
+fun latestGitTag(): String? = try {
+    providers.exec {
+        commandLine("git", "describe", "--tags", "--abbrev=0")
+        isIgnoreExitValue = true
+    }.standardOutput.asText.get().trim().takeIf { it.isNotEmpty() }
+} catch (e: Exception) {
+    null
+}
+
+// The version name comes from the release tag: the release workflow passes it in
+// VELORA_VERSION_NAME, and local builds fall back to the latest git tag.
+val baseVersionName = System.getenv("VELORA_VERSION_NAME")?.takeIf { it.isNotBlank() }
+    ?: latestGitTag()
+    ?: "0.0.0"
 val fullVersionName = "$baseVersionName$buildSuffix"
 
 // ---------------------------------------
