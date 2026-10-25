@@ -8,6 +8,7 @@
 - **Complete Indonesian Translation**: The 94 texts that still appeared in English in Indonesian (Settings, dApp browser, Stake, balance alerts, Receive) are now translated, and Recover addresses, Connected sites and the theme selector are translated in every language.
 - **Translatable Screens**: Transaction details, history filters and status badges, the dApp connect sheet, password strength, node monitor labels and several buttons were hardcoded in English and can now be translated. In the Send and Stake confirmation, addresses are shortened and shown in monospace in every language (previously this only worked for some English labels).
 - **Translatable Messages**: Validation errors, confirmations and failure messages (wrong password, invalid amount, wallet created, network switched and more) can now be translated. Errors reported by the node are still shown as they are.
+- **Complete Translations**: All ten languages (English, Indonesian, Malay, Vietnamese, French, Spanish, German, Portuguese, Russian and Chinese) now cover every text in the app, including the address book, saved memos, staking and the new messages above.
 
 ## [0.1.6] - 2026-10-25
 

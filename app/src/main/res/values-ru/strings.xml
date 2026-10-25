@@ -4,6 +4,13 @@
 
     <!-- Widget -->
     <string name="widget_description">Отображает ваш баланс PAC на главном экране</string>
+    <string name="app_logo_desc">Логотип Velora</string>
+    <string name="password_strength_weak">Слабый</string>
+    <string name="password_strength_fair">Средний</string>
+    <string name="password_strength_strong">Надёжный</string>
+    <string name="password_strength_very_strong">Очень надёжный</string>
+    <string name="password_show">Показать пароль</string>
+    <string name="password_hide">Скрыть пароль</string>
     <string name="widget_tap_to_open">Нажмите, чтобы открыть кошелек</string>
 
     <!-- Bottom navigation -->
@@ -27,10 +34,14 @@
     <string name="action_hide">Скрыть</string>
     <string name="action_add">Добавить</string>
     <string name="action_delete">Удалить</string>
+    <string name="action_edit">Изменить</string>
+    <string name="swipe_custom">Ещё</string>
     <string name="action_switch_wallet">Сменить кошелек</string>
     <string name="common_balance">Баланс: %1$s</string>
     <string name="common_amount_placeholder">0.00</string>
     <string name="common_fee_placeholder">0.01</string>
+    <string name="common_unknown">Неизвестно</string>
+    <string name="common_unknown_error">Неизвестная ошибка</string>
     <string name="balance_total_label">Общий баланс</string>
     <string name="balance_usd_estimate">≈ $%1$s</string>
 
@@ -61,6 +72,7 @@
     <string name="stake_validator_pubkey_placeholder">Только если это не ваш валидатор</string>
     <string name="stake_amount_label">Сумма стейкинга</string>
     <string name="stake_fee_label">Комиссия сети</string>
+    <string name="stake_fee_auto">Рассчитать комиссию автоматически</string>
     <string name="stake_memo_label">Примечание (необязательно)</string>
     <string name="stake_memo_placeholder">Ваше сообщение</string>
     <string name="stake_preview_button">Проверить стейкинг</string>
@@ -72,9 +84,14 @@
     <string name="stake_success_message">Ваша транзакция стейкинга отправлена в сеть Pactus.</string>
     <string name="stake_tx_id_copied">ID транзакции скопирован</string>
     <string name="stake_sender_label">Отправитель</string>
+    <string name="stake_current_label">Текущий стейк: %1$s</string>
+    <string name="stake_max_error">Общий стейк не может превышать 1 000 PAC. Можно добавить не более %1$s PAC.</string>
     <string name="home_my_wallets">Мои кошельки</string>
     <string name="home_add_new">Добавить новый</string>
     <string name="home_add_new_wallet">Добавить новый кошелек</string>
+    <string name="home_default_wallet_name">Основной кошелек</string>
+    <string name="home_alert_action">Оповещение</string>
+    <string name="wallet_picker_active">Активен</string>
     <string name="home_accounts_count">%1$d счет</string>
     <string name="home_accounts_count_plural">%1$d счетов</string>
     <string name="home_reset_wallet_title">Сбросить кошелек?</string>
@@ -108,6 +125,16 @@
     <string name="send_to_label">Адрес получателя</string>
     <string name="send_to_placeholder">pc1z…</string>
     <string name="send_scan_qr">Сканировать QR</string>
+    <string name="send_address_book">Адресная книга</string>
+    <string name="address_book_empty">Адресная книга пуста.</string>
+    <string name="address_book_add_title">Добавить в адресную книгу</string>
+    <string name="address_book_label_hint">Название (например, Моя биржа)</string>
+    <string name="address_book_address_hint">Адрес Pactus</string>
+    <string name="address_book_save">Сохранить в контакты</string>
+    <string name="send_saved_memos">Сохраненные примечания</string>
+    <string name="memos_empty">Пока нет сохраненных примечаний.</string>
+    <string name="memos_add_title">Сохранить примечание</string>
+    <string name="memos_text_hint">Введите текст примечания</string>
     <string name="send_scan_prompt">Сканировать адрес Pactus</string>
     <string name="send_amount_label">Сумма</string>
     <string name="send_amount_nanopac">Сумма в NanoPAC</string>
@@ -126,6 +153,7 @@
     <string name="send_success_title">Перевод выполнен</string>
     <string name="send_success_message">Ваши PAC отправлены в сеть и обрабатываются.</string>
     <string name="send_tx_id_copied">ID транзакции скопирован</string>
+    <string name="send_tx_id_label">ID транзакции</string>
     <string name="send_success">Транзакция отправлена! ID: %1$s…</string>
     <string name="send_unit_pac">PAC</string>
     <string name="send_unit_npac">nPAC</string>
@@ -146,8 +174,25 @@
     <string name="history_status_pending">В ожидании</string>
     <string name="history_status_failed">Ошибка</string>
     <string name="history_status_confirmed">Подтверждено</string>
+    <string name="history_filter_all_accounts">Все аккаунты</string>
+    <string name="history_select_account">Выберите аккаунт</string>
     <string name="history_transaction_detail">Детали транзакции</string>
     <string name="history_tx_id">TX ID</string>
+    <string name="history_direction_received">Получено</string>
+    <string name="history_direction_sent">Отправлено</string>
+    <string name="history_direction_self">Себе</string>
+    <string name="history_detail_status">Статус</string>
+    <string name="history_detail_type">Тип</string>
+    <string name="history_detail_from">От</string>
+    <string name="history_detail_to">Кому</string>
+    <string name="history_detail_fee">Комиссия</string>
+    <string name="history_detail_block">Блок</string>
+    <string name="history_detail_date">Дата</string>
+    <string name="history_detail_memo">Примечание</string>
+    <string name="history_copy_from_address">Копировать адрес отправителя</string>
+    <string name="history_copy_to_address">Копировать адрес получателя</string>
+    <string name="history_copy_tx_id">Копировать ID транзакции</string>
+    <string name="history_toggle_date_mode">Переключить местное время / UTC</string>
     <string name="history_empty_title">Транзакций пока нет</string>
     <string name="history_empty_subtitle">Здесь будет отображаться ваша история транзакций</string>
 
@@ -162,12 +207,26 @@
     <string name="browser_search_placeholder">Поиск или ввод URL</string>
     <string name="browser_ecosystem_title">Экосистема Pactus</string>
     <string name="browser_ecosystem_subtitle">Откройте для себя децентрализованный мир Pactus</string>
+    <string name="browser_eco_website_title">Сайт Pactus</string>
+    <string name="browser_eco_website_desc">Официальный сайт блокчейна Pactus.</string>
+    <string name="browser_eco_scan_desc">Основной обозреватель блоков сети Pactus.</string>
+    <string name="browser_eco_docs_title">Документация Pactus</string>
+    <string name="browser_eco_docs_desc">Подробные руководства и техническая документация.</string>
+    <string name="browser_eco_github_desc">Исходный код и ход разработки.</string>
+    <string name="browser_eco_pips_desc">Предложения по улучшению Pactus и стандарты.</string>
     <string name="browser_sign_title">Подписать транзакцию</string>
     <string name="browser_sign_from">От</string>
     <string name="browser_sign_to">Кому</string>
     <string name="browser_sign_amount">Сумма</string>
     <string name="browser_sign_fee">Комиссия</string>
     <string name="browser_sign_memo">Примечание</string>
+    <string name="browser_connect_title">Подключиться к этому сайту?</string>
+    <string name="browser_connect_message">Сайт запрашивает адрес вашего кошелька. Он не сможет переводить средства без вашего подтверждения каждой транзакции.</string>
+    <string name="browser_connect_button">Подключить</string>
+    <string name="browser_site">Сайт</string>
+    <string name="browser_account">Аккаунт</string>
+    <string name="browser_not_connected_note">Этот сайт еще не подключен к вашему кошельку. Подтверждение также подключит его.</string>
+    <string name="browser_message_to_sign">Сообщение для подписи</string>
     <string name="browser_sign_message_title">Подписать сообщение</string>
     <string name="browser_sign_message_signer">Аккаунт для подписи</string>
     <string name="browser_sign_message_signer_requested">Запрошен этим сайтом</string>
@@ -203,6 +262,7 @@
     <string name="settings_section_about">О приложении</string>
     <string name="settings_about">О кошельке Velora</string>
     <string name="settings_about_subtitle">Версия, ссылки и информация</string>
+    <string name="settings_tap_to_rename">Нажмите, чтобы переименовать</string>
     <string name="settings_connected_sites">Подключённые сайты</string>
     <string name="settings_connected_sites_subtitle">dApps, которым разрешено видеть адрес вашего кошелька</string>
     <string name="sites_empty">Нет подключённых сайтов.</string>
@@ -268,6 +328,7 @@
     <string name="about_tagline">Легкий клиент для блокчейна Pactus</string>
     <string name="about_website">Сайт Velora</string>
     <string name="about_website_subtitle">velora.pactusscan.com</string>
+    <string name="about_explorer">Открыть в обозревателе</string>
     <string name="about_terms">Условия использования</string>
     <string name="about_terms_subtitle">velora.pactusscan.com/terms-of-service</string>
     <string name="about_privacy">Политика конфиденциальности</string>
@@ -289,6 +350,8 @@
     <string name="notification_balance_alert_text">Баланс кошелька \'%1$s\' составляет %2$s, что %3$s вашего порога в %4$s</string>
     <string name="notification_condition_below">ниже</string>
     <string name="notification_condition_above">выше</string>
+    <string name="notification_node_offline_title">Узел офлайн</string>
+    <string name="notification_node_offline_text">Узел %1$s недоступен или офлайн.</string>
 
     <!-- Node Monitor screen -->
     <string name="node_title">Монитор узла</string>
@@ -325,6 +388,9 @@
     <string name="node_error_daemon_down">Не удалось подключиться к демону.</string>
     <string name="node_error_not_found">Узел не найден. Проверьте адрес.</string>
     <string name="node_add_confirm">Добавить</string>
+    <string name="node_peer_info_missing">Нет информации о пире</string>
+    <string name="node_avg_score_label">Средний балл</string>
+    <string name="node_add_input_label">Адрес валидатора или PeerID</string>
     <string name="node_add_dialog_title">Добавить узел</string>
     <string name="node_add_dialog_body">Введите адрес валидатора для мониторинга его узла.</string>
     <string name="node_address_label">Адрес валидатора</string>
@@ -412,4 +478,67 @@
     <string name="security_setup_biometric_title">Включить биометрию</string>
     <string name="security_setup_biometric_subtitle">Используйте отпечаток или лицо для входа без пароля</string>
     <string name="security_setup_create">Создать кошелек</string>
+    <string name="error_incorrect_password">Неверный пароль</string>
+    <string name="error_unlock_failed">Не удалось разблокировать</string>
+    <string name="error_transaction_failed">Транзакция не выполнена</string>
+    <string name="error_signing_failed">Не удалось подписать</string>
+    <string name="error_staking_failed">Стейкинг не выполнен</string>
+    <string name="error_enter_valid_amount">Введите корректную сумму</string>
+    <string name="error_enter_fee">Введите комиссию</string>
+    <string name="error_insufficient_balance">Недостаточно средств для суммы и комиссии</string>
+    <string name="error_enter_wallet_password">Введите пароль кошелька</string>
+    <string name="error_fee_estimation">Не удалось оценить — введите комиссию вручную</string>
+    <string name="error_password_min_length">Пароль должен содержать не менее 8 символов</string>
+    <string name="error_create_wallet">Не удалось создать кошелек</string>
+    <string name="browser_bookmarked">Добавлено в закладки</string>
+    <string name="home_alert_saved">Оповещение о балансе сохранено</string>
+    <string name="home_alert_removed">Оповещение о балансе удалено</string>
+    <string name="home_error_last_account">Нельзя удалить единственный аккаунт этого кошелька</string>
+    <string name="home_account_deleted">Аккаунт удален</string>
+    <string name="home_error_delete_account">Не удалось удалить аккаунт</string>
+    <string name="home_error_switch_wallet">Не удалось переключить кошелек</string>
+    <string name="home_wallet_deleted">Кошелек удален</string>
+    <string name="home_error_delete_wallet">Не удалось удалить кошелек</string>
+    <string name="home_wallet_created">Кошелек «%1$s» создан</string>
+    <string name="home_error_add_account">Не удалось добавить аккаунт</string>
+    <string name="home_error_refresh">Не удалось обновить балансы</string>
+    <string name="node_error_invalid_input">Неверный ввод (нужен адрес валидатора или PeerID)</string>
+    <string name="node_error_already_added">Узел уже добавлен</string>
+    <string name="import_error_bls_soon">Импорт BLS-аккаунтов скоро появится</string>
+    <string name="import_error_key_unsupported">Этот тип ключа пока не поддерживается</string>
+    <string name="import_error_testnet_key">Это ключ Testnet. Переключитесь на Testnet в настройках.</string>
+    <string name="import_error_mainnet_key">Это ключ Mainnet. Переключитесь на Mainnet в настройках.</string>
+    <string name="import_error_key_format">Неверный формат ключа или контрольная сумма</string>
+    <string name="import_error_key_empty">Введите корректный приватный ключ</string>
+    <string name="import_error_already_imported">Этот аккаунт уже импортирован</string>
+    <string name="watch_error_invalid_address">Введите корректный адрес</string>
+    <string name="watch_error_address_prefix">Адрес должен начинаться с pc1</string>
+    <string name="restore_error_fill_words">Заполните все слова (%1$d).</string>
+    <string name="restore_error_invalid_phrase">Неверная seed-фраза. Проверьте каждое слово и попробуйте снова.</string>
+    <string name="send_error_recipient_required">Укажите адрес получателя</string>
+    <string name="send_error_invalid_address">Неверный адрес Pactus (например, pc1r…)</string>
+    <string name="send_error_own_address">Нельзя отправить на собственный адрес</string>
+    <string name="stake_error_invalid_validator">Неверный адрес валидатора (pc1p…)</string>
+    <string name="settings_error_current_password_required">Введите текущий пароль</string>
+    <string name="settings_error_new_password_same">Новый пароль должен отличаться</string>
+    <string name="settings_password_changed">Пароль успешно изменен</string>
+    <string name="settings_error_current_password_wrong">Текущий пароль неверен</string>
+    <string name="settings_error_change_password">Не удалось изменить пароль</string>
+    <string name="settings_error_enable_biometric">Не удалось включить биометрию</string>
+    <string name="settings_biometric_enabled">Биометрическая разблокировка включена</string>
+    <string name="settings_network_switched">Переключено на %1$s</string>
+    <string name="settings_error_network_switch">Не удалось переключить сеть</string>
+    <string name="settings_rpc_reverted">Восстановлены адреса по умолчанию</string>
+    <string name="settings_rpc_saved">Пользовательский RPC URL сохранен</string>
+    <string name="settings_error_enter_password">Введите пароль</string>
+    <string name="settings_error_decrypt_phrase">Не удалось расшифровать фразу</string>
+    <string name="settings_no_new_accounts">Новые аккаунты не найдены</string>
+    <string name="settings_error_recovery">Не удалось восстановить адреса</string>
+    <string name="settings_wallet_renamed">Кошелек переименован в %1$s</string>
+    <plurals name="settings_recovered_accounts">
+        <item quantity="one">Восстановлен %1$d аккаунт</item>
+        <item quantity="few">Восстановлено %1$d аккаунта</item>
+        <item quantity="many">Восстановлено %1$d аккаунтов</item>
+        <item quantity="other">Восстановлено %1$d аккаунта</item>
+    </plurals>
 </resources>

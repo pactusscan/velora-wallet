@@ -4,12 +4,21 @@
 
     <!-- Widget -->
     <string name="widget_description">Muestra su saldo de PAC en la pantalla de inicio</string>
+    <string name="app_logo_desc">Logotipo de Velora</string>
+    <string name="password_strength_weak">Débil</string>
+    <string name="password_strength_fair">Aceptable</string>
+    <string name="password_strength_strong">Fuerte</string>
+    <string name="password_strength_very_strong">Muy fuerte</string>
+    <string name="password_show">Mostrar contraseña</string>
+    <string name="password_hide">Ocultar contraseña</string>
     <string name="widget_tap_to_open">Toque para abrir la billetera</string>
+    <string name="nav_node">Nodo</string>
 
     <!-- Bottom navigation -->
     <string name="nav_wallet">Billetera</string>
     <string name="nav_activity">Actividad</string>
     <string name="nav_browser">Navegador</string>
+    <string name="nav_discover">Descubrir</string>
     <string name="nav_settings">Ajustes</string>
 
     <!-- Common actions -->
@@ -22,11 +31,17 @@
     <string name="action_save">Guardar cambios</string>
     <string name="action_cancel">Cancelar</string>
     <string name="action_clear">Borrar</string>
+    <string name="action_hide">Ocultar</string>
+    <string name="action_add">Añadir</string>
     <string name="action_delete">Eliminar</string>
+    <string name="action_edit">Editar</string>
+    <string name="swipe_custom">Más</string>
     <string name="action_switch_wallet">Cambiar billetera</string>
     <string name="common_balance">Saldo: %1$s</string>
     <string name="common_amount_placeholder">0.00</string>
     <string name="common_fee_placeholder">0.01</string>
+    <string name="common_unknown">Desconocido</string>
+    <string name="common_unknown_error">Error desconocido</string>
     <string name="balance_total_label">Saldo Total</string>
     <string name="balance_usd_estimate">≈ $%1$s</string>
 
@@ -45,6 +60,7 @@
     <string name="stake_validator_pubkey_placeholder">Solo si no es su validador</string>
     <string name="stake_amount_label">Cantidad a stakear</string>
     <string name="stake_fee_label">Comisión de red</string>
+    <string name="stake_fee_auto">Estimar la comisión automáticamente</string>
     <string name="stake_memo_label">Nota (Opcional)</string>
     <string name="stake_memo_placeholder">Mensaje opcional</string>
     <string name="stake_preview_button">Revisar Vínculo/Stake</string>
@@ -61,6 +77,9 @@
     <string name="home_my_wallets">Mis billeteras</string>
     <string name="home_add_new">Añadir nueva</string>
     <string name="home_add_new_wallet">Añadir nueva billetera</string>
+    <string name="home_default_wallet_name">Billetera principal</string>
+    <string name="home_alert_action">Alerta</string>
+    <string name="wallet_picker_active">Activa</string>
     <string name="home_reset_wallet_title">¿Restablecer billetera?</string>
     <string name="home_reset_wallet_message">Esto eliminará permanentemente su billetera de este dispositivo. Asegúrese de haber respaldado su frase semilla antes de continuar.</string>
     <string name="home_delete_account_title">¿Eliminar cuenta?</string>
@@ -106,6 +125,16 @@
     <string name="send_to_label">A la dirección</string>
     <string name="send_to_placeholder">pc1z…</string>
     <string name="send_scan_qr">Escanear QR</string>
+    <string name="send_address_book">Libreta de direcciones</string>
+    <string name="address_book_empty">Tu libreta de direcciones está vacía.</string>
+    <string name="address_book_add_title">Añadir a la libreta</string>
+    <string name="address_book_label_hint">Etiqueta (p. ej., Mi exchange)</string>
+    <string name="address_book_address_hint">Dirección de Pactus</string>
+    <string name="address_book_save">Guardar en contactos</string>
+    <string name="send_saved_memos">Notas guardadas</string>
+    <string name="memos_empty">Aún no hay notas guardadas.</string>
+    <string name="memos_add_title">Guardar nota</string>
+    <string name="memos_text_hint">Escribe la nota</string>
     <string name="send_scan_prompt">Escanear dirección de Pactus</string>
     <string name="send_amount_label">Cantidad</string>
     <string name="send_amount_nanopac">Cantidad en NanoPAC</string>
@@ -124,6 +153,7 @@
     <string name="send_success_title">Transferencia exitosa</string>
     <string name="send_success_message">Su PAC ha sido enviado a la red y está siendo procesado.</string>
     <string name="send_tx_id_copied">ID de transacción copiado</string>
+    <string name="send_tx_id_label">ID de transacción</string>
     <string name="send_success">¡Transacción enviada! ID: %1$s…</string>
     <string name="send_unit_pac">PAC</string>
     <string name="send_unit_npac">nPAC</string>
@@ -148,6 +178,21 @@
     <string name="history_select_account">Seleccionar cuenta</string>
     <string name="history_transaction_detail">Detalle de transacción</string>
     <string name="history_tx_id">ID de TX</string>
+    <string name="history_direction_received">Recibido</string>
+    <string name="history_direction_sent">Enviado</string>
+    <string name="history_direction_self">A sí mismo</string>
+    <string name="history_detail_status">Estado</string>
+    <string name="history_detail_type">Tipo</string>
+    <string name="history_detail_from">De</string>
+    <string name="history_detail_to">Para</string>
+    <string name="history_detail_fee">Comisión</string>
+    <string name="history_detail_block">Bloque</string>
+    <string name="history_detail_date">Fecha</string>
+    <string name="history_detail_memo">Nota</string>
+    <string name="history_copy_from_address">Copiar dirección del remitente</string>
+    <string name="history_copy_to_address">Copiar dirección del destinatario</string>
+    <string name="history_copy_tx_id">Copiar ID de transacción</string>
+    <string name="history_toggle_date_mode">Cambiar entre hora local y UTC</string>
     <string name="history_empty_title">Aún no hay transacciones</string>
     <string name="history_empty_subtitle">Su historial de transacciones aparecerá aquí</string>
 
@@ -162,12 +207,26 @@
     <string name="browser_search_placeholder">Buscar o ingresar URL</string>
     <string name="browser_ecosystem_title">Ecosistema Pactus</string>
     <string name="browser_ecosystem_subtitle">Descubra el mundo descentralizado de Pactus</string>
+    <string name="browser_eco_website_title">Sitio web de Pactus</string>
+    <string name="browser_eco_website_desc">El sitio web oficial de la blockchain Pactus.</string>
+    <string name="browser_eco_scan_desc">El explorador de bloques principal de la red Pactus.</string>
+    <string name="browser_eco_docs_title">Documentación de Pactus</string>
+    <string name="browser_eco_docs_desc">Guías completas y documentación técnica.</string>
+    <string name="browser_eco_github_desc">Código fuente y actividad de desarrollo.</string>
+    <string name="browser_eco_pips_desc">Propuestas de mejora de Pactus y estándares.</string>
     <string name="browser_sign_title">Firmar transacción</string>
     <string name="browser_sign_from">Desde</string>
     <string name="browser_sign_to">A</string>
     <string name="browser_sign_amount">Cantidad</string>
     <string name="browser_sign_fee">Comisión</string>
     <string name="browser_sign_memo">Nota</string>
+    <string name="browser_connect_title">¿Conectar con este sitio?</string>
+    <string name="browser_connect_message">Este sitio solicita ver la dirección de tu billetera. No puede mover fondos sin tu aprobación en cada transacción.</string>
+    <string name="browser_connect_button">Conectar</string>
+    <string name="browser_site">Sitio</string>
+    <string name="browser_account">Cuenta</string>
+    <string name="browser_not_connected_note">Este sitio aún no está conectado a tu billetera. Al aprobar también se conectará.</string>
+    <string name="browser_message_to_sign">Mensaje a firmar</string>
     <string name="browser_sign_message_title">Firmar mensaje</string>
     <string name="browser_sign_message_signer">Cuenta firmante</string>
     <string name="browser_sign_message_signer_requested">Solicitada por este sitio</string>
@@ -195,7 +254,11 @@
     <string name="settings_section_appearance">Apariencia</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_subtitle">Elige tu tema preferido</string>
+    <string name="theme_select">Seleccionar tema</string>
     <string name="theme_selector">Tema</string>
+    <string name="theme_system">Predeterminado del sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
     <string name="settings_section_about">Acerca de</string>
     <string name="settings_about">Acerca de Velora Wallet</string>
     <string name="settings_about_subtitle">Versión, enlaces y legal</string>
@@ -347,6 +410,63 @@
     <string name="security_setup_biometric_title">Activar desbloqueo biométrico</string>
     <string name="security_setup_biometric_subtitle">Use huella digital o rostro para desbloquear sin contraseña</string>
     <string name="security_setup_create">Crear billetera</string>
+    <string name="error_incorrect_password">Contraseña incorrecta</string>
+    <string name="error_unlock_failed">No se pudo desbloquear</string>
+    <string name="error_transaction_failed">La transacción falló</string>
+    <string name="error_signing_failed">No se pudo firmar</string>
+    <string name="error_staking_failed">El staking falló</string>
+    <string name="error_enter_valid_amount">Introduce una cantidad válida</string>
+    <string name="error_enter_fee">Introduce una comisión</string>
+    <string name="error_insufficient_balance">Saldo insuficiente para cantidad + comisión</string>
+    <string name="error_enter_wallet_password">Introduce la contraseña de tu billetera</string>
+    <string name="error_fee_estimation">Falló la estimación — introduce la comisión manualmente</string>
+    <string name="error_password_min_length">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="error_create_wallet">No se pudo crear la billetera</string>
+    <string name="browser_bookmarked">Añadido a marcadores</string>
+    <string name="home_alert_saved">Alerta de saldo guardada</string>
+    <string name="home_alert_removed">Alerta de saldo eliminada</string>
+    <string name="home_error_last_account">No se puede eliminar la única cuenta de esta billetera</string>
+    <string name="home_account_deleted">Cuenta eliminada</string>
+    <string name="home_error_delete_account">No se pudo eliminar la cuenta</string>
+    <string name="home_error_switch_wallet">No se pudo cambiar de billetera</string>
+    <string name="home_wallet_deleted">Billetera eliminada</string>
+    <string name="home_error_delete_wallet">No se pudo eliminar la billetera</string>
+    <string name="home_wallet_created">Billetera \"%1$s\" creada</string>
+    <string name="home_error_add_account">No se pudo añadir la cuenta</string>
+    <string name="home_error_refresh">No se pudieron actualizar los saldos</string>
+    <string name="node_error_invalid_input">Entrada no válida (debe ser una dirección de validador o un PeerID)</string>
+    <string name="node_error_already_added">El nodo ya se añadió</string>
+    <string name="import_error_bls_soon">La importación de cuentas BLS llegará pronto</string>
+    <string name="import_error_key_unsupported">Este tipo de clave aún no es compatible</string>
+    <string name="import_error_testnet_key">Esta es una clave de Testnet. Cambia a Testnet en los ajustes.</string>
+    <string name="import_error_mainnet_key">Esta es una clave de Mainnet. Cambia a Mainnet en los ajustes.</string>
+    <string name="import_error_key_format">Formato de clave o checksum no válido</string>
+    <string name="import_error_key_empty">Introduce una clave privada válida</string>
+    <string name="import_error_already_imported">Esta cuenta ya fue importada</string>
+    <string name="watch_error_invalid_address">Introduce una dirección válida</string>
+    <string name="watch_error_address_prefix">La dirección debe empezar por pc1</string>
+    <string name="restore_error_fill_words">Completa las %1$d palabras.</string>
+    <string name="restore_error_invalid_phrase">Frase semilla no válida. Revisa cada palabra e inténtalo de nuevo.</string>
+    <string name="send_error_recipient_required">La dirección del destinatario es obligatoria</string>
+    <string name="send_error_invalid_address">Dirección de Pactus no válida (p. ej., pc1r…)</string>
+    <string name="send_error_own_address">No puedes enviar a tu propia dirección</string>
+    <string name="stake_error_invalid_validator">Dirección de validador no válida (pc1p…)</string>
+    <string name="settings_error_current_password_required">Introduce tu contraseña actual</string>
+    <string name="settings_error_new_password_same">La nueva contraseña debe ser diferente</string>
+    <string name="settings_password_changed">Contraseña cambiada correctamente</string>
+    <string name="settings_error_current_password_wrong">La contraseña actual es incorrecta</string>
+    <string name="settings_error_change_password">No se pudo cambiar la contraseña</string>
+    <string name="settings_error_enable_biometric">No se pudo activar la biometría</string>
+    <string name="settings_biometric_enabled">Desbloqueo biométrico activado</string>
+    <string name="settings_network_switched">Cambiado a %1$s</string>
+    <string name="settings_error_network_switch">No se pudo cambiar de red</string>
+    <string name="settings_rpc_reverted">Se restauraron los endpoints predeterminados</string>
+    <string name="settings_rpc_saved">URL de RPC personalizada guardada</string>
+    <string name="settings_error_enter_password">Introduce tu contraseña</string>
+    <string name="settings_error_decrypt_phrase">No se pudo descifrar la frase</string>
+    <string name="settings_no_new_accounts">No se encontraron cuentas nuevas</string>
+    <string name="settings_error_recovery">Falló la recuperación de direcciones</string>
+    <string name="settings_wallet_renamed">Billetera renombrada a %1$s</string>
 
     <!-- Node Monitor screen -->
     <string name="node_title">Monitor de Nodo</string>
@@ -392,6 +512,9 @@
     <string name="node_protocol">Protocolo v%1$s</string>
     <string name="node_peer_id">PeerID: %1$s…%2$s</string>
     <string name="node_add_confirm">Añadir</string>
+    <string name="node_peer_info_missing">Falta información del peer</string>
+    <string name="node_avg_score_label">Puntuación media</string>
+    <string name="node_add_input_label">Dirección del validador o PeerID</string>
 
     <!-- Notifications -->
     <string name="notification_channel_transactions">Transacciones</string>
@@ -409,4 +532,11 @@
     <string name="notification_balance_alert_text">El saldo de la billetera \'%1$s\' es %2$s, lo cual está %3$s su umbral de %4$s</string>
     <string name="notification_condition_below">por debajo de</string>
     <string name="notification_condition_above">por encima de</string>
+    <string name="notification_node_offline_title">Nodo sin conexión</string>
+    <string name="notification_node_offline_text">El nodo %1$s no está disponible o está sin conexión.</string>
+    <plurals name="settings_recovered_accounts">
+        <item quantity="one">%1$d cuenta recuperada</item>
+        <item quantity="many">%1$d cuentas recuperadas</item>
+        <item quantity="other">%1$d cuentas recuperadas</item>
+    </plurals>
 </resources>
