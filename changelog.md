@@ -7,6 +7,7 @@
 
 ### Fixed & Improved
 - **dApp Signing After Opening the App**: Approving a dApp message or transaction right after opening Velora failed with "Wallet is locked". The approval now asks for your password (or fingerprint, when enabled) first and then completes the signing.
+- **Safer dApp Approvals**: A site can no longer replace a signing request while you are reviewing it. Only one request is shown at a time, further requests are refused until you approve or reject it, and only the exact request you confirmed is signed.
 
 ## [0.1.5] - 2026-10-25
 
