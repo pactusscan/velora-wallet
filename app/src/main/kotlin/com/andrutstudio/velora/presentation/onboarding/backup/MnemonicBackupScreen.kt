@@ -250,7 +250,7 @@ private fun MnemonicBackupScreenPreview() {
     VeloraTheme {
         MnemonicBackupScreen(
             state = OnboardingViewModel.State(
-                mnemonic = "trophy square pipe runway staff coin innocent trust labor forum good spell".split(" "),
+                mnemonic = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about".split(" "),
             ),
             onContinue = {},
             onBack = {},
