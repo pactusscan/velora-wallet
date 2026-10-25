@@ -28,6 +28,7 @@ import com.andrutstudio.velora.domain.model.Account
 import com.andrutstudio.velora.domain.model.AccountType
 import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
+import com.andrutstudio.velora.presentation.components.TxErrorBox
 import com.andrutstudio.velora.presentation.components.formatPac
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -147,6 +148,11 @@ fun ConfirmStakeSheet(
 
             Spacer(Modifier.height(20.dp))
 
+            state.stakeError?.let { error ->
+                TxErrorBox(message = error)
+                Spacer(Modifier.height(16.dp))
+            }
+
             Button(
                 onClick = onConfirm,
                 modifier = Modifier.fillMaxWidth(),
@@ -232,6 +238,30 @@ private fun ConfirmStakeSheetPreview() {
                 ),
                 validatorAddress = "pc1p...",
                 amountText = "100.0",
+                isConfirmVisible = true
+            ),
+            onDismiss = {},
+            onConfirm = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ConfirmStakeSheetErrorPreview() {
+    VeloraTheme {
+        ConfirmStakeSheet(
+            state = StakeViewModel.State(
+                selectedAccount = Account(
+                    address = "pc1rmv39cmjlexample27l5jg5wv67am5hy2velora",
+                    label = "Account 1",
+                    type = AccountType.ED25519,
+                    derivationIndex = 0
+                ),
+                validatorAddress = "pc1p...",
+                amountText = "100.0",
+                password = "secret",
+                stakeError = "invalid transaction: insufficient fee",
                 isConfirmVisible = true
             ),
             onDismiss = {},

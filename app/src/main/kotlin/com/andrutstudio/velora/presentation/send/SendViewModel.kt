@@ -59,6 +59,8 @@ class SendViewModel @Inject constructor(
         val isLoading: Boolean = true,
         val password: String = "",
         val passwordError: String? = null,
+        // Shown inside the confirm sheet; a snackbar would be hidden behind the modal sheet.
+        val sendError: String? = null,
         val isBiometricEnabled: Boolean = false,
         val addressBook: List<AddressBookEntity> = emptyList(),
         val isAddressBookVisible: Boolean = false,
@@ -186,7 +188,7 @@ class SendViewModel @Inject constructor(
     }
 
     fun onPasswordChange(value: String) {
-        _state.update { it.copy(password = value, passwordError = null) }
+        _state.update { it.copy(password = value, passwordError = null, sendError = null) }
     }
 
     fun onAddressBookClick() {
@@ -296,13 +298,13 @@ class SendViewModel @Inject constructor(
                 _state.update { it.copy(amountError = "Insufficient balance for amount + fee") }
                 return
             }
-            _state.update { it.copy(isConfirmVisible = true, password = "", passwordError = null) }
+            _state.update { it.copy(isConfirmVisible = true, password = "", passwordError = null, sendError = null) }
         }
     }
 
     fun onDismissConfirm() {
         if (_state.value.isSending) return
-        _state.update { it.copy(isConfirmVisible = false, password = "", passwordError = null) }
+        _state.update { it.copy(isConfirmVisible = false, password = "", passwordError = null, sendError = null) }
     }
 
     fun onConfirmSend() {
@@ -336,7 +338,7 @@ class SendViewModel @Inject constructor(
     }
 
     private fun doSend(from: String, to: String, amount: Amount, fee: Amount, memo: String, password: String) {
-        _state.update { it.copy(isSending = true, passwordError = null) }
+        _state.update { it.copy(isSending = true, passwordError = null, sendError = null) }
         viewModelScope.launch {
             try {
                 val unlocked = walletRepository.unlockWallet(password)
@@ -362,8 +364,7 @@ class SendViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _state.update { it.copy(isSending = false) }
-                _effect.send(Effect.ShowError(e.message ?: "Transaction failed"))
+                _state.update { it.copy(isSending = false, sendError = e.message ?: "Transaction failed") }
             }
         }
     }
