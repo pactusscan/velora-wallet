@@ -4,6 +4,13 @@
 
     <!-- Widget -->
     <string name="widget_description">Zeigt Ihr PAC-Guthaben auf dem Startbildschirm an</string>
+    <string name="app_logo_desc">Velora-Logo</string>
+    <string name="password_strength_weak">Schwach</string>
+    <string name="password_strength_fair">Mittel</string>
+    <string name="password_strength_strong">Stark</string>
+    <string name="password_strength_very_strong">Sehr stark</string>
+    <string name="password_show">Passwort anzeigen</string>
+    <string name="password_hide">Passwort verbergen</string>
     <string name="widget_tap_to_open">Tippen, um Wallet zu öffnen</string>
 
     <!-- Bottom navigation -->
@@ -27,10 +34,14 @@
     <string name="action_hide">Ausblenden</string>
     <string name="action_add">Hinzufügen</string>
     <string name="action_delete">Löschen</string>
+    <string name="action_edit">Bearbeiten</string>
+    <string name="swipe_custom">Mehr</string>
     <string name="action_switch_wallet">Wallet wechseln</string>
     <string name="common_balance">Guthaben: %1$s</string>
     <string name="common_amount_placeholder">0,00</string>
     <string name="common_fee_placeholder">0,01</string>
+    <string name="common_unknown">Unbekannt</string>
+    <string name="common_unknown_error">Unbekannter Fehler</string>
     <string name="balance_total_label">Gesamtguthaben</string>
     <string name="balance_usd_estimate">≈ $%1$s</string>
 
@@ -61,6 +72,7 @@
     <string name="stake_validator_pubkey_placeholder">Nur wenn es nicht Ihr Validator ist</string>
     <string name="stake_amount_label">Stake-Betrag</string>
     <string name="stake_fee_label">Netzwerkgebühr</string>
+    <string name="stake_fee_auto">Gebühr automatisch schätzen</string>
     <string name="stake_memo_label">Memo (Optional)</string>
     <string name="stake_memo_placeholder">Optionale Nachricht</string>
     <string name="stake_preview_button">Bond/Stake prüfen</string>
@@ -77,6 +89,9 @@
     <string name="home_my_wallets">Meine Wallets</string>
     <string name="home_add_new">Neu hinzufügen</string>
     <string name="home_add_new_wallet">Neue Wallet hinzufügen</string>
+    <string name="home_default_wallet_name">Haupt-Wallet</string>
+    <string name="home_alert_action">Alarm</string>
+    <string name="wallet_picker_active">Aktiv</string>
     <string name="home_accounts_count">%1$d Konto</string>
     <string name="home_accounts_count_plural">%1$d Konten</string>
     <string name="home_reset_wallet_title">Wallet zurücksetzen?</string>
@@ -110,6 +125,16 @@
     <string name="send_to_label">An Adresse</string>
     <string name="send_to_placeholder">pc1z…</string>
     <string name="send_scan_qr">QR-Code scannen</string>
+    <string name="send_address_book">Adressbuch</string>
+    <string name="address_book_empty">Ihr Adressbuch ist leer.</string>
+    <string name="address_book_add_title">Zum Adressbuch hinzufügen</string>
+    <string name="address_book_label_hint">Bezeichnung (z. B. Meine Börse)</string>
+    <string name="address_book_address_hint">Pactus-Adresse</string>
+    <string name="address_book_save">In Kontakten speichern</string>
+    <string name="send_saved_memos">Gespeicherte Memos</string>
+    <string name="memos_empty">Noch keine gespeicherten Memos.</string>
+    <string name="memos_add_title">Memo speichern</string>
+    <string name="memos_text_hint">Memo-Text eingeben</string>
     <string name="send_scan_prompt">Pactus-Adresse scannen</string>
     <string name="send_amount_label">Betrag</string>
     <string name="send_amount_nanopac">Betrag in NanoPAC</string>
@@ -128,6 +153,7 @@
     <string name="send_success_title">Überweisung erfolgreich</string>
     <string name="send_success_message">Ihre PAC wurden an das Netzwerk gesendet und werden verarbeitet.</string>
     <string name="send_tx_id_copied">Transaktions-ID kopiert</string>
+    <string name="send_tx_id_label">Transaktions-ID</string>
     <string name="send_success">Transaktion gesendet! ID: %1$s…</string>
     <string name="send_unit_pac">PAC</string>
     <string name="send_unit_npac">nPAC</string>
@@ -148,8 +174,25 @@
     <string name="history_status_pending">Ausstehend</string>
     <string name="history_status_failed">Fehlgeschlagen</string>
     <string name="history_status_confirmed">Bestätigt</string>
+    <string name="history_filter_all_accounts">Alle Konten</string>
+    <string name="history_select_account">Konto auswählen</string>
     <string name="history_transaction_detail">Transaktionsdetails</string>
     <string name="history_tx_id">TX-ID</string>
+    <string name="history_direction_received">Empfangen</string>
+    <string name="history_direction_sent">Gesendet</string>
+    <string name="history_direction_self">An sich selbst</string>
+    <string name="history_detail_status">Status</string>
+    <string name="history_detail_type">Typ</string>
+    <string name="history_detail_from">Von</string>
+    <string name="history_detail_to">An</string>
+    <string name="history_detail_fee">Gebühr</string>
+    <string name="history_detail_block">Block</string>
+    <string name="history_detail_date">Datum</string>
+    <string name="history_detail_memo">Memo</string>
+    <string name="history_copy_from_address">Absenderadresse kopieren</string>
+    <string name="history_copy_to_address">Empfängeradresse kopieren</string>
+    <string name="history_copy_tx_id">Transaktions-ID kopieren</string>
+    <string name="history_toggle_date_mode">Zwischen Ortszeit und UTC wechseln</string>
     <string name="history_empty_title">Noch keine Transaktionen</string>
     <string name="history_empty_subtitle">Ihr Transaktionsverlauf wird hier angezeigt</string>
 
@@ -164,12 +207,26 @@
     <string name="browser_search_placeholder">Suchen oder URL eingeben</string>
     <string name="browser_ecosystem_title">Pactus-Ökosystem</string>
     <string name="browser_ecosystem_subtitle">Entdecken Sie die dezentrale Welt von Pactus</string>
+    <string name="browser_eco_website_title">Pactus-Website</string>
+    <string name="browser_eco_website_desc">Die offizielle Website der Pactus-Blockchain.</string>
+    <string name="browser_eco_scan_desc">Der wichtigste Block-Explorer für das Pactus-Netzwerk.</string>
+    <string name="browser_eco_docs_title">Pactus-Dokumentation</string>
+    <string name="browser_eco_docs_desc">Umfassende Anleitungen und technische Dokumentation.</string>
+    <string name="browser_eco_github_desc">Quellcode und Entwicklungsaktivität.</string>
+    <string name="browser_eco_pips_desc">Pactus Improvement Proposals und Standards.</string>
     <string name="browser_sign_title">Transaktion signieren</string>
     <string name="browser_sign_from">Von</string>
     <string name="browser_sign_to">An</string>
     <string name="browser_sign_amount">Betrag</string>
     <string name="browser_sign_fee">Gebühr</string>
     <string name="browser_sign_memo">Memo</string>
+    <string name="browser_connect_title">Mit dieser Website verbinden?</string>
+    <string name="browser_connect_message">Diese Website möchte Ihre Wallet-Adresse sehen. Sie kann ohne Ihre Zustimmung zu jeder Transaktion keine Guthaben bewegen.</string>
+    <string name="browser_connect_button">Verbinden</string>
+    <string name="browser_site">Website</string>
+    <string name="browser_account">Konto</string>
+    <string name="browser_not_connected_note">Diese Website ist noch nicht mit Ihrer Wallet verbunden. Mit der Zustimmung wird sie auch verbunden.</string>
+    <string name="browser_message_to_sign">Zu signierende Nachricht</string>
     <string name="browser_sign_message_title">Nachricht signieren</string>
     <string name="browser_sign_message_signer">Signierendes Konto</string>
     <string name="browser_sign_message_signer_requested">Von dieser Website angefordert</string>
@@ -207,7 +264,7 @@
     <string name="settings_about_subtitle">Version, Links und Rechtliches</string>
     <string name="settings_tap_to_rename">Zum Umbenennen tippen</string>
     <string name="settings_connected_sites">Verbundene Websites</string>
-    <string name="settings_connected_sites_subtitle">dApps, die deine Wallet-Adresse sehen dürfen</string>
+    <string name="settings_connected_sites_subtitle">dApps, die Ihre Wallet-Adresse sehen dürfen</string>
     <string name="sites_empty">Keine Websites verbunden.</string>
     <string name="sites_connected_on">Verbunden am %1$s</string>
     <string name="action_revoke">Widerrufen</string>
@@ -293,6 +350,8 @@
     <string name="notification_balance_alert_text">Wallet \'%1$s\' Guthaben ist %2$s, was %3$s Ihrem Schwellenwert von %4$s liegt</string>
     <string name="notification_condition_below">unter</string>
     <string name="notification_condition_above">über</string>
+    <string name="notification_node_offline_title">Knoten offline</string>
+    <string name="notification_node_offline_text">Knoten %1$s ist nicht erreichbar oder offline.</string>
 
     <!-- Node Monitor screen -->
     <string name="node_title">Knoten-Monitor</string>
@@ -329,6 +388,9 @@
     <string name="node_error_daemon_down">Verbindung nicht möglich. Knoten-Daemon ist möglicherweise ausgefallen.</string>
     <string name="node_error_not_found">Knoten nicht gefunden. Überprüfen Sie die Validator-Adresse.</string>
     <string name="node_add_confirm">Hinzufügen</string>
+    <string name="node_peer_info_missing">Peer-Informationen fehlen</string>
+    <string name="node_avg_score_label">Ø-Score</string>
+    <string name="node_add_input_label">Validator-Adresse oder PeerID</string>
     <string name="node_add_dialog_title">Knoten hinzufügen</string>
     <string name="node_add_dialog_body">Geben Sie eine Validator-Adresse ein, um den Knoten zu überwachen.</string>
     <string name="node_address_label">Validator-Adresse</string>
@@ -416,4 +478,65 @@
     <string name="security_setup_biometric_title">Biometrisches Entsperren aktivieren</string>
     <string name="security_setup_biometric_subtitle">Fingerabdruck oder Gesicht zum Entsperren ohne Passwort verwenden</string>
     <string name="security_setup_create">Wallet erstellen</string>
+    <string name="error_incorrect_password">Falsches Passwort</string>
+    <string name="error_unlock_failed">Entsperren fehlgeschlagen</string>
+    <string name="error_transaction_failed">Transaktion fehlgeschlagen</string>
+    <string name="error_signing_failed">Signieren fehlgeschlagen</string>
+    <string name="error_staking_failed">Staking fehlgeschlagen</string>
+    <string name="error_enter_valid_amount">Geben Sie einen gültigen Betrag ein</string>
+    <string name="error_enter_fee">Geben Sie eine Gebühr ein</string>
+    <string name="error_insufficient_balance">Guthaben reicht nicht für Betrag + Gebühr</string>
+    <string name="error_enter_wallet_password">Geben Sie Ihr Wallet-Passwort ein</string>
+    <string name="error_fee_estimation">Schätzung fehlgeschlagen — Gebühr manuell eingeben</string>
+    <string name="error_password_min_length">Das Passwort muss mindestens 8 Zeichen haben</string>
+    <string name="error_create_wallet">Wallet konnte nicht erstellt werden</string>
+    <string name="browser_bookmarked">Lesezeichen gespeichert</string>
+    <string name="home_alert_saved">Kontostand-Alarm gespeichert</string>
+    <string name="home_alert_removed">Kontostand-Alarm entfernt</string>
+    <string name="home_error_last_account">Das einzige Konto dieser Wallet kann nicht gelöscht werden</string>
+    <string name="home_account_deleted">Konto gelöscht</string>
+    <string name="home_error_delete_account">Konto konnte nicht gelöscht werden</string>
+    <string name="home_error_switch_wallet">Wallet konnte nicht gewechselt werden</string>
+    <string name="home_wallet_deleted">Wallet gelöscht</string>
+    <string name="home_error_delete_wallet">Wallet konnte nicht gelöscht werden</string>
+    <string name="home_wallet_created">Wallet „%1$s“ erstellt</string>
+    <string name="home_error_add_account">Konto konnte nicht hinzugefügt werden</string>
+    <string name="home_error_refresh">Kontostände konnten nicht aktualisiert werden</string>
+    <string name="node_error_invalid_input">Ungültige Eingabe (Validator-Adresse oder PeerID erforderlich)</string>
+    <string name="node_error_already_added">Knoten bereits hinzugefügt</string>
+    <string name="import_error_bls_soon">Import von BLS-Konten folgt in Kürze</string>
+    <string name="import_error_key_unsupported">Dieser Schlüsseltyp wird noch nicht unterstützt</string>
+    <string name="import_error_testnet_key">Dies ist ein Testnet-Schlüssel. Bitte wechseln Sie in den Einstellungen zum Testnet.</string>
+    <string name="import_error_mainnet_key">Dies ist ein Mainnet-Schlüssel. Bitte wechseln Sie in den Einstellungen zum Mainnet.</string>
+    <string name="import_error_key_format">Ungültiges Schlüsselformat oder Prüfsumme</string>
+    <string name="import_error_key_empty">Bitte geben Sie einen gültigen privaten Schlüssel ein</string>
+    <string name="import_error_already_imported">Dieses Konto wurde bereits importiert</string>
+    <string name="watch_error_invalid_address">Geben Sie eine gültige Adresse ein</string>
+    <string name="watch_error_address_prefix">Die Adresse muss mit pc1 beginnen</string>
+    <string name="restore_error_fill_words">Bitte füllen Sie alle %1$d Wörter aus.</string>
+    <string name="restore_error_invalid_phrase">Ungültige Seed-Phrase. Prüfen Sie jedes Wort und versuchen Sie es erneut.</string>
+    <string name="send_error_recipient_required">Empfängeradresse erforderlich</string>
+    <string name="send_error_invalid_address">Ungültige Pactus-Adresse (z. B. pc1r…)</string>
+    <string name="send_error_own_address">Senden an die eigene Adresse ist nicht möglich</string>
+    <string name="stake_error_invalid_validator">Ungültige Validator-Adresse (pc1p…)</string>
+    <string name="settings_error_current_password_required">Geben Sie Ihr aktuelles Passwort ein</string>
+    <string name="settings_error_new_password_same">Das neue Passwort muss sich unterscheiden</string>
+    <string name="settings_password_changed">Passwort erfolgreich geändert</string>
+    <string name="settings_error_current_password_wrong">Das aktuelle Passwort ist falsch</string>
+    <string name="settings_error_change_password">Passwort konnte nicht geändert werden</string>
+    <string name="settings_error_enable_biometric">Biometrie konnte nicht aktiviert werden</string>
+    <string name="settings_biometric_enabled">Biometrisches Entsperren aktiviert</string>
+    <string name="settings_network_switched">Zu %1$s gewechselt</string>
+    <string name="settings_error_network_switch">Netzwerkwechsel fehlgeschlagen</string>
+    <string name="settings_rpc_reverted">Auf Standard-Endpunkte zurückgesetzt</string>
+    <string name="settings_rpc_saved">Eigene RPC-URL gespeichert</string>
+    <string name="settings_error_enter_password">Geben Sie Ihr Passwort ein</string>
+    <string name="settings_error_decrypt_phrase">Phrase konnte nicht entschlüsselt werden</string>
+    <string name="settings_no_new_accounts">Keine neuen Konten gefunden</string>
+    <string name="settings_error_recovery">Adresswiederherstellung fehlgeschlagen</string>
+    <string name="settings_wallet_renamed">Wallet umbenannt in %1$s</string>
+    <plurals name="settings_recovered_accounts">
+        <item quantity="one">%1$d Konto wiederhergestellt</item>
+        <item quantity="other">%1$d Konten wiederhergestellt</item>
+    </plurals>
 </resources>

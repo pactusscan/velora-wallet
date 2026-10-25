@@ -4,6 +4,13 @@
 
     <!-- Widget -->
     <string name="widget_description">在主屏幕上显示您的 PAC 余额</string>
+    <string name="app_logo_desc">Velora 标志</string>
+    <string name="password_strength_weak">弱</string>
+    <string name="password_strength_fair">一般</string>
+    <string name="password_strength_strong">强</string>
+    <string name="password_strength_very_strong">非常强</string>
+    <string name="password_show">显示密码</string>
+    <string name="password_hide">隐藏密码</string>
     <string name="widget_tap_to_open">点击打开钱包</string>
 
     <!-- Bottom navigation -->
@@ -27,10 +34,14 @@
     <string name="action_hide">隐藏</string>
     <string name="action_add">添加</string>
     <string name="action_delete">删除</string>
+    <string name="action_edit">编辑</string>
+    <string name="swipe_custom">更多</string>
     <string name="action_switch_wallet">切换钱包</string>
     <string name="common_balance">余额: %1$s</string>
     <string name="common_amount_placeholder">0.00</string>
     <string name="common_fee_placeholder">0.01</string>
+    <string name="common_unknown">未知</string>
+    <string name="common_unknown_error">未知错误</string>
     <string name="balance_total_label">总余额</string>
     <string name="balance_usd_estimate">≈ $%1$s</string>
 
@@ -61,6 +72,7 @@
     <string name="stake_validator_pubkey_placeholder">仅当不是您的验证者时</string>
     <string name="stake_amount_label">质押金额</string>
     <string name="stake_fee_label">网络费用</string>
+    <string name="stake_fee_auto">自动估算手续费</string>
     <string name="stake_memo_label">备注 (可选)</string>
     <string name="stake_memo_placeholder">可选消息</string>
     <string name="stake_preview_button">预览绑定/质押</string>
@@ -72,9 +84,14 @@
     <string name="stake_success_message">您的质押交易已广播到 Pactus 网络。</string>
     <string name="stake_tx_id_copied">交易 ID 已复制</string>
     <string name="stake_sender_label">发送者</string>
+    <string name="stake_current_label">当前质押：%1$s</string>
+    <string name="stake_max_error">总质押不能超过 1,000 PAC。您最多只能再添加 %1$s PAC。</string>
     <string name="home_my_wallets">我的钱包</string>
     <string name="home_add_new">添加新钱包</string>
     <string name="home_add_new_wallet">添加新钱包</string>
+    <string name="home_default_wallet_name">主钱包</string>
+    <string name="home_alert_action">提醒</string>
+    <string name="wallet_picker_active">当前</string>
     <string name="home_accounts_count">%1$d 个账户</string>
     <string name="home_accounts_count_plural">%1$d 个账户</string>
     <string name="home_reset_wallet_title">重置钱包？</string>
@@ -108,6 +125,16 @@
     <string name="send_to_label">接收地址</string>
     <string name="send_to_placeholder">pc1z…</string>
     <string name="send_scan_qr">扫描二维码</string>
+    <string name="send_address_book">地址簿</string>
+    <string name="address_book_empty">您的地址簿为空。</string>
+    <string name="address_book_add_title">添加到地址簿</string>
+    <string name="address_book_label_hint">标签（例如：我的交易所）</string>
+    <string name="address_book_address_hint">Pactus 地址</string>
+    <string name="address_book_save">保存到联系人</string>
+    <string name="send_saved_memos">已保存的备注</string>
+    <string name="memos_empty">暂无已保存的备注。</string>
+    <string name="memos_add_title">保存备注</string>
+    <string name="memos_text_hint">输入备注内容</string>
     <string name="send_scan_prompt">扫描 Pactus 地址</string>
     <string name="send_amount_label">金额</string>
     <string name="send_amount_nanopac">金额 (NanoPAC)</string>
@@ -126,6 +153,7 @@
     <string name="send_success_title">转账成功</string>
     <string name="send_success_message">您的 PAC 已发送到网络并在处理中。</string>
     <string name="send_tx_id_copied">交易 ID 已复制</string>
+    <string name="send_tx_id_label">交易 ID</string>
     <string name="send_success">交易已发送! ID: %1$s…</string>
     <string name="send_unit_pac">PAC</string>
     <string name="send_unit_npac">nPAC</string>
@@ -146,8 +174,25 @@
     <string name="history_status_pending">待处理</string>
     <string name="history_status_failed">失败</string>
     <string name="history_status_confirmed">已确认</string>
+    <string name="history_filter_all_accounts">所有账户</string>
+    <string name="history_select_account">选择账户</string>
     <string name="history_transaction_detail">交易详情</string>
     <string name="history_tx_id">交易 ID</string>
+    <string name="history_direction_received">已收到</string>
+    <string name="history_direction_sent">已发送</string>
+    <string name="history_direction_self">转给自己</string>
+    <string name="history_detail_status">状态</string>
+    <string name="history_detail_type">类型</string>
+    <string name="history_detail_from">发送方</string>
+    <string name="history_detail_to">接收方</string>
+    <string name="history_detail_fee">手续费</string>
+    <string name="history_detail_block">区块</string>
+    <string name="history_detail_date">日期</string>
+    <string name="history_detail_memo">备注</string>
+    <string name="history_copy_from_address">复制发送方地址</string>
+    <string name="history_copy_to_address">复制接收方地址</string>
+    <string name="history_copy_tx_id">复制交易 ID</string>
+    <string name="history_toggle_date_mode">在本地时间和 UTC 之间切换</string>
     <string name="history_empty_title">尚无交易</string>
     <string name="history_empty_subtitle">您的交易记录将显示在此处</string>
 
@@ -162,12 +207,26 @@
     <string name="browser_search_placeholder">搜索或输入网址</string>
     <string name="browser_ecosystem_title">Pactus 生态系统</string>
     <string name="browser_ecosystem_subtitle">探索 Pactus 的去中心化世界</string>
+    <string name="browser_eco_website_title">Pactus 官网</string>
+    <string name="browser_eco_website_desc">Pactus 区块链官方网站。</string>
+    <string name="browser_eco_scan_desc">Pactus 网络的主要区块浏览器。</string>
+    <string name="browser_eco_docs_title">Pactus 文档</string>
+    <string name="browser_eco_docs_desc">全面的指南和技术文档。</string>
+    <string name="browser_eco_github_desc">源代码和开发动态。</string>
+    <string name="browser_eco_pips_desc">Pactus 改进提案与标准。</string>
     <string name="browser_sign_title">签名交易</string>
     <string name="browser_sign_from">发送方</string>
     <string name="browser_sign_to">接收方</string>
     <string name="browser_sign_amount">金额</string>
     <string name="browser_sign_fee">费用</string>
     <string name="browser_sign_memo">备注</string>
+    <string name="browser_connect_title">连接到此网站？</string>
+    <string name="browser_connect_message">此网站请求查看您的钱包地址。未经您对每笔交易的批准，它无法转移资金。</string>
+    <string name="browser_connect_button">连接</string>
+    <string name="browser_site">网站</string>
+    <string name="browser_account">账户</string>
+    <string name="browser_not_connected_note">此网站尚未连接到您的钱包。批准后也会将其连接。</string>
+    <string name="browser_message_to_sign">待签名消息</string>
     <string name="browser_sign_message_title">签名消息</string>
     <string name="browser_sign_message_signer">签名账户</string>
     <string name="browser_sign_message_signer_requested">由此网站指定</string>
@@ -203,6 +262,7 @@
     <string name="settings_section_about">关于</string>
     <string name="settings_about">关于 Velora 钱包</string>
     <string name="settings_about_subtitle">版本、链接和法律信息</string>
+    <string name="settings_tap_to_rename">点击重命名</string>
     <string name="settings_connected_sites">已连接的网站</string>
     <string name="settings_connected_sites_subtitle">允许查看您钱包地址的 dApp</string>
     <string name="sites_empty">没有已连接的网站。</string>
@@ -268,6 +328,7 @@
     <string name="about_tagline">Pactus 区块链的轻客户端钱包</string>
     <string name="about_website">Velora 官网</string>
     <string name="about_website_subtitle">velora.pactusscan.com</string>
+    <string name="about_explorer">在浏览器中查看</string>
     <string name="about_terms">服务条款</string>
     <string name="about_terms_subtitle">velora.pactusscan.com/terms-of-service</string>
     <string name="about_privacy">隐私政策</string>
@@ -289,6 +350,8 @@
     <string name="notification_balance_alert_text">钱包 \'%1$s\' 余额为 %2$s, %3$s 您的阈值 %4$s</string>
     <string name="notification_condition_below">低于</string>
     <string name="notification_condition_above">高于</string>
+    <string name="notification_node_offline_title">节点离线</string>
+    <string name="notification_node_offline_text">节点 %1$s 无法访问或已离线。</string>
 
     <!-- Node Monitor screen -->
     <string name="node_title">节点监控</string>
@@ -325,6 +388,9 @@
     <string name="node_error_daemon_down">无法连接。节点守护进程可能已关闭。</string>
     <string name="node_error_not_found">找不到节点。请检查验证者地址。</string>
     <string name="node_add_confirm">添加</string>
+    <string name="node_peer_info_missing">缺少节点信息</string>
+    <string name="node_avg_score_label">平均分</string>
+    <string name="node_add_input_label">验证者地址或 PeerID</string>
     <string name="node_add_dialog_title">添加节点</string>
     <string name="node_add_dialog_body">输入验证者地址以监控其节点。</string>
     <string name="node_address_label">验证者地址</string>
@@ -412,4 +478,64 @@
     <string name="security_setup_biometric_title">启用生物识别解锁</string>
     <string name="security_setup_biometric_subtitle">使用指纹或面部无需密码即可解锁</string>
     <string name="security_setup_create">创建钱包</string>
+    <string name="error_incorrect_password">密码错误</string>
+    <string name="error_unlock_failed">解锁失败</string>
+    <string name="error_transaction_failed">交易失败</string>
+    <string name="error_signing_failed">签名失败</string>
+    <string name="error_staking_failed">质押失败</string>
+    <string name="error_enter_valid_amount">请输入有效金额</string>
+    <string name="error_enter_fee">请输入手续费</string>
+    <string name="error_insufficient_balance">余额不足以支付金额和手续费</string>
+    <string name="error_enter_wallet_password">请输入钱包密码</string>
+    <string name="error_fee_estimation">估算失败——请手动输入手续费</string>
+    <string name="error_password_min_length">密码至少需要 8 个字符</string>
+    <string name="error_create_wallet">创建钱包失败</string>
+    <string name="browser_bookmarked">已添加书签</string>
+    <string name="home_alert_saved">余额提醒已保存</string>
+    <string name="home_alert_removed">余额提醒已删除</string>
+    <string name="home_error_last_account">无法删除此钱包中唯一的账户</string>
+    <string name="home_account_deleted">账户已删除</string>
+    <string name="home_error_delete_account">删除账户失败</string>
+    <string name="home_error_switch_wallet">切换钱包失败</string>
+    <string name="home_wallet_deleted">钱包已删除</string>
+    <string name="home_error_delete_wallet">删除钱包失败</string>
+    <string name="home_wallet_created">钱包“%1$s”已创建</string>
+    <string name="home_error_add_account">添加账户失败</string>
+    <string name="home_error_refresh">无法刷新余额</string>
+    <string name="node_error_invalid_input">输入无效（必须是验证者地址或 PeerID）</string>
+    <string name="node_error_already_added">节点已添加</string>
+    <string name="import_error_bls_soon">BLS 账户导入即将推出</string>
+    <string name="import_error_key_unsupported">暂不支持此类型的密钥</string>
+    <string name="import_error_testnet_key">这是测试网密钥。请在设置中切换到测试网。</string>
+    <string name="import_error_mainnet_key">这是主网密钥。请在设置中切换到主网。</string>
+    <string name="import_error_key_format">密钥格式或校验和无效</string>
+    <string name="import_error_key_empty">请输入有效的私钥</string>
+    <string name="import_error_already_imported">此账户已导入</string>
+    <string name="watch_error_invalid_address">请输入有效地址</string>
+    <string name="watch_error_address_prefix">地址必须以 pc1 开头</string>
+    <string name="restore_error_fill_words">请填写全部 %1$d 个单词。</string>
+    <string name="restore_error_invalid_phrase">助记词无效。请检查每个单词后重试。</string>
+    <string name="send_error_recipient_required">请输入收款地址</string>
+    <string name="send_error_invalid_address">Pactus 地址无效（例如 pc1r…）</string>
+    <string name="send_error_own_address">不能发送到您自己的地址</string>
+    <string name="stake_error_invalid_validator">验证者地址无效（pc1p…）</string>
+    <string name="settings_error_current_password_required">请输入当前密码</string>
+    <string name="settings_error_new_password_same">新密码必须与旧密码不同</string>
+    <string name="settings_password_changed">密码修改成功</string>
+    <string name="settings_error_current_password_wrong">当前密码错误</string>
+    <string name="settings_error_change_password">修改密码失败</string>
+    <string name="settings_error_enable_biometric">启用生物识别失败</string>
+    <string name="settings_biometric_enabled">已启用生物识别解锁</string>
+    <string name="settings_network_switched">已切换到 %1$s</string>
+    <string name="settings_error_network_switch">切换网络失败</string>
+    <string name="settings_rpc_reverted">已恢复默认节点地址</string>
+    <string name="settings_rpc_saved">已保存自定义 RPC 地址</string>
+    <string name="settings_error_enter_password">请输入密码</string>
+    <string name="settings_error_decrypt_phrase">解密助记词失败</string>
+    <string name="settings_no_new_accounts">未找到新账户</string>
+    <string name="settings_error_recovery">地址恢复失败</string>
+    <string name="settings_wallet_renamed">钱包已重命名为 %1$s</string>
+    <plurals name="settings_recovered_accounts">
+        <item quantity="other">已恢复 %1$d 个账户</item>
+    </plurals>
 </resources>

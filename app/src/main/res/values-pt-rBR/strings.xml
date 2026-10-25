@@ -4,6 +4,13 @@
 
     <!-- Widget -->
     <string name="widget_description">Exibe seu saldo de PAC na tela inicial</string>
+    <string name="app_logo_desc">Logotipo da Velora</string>
+    <string name="password_strength_weak">Fraca</string>
+    <string name="password_strength_fair">Razoável</string>
+    <string name="password_strength_strong">Forte</string>
+    <string name="password_strength_very_strong">Muito forte</string>
+    <string name="password_show">Mostrar senha</string>
+    <string name="password_hide">Ocultar senha</string>
     <string name="widget_tap_to_open">Toque para abrir a carteira</string>
 
     <!-- Bottom navigation -->
@@ -27,10 +34,14 @@
     <string name="action_hide">Ocultar</string>
     <string name="action_add">Adicionar</string>
     <string name="action_delete">Excluir</string>
+    <string name="action_edit">Editar</string>
+    <string name="swipe_custom">Mais</string>
     <string name="action_switch_wallet">Trocar carteira</string>
     <string name="common_balance">Saldo: %1$s</string>
     <string name="common_amount_placeholder">0,00</string>
     <string name="common_fee_placeholder">0,01</string>
+    <string name="common_unknown">Desconhecido</string>
+    <string name="common_unknown_error">Erro desconhecido</string>
     <string name="balance_total_label">Saldo Total</string>
     <string name="balance_usd_estimate">≈ $%1$s</string>
 
@@ -61,6 +72,7 @@
     <string name="stake_validator_pubkey_placeholder">Apenas se não for o seu validador</string>
     <string name="stake_amount_label">Valor do stake</string>
     <string name="stake_fee_label">Taxa de rede</string>
+    <string name="stake_fee_auto">Estimar a taxa automaticamente</string>
     <string name="stake_memo_label">Memo (Opcional)</string>
     <string name="stake_memo_placeholder">Mensagem opcional</string>
     <string name="stake_preview_button">Revisar Bond/Stake</string>
@@ -72,9 +84,14 @@
     <string name="stake_success_message">Sua transação de staking foi transmitida para a rede Pactus.</string>
     <string name="stake_tx_id_copied">ID da transação copiado</string>
     <string name="stake_sender_label">Remetente</string>
+    <string name="stake_current_label">Stake atual: %1$s</string>
+    <string name="stake_max_error">O stake total não pode exceder 1.000 PAC. Você só pode adicionar no máximo %1$s PAC.</string>
     <string name="home_my_wallets">Minhas Carteiras</string>
     <string name="home_add_new">Adicionar Nova</string>
     <string name="home_add_new_wallet">Adicionar Nova Carteira</string>
+    <string name="home_default_wallet_name">Carteira principal</string>
+    <string name="home_alert_action">Alerta</string>
+    <string name="wallet_picker_active">Ativa</string>
     <string name="home_accounts_count">%1$d conta</string>
     <string name="home_accounts_count_plural">%1$d contas</string>
     <string name="home_reset_wallet_title">Redefinir Carteira?</string>
@@ -108,6 +125,16 @@
     <string name="send_to_label">Para o endereço</string>
     <string name="send_to_placeholder">pc1z…</string>
     <string name="send_scan_qr">Escanear QR</string>
+    <string name="send_address_book">Agenda de endereços</string>
+    <string name="address_book_empty">Sua agenda de endereços está vazia.</string>
+    <string name="address_book_add_title">Adicionar à agenda</string>
+    <string name="address_book_label_hint">Rótulo (ex.: Minha corretora)</string>
+    <string name="address_book_address_hint">Endereço Pactus</string>
+    <string name="address_book_save">Salvar nos contatos</string>
+    <string name="send_saved_memos">Memos salvos</string>
+    <string name="memos_empty">Nenhum memo salvo ainda.</string>
+    <string name="memos_add_title">Salvar memo</string>
+    <string name="memos_text_hint">Digite o texto do memo</string>
     <string name="send_scan_prompt">Escanear Endereço Pactus</string>
     <string name="send_amount_label">Valor</string>
     <string name="send_amount_nanopac">Valor em NanoPAC</string>
@@ -126,6 +153,7 @@
     <string name="send_success_title">Transferência com Sucesso</string>
     <string name="send_success_message">Seu PAC foi enviado para a rede e está sendo processado.</string>
     <string name="send_tx_id_copied">ID da transação copiado</string>
+    <string name="send_tx_id_label">ID da transação</string>
     <string name="send_success">Transação enviada! ID: %1$s…</string>
     <string name="send_unit_pac">PAC</string>
     <string name="send_unit_npac">nPAC</string>
@@ -146,8 +174,25 @@
     <string name="history_status_pending">Pendente</string>
     <string name="history_status_failed">Falhou</string>
     <string name="history_status_confirmed">Confirmado</string>
+    <string name="history_filter_all_accounts">Todas as contas</string>
+    <string name="history_select_account">Selecionar conta</string>
     <string name="history_transaction_detail">Detalhes da Transação</string>
     <string name="history_tx_id">ID da TX</string>
+    <string name="history_direction_received">Recebido</string>
+    <string name="history_direction_sent">Enviado</string>
+    <string name="history_direction_self">Para si mesmo</string>
+    <string name="history_detail_status">Status</string>
+    <string name="history_detail_type">Tipo</string>
+    <string name="history_detail_from">De</string>
+    <string name="history_detail_to">Para</string>
+    <string name="history_detail_fee">Taxa</string>
+    <string name="history_detail_block">Bloco</string>
+    <string name="history_detail_date">Data</string>
+    <string name="history_detail_memo">Memo</string>
+    <string name="history_copy_from_address">Copiar endereço do remetente</string>
+    <string name="history_copy_to_address">Copiar endereço do destinatário</string>
+    <string name="history_copy_tx_id">Copiar ID da transação</string>
+    <string name="history_toggle_date_mode">Alternar entre horário local e UTC</string>
     <string name="history_empty_title">Nenhuma transação ainda</string>
     <string name="history_empty_subtitle">Seu histórico de transações aparecerá aqui</string>
 
@@ -162,12 +207,26 @@
     <string name="browser_search_placeholder">Pesquisar ou digitar URL</string>
     <string name="browser_ecosystem_title">Ecossistema Pactus</string>
     <string name="browser_ecosystem_subtitle">Descubra o mundo descentralizado do Pactus</string>
+    <string name="browser_eco_website_title">Site da Pactus</string>
+    <string name="browser_eco_website_desc">O site oficial da blockchain Pactus.</string>
+    <string name="browser_eco_scan_desc">O principal explorador de blocos da rede Pactus.</string>
+    <string name="browser_eco_docs_title">Documentação da Pactus</string>
+    <string name="browser_eco_docs_desc">Guias completos e documentação técnica.</string>
+    <string name="browser_eco_github_desc">Código-fonte e atividade de desenvolvimento.</string>
+    <string name="browser_eco_pips_desc">Propostas de melhoria da Pactus e padrões.</string>
     <string name="browser_sign_title">Assinar Transação</string>
     <string name="browser_sign_from">De</string>
     <string name="browser_sign_to">Para</string>
     <string name="browser_sign_amount">Valor</string>
     <string name="browser_sign_fee">Taxa</string>
     <string name="browser_sign_memo">Memo</string>
+    <string name="browser_connect_title">Conectar a este site?</string>
+    <string name="browser_connect_message">Este site quer ver o endereço da sua carteira. Ele não pode mover fundos sem a sua aprovação em cada transação.</string>
+    <string name="browser_connect_button">Conectar</string>
+    <string name="browser_site">Site</string>
+    <string name="browser_account">Conta</string>
+    <string name="browser_not_connected_note">Este site ainda não está conectado à sua carteira. Aprovar também irá conectá-lo.</string>
+    <string name="browser_message_to_sign">Mensagem a assinar</string>
     <string name="browser_sign_message_title">Assinar Mensagem</string>
     <string name="browser_sign_message_signer">Conta de assinatura</string>
     <string name="browser_sign_message_signer_requested">Solicitada por este site</string>
@@ -203,6 +262,7 @@
     <string name="settings_section_about">Sobre</string>
     <string name="settings_about">Sobre Velora Wallet</string>
     <string name="settings_about_subtitle">Versão, links e jurídico</string>
+    <string name="settings_tap_to_rename">Toque para renomear</string>
     <string name="settings_connected_sites">Sites conectados</string>
     <string name="settings_connected_sites_subtitle">dApps autorizados a ver o endereço da sua carteira</string>
     <string name="sites_empty">Nenhum site conectado.</string>
@@ -268,6 +328,7 @@
     <string name="about_tagline">Carteira light-client para a blockchain Pactus</string>
     <string name="about_website">Site do Velora</string>
     <string name="about_website_subtitle">velora.pactusscan.com</string>
+    <string name="about_explorer">Ver no Explorer</string>
     <string name="about_terms">Termos de Serviço</string>
     <string name="about_terms_subtitle">velora.pactusscan.com/terms-of-service</string>
     <string name="about_privacy">Política de Privacidade</string>
@@ -289,6 +350,8 @@
     <string name="notification_balance_alert_text">O saldo da carteira \'%1$s\' é %2$s, o que está %3$s do seu limite de %4$s</string>
     <string name="notification_condition_below">abaixo</string>
     <string name="notification_condition_above">acima</string>
+    <string name="notification_node_offline_title">Nó offline</string>
+    <string name="notification_node_offline_text">O nó %1$s está inacessível ou offline.</string>
 
     <!-- Node Monitor screen -->
     <string name="node_title">Monitor de Nó</string>
@@ -325,6 +388,9 @@
     <string name="node_error_daemon_down">Não foi possível conectar. O daemon do nó pode estar fora do ar.</string>
     <string name="node_error_not_found">Nó não encontrado. Verifique o endereço do validador.</string>
     <string name="node_add_confirm">Adicionar</string>
+    <string name="node_peer_info_missing">Informações do peer ausentes</string>
+    <string name="node_avg_score_label">Pontuação média</string>
+    <string name="node_add_input_label">Endereço do validador ou PeerID</string>
     <string name="node_add_dialog_title">Adicionar Nó</string>
     <string name="node_add_dialog_body">Digite um endereço de validador para monitorar seu nó.</string>
     <string name="node_address_label">Endereço do validador</string>
@@ -412,4 +478,66 @@
     <string name="security_setup_biometric_title">Ativar desbloqueio biométrico</string>
     <string name="security_setup_biometric_subtitle">Usar impressão digital ou rosto para desbloquear sem senha</string>
     <string name="security_setup_create">Criar Carteira</string>
+    <string name="error_incorrect_password">Senha incorreta</string>
+    <string name="error_unlock_failed">Falha ao desbloquear</string>
+    <string name="error_transaction_failed">A transação falhou</string>
+    <string name="error_signing_failed">Falha ao assinar</string>
+    <string name="error_staking_failed">O staking falhou</string>
+    <string name="error_enter_valid_amount">Insira um valor válido</string>
+    <string name="error_enter_fee">Insira uma taxa</string>
+    <string name="error_insufficient_balance">Saldo insuficiente para valor + taxa</string>
+    <string name="error_enter_wallet_password">Insira a senha da sua carteira</string>
+    <string name="error_fee_estimation">Falha na estimativa — insira a taxa manualmente</string>
+    <string name="error_password_min_length">A senha deve ter pelo menos 8 caracteres</string>
+    <string name="error_create_wallet">Falha ao criar a carteira</string>
+    <string name="browser_bookmarked">Adicionado aos favoritos</string>
+    <string name="home_alert_saved">Alerta de saldo salvo</string>
+    <string name="home_alert_removed">Alerta de saldo removido</string>
+    <string name="home_error_last_account">Não é possível excluir a única conta desta carteira</string>
+    <string name="home_account_deleted">Conta excluída</string>
+    <string name="home_error_delete_account">Falha ao excluir a conta</string>
+    <string name="home_error_switch_wallet">Falha ao trocar de carteira</string>
+    <string name="home_wallet_deleted">Carteira excluída</string>
+    <string name="home_error_delete_wallet">Falha ao excluir a carteira</string>
+    <string name="home_wallet_created">Carteira \"%1$s\" criada</string>
+    <string name="home_error_add_account">Falha ao adicionar a conta</string>
+    <string name="home_error_refresh">Não foi possível atualizar os saldos</string>
+    <string name="node_error_invalid_input">Entrada inválida (deve ser um endereço de validador ou PeerID)</string>
+    <string name="node_error_already_added">Nó já adicionado</string>
+    <string name="import_error_bls_soon">A importação de contas BLS chegará em breve</string>
+    <string name="import_error_key_unsupported">Este tipo de chave ainda não é suportado</string>
+    <string name="import_error_testnet_key">Esta é uma chave da Testnet. Mude para a Testnet nas configurações.</string>
+    <string name="import_error_mainnet_key">Esta é uma chave da Mainnet. Mude para a Mainnet nas configurações.</string>
+    <string name="import_error_key_format">Formato de chave ou checksum inválido</string>
+    <string name="import_error_key_empty">Insira uma chave privada válida</string>
+    <string name="import_error_already_imported">Esta conta já foi importada</string>
+    <string name="watch_error_invalid_address">Insira um endereço válido</string>
+    <string name="watch_error_address_prefix">O endereço deve começar com pc1</string>
+    <string name="restore_error_fill_words">Preencha todas as %1$d palavras.</string>
+    <string name="restore_error_invalid_phrase">Frase de recuperação inválida. Verifique cada palavra e tente novamente.</string>
+    <string name="send_error_recipient_required">O endereço do destinatário é obrigatório</string>
+    <string name="send_error_invalid_address">Endereço Pactus inválido (ex.: pc1r…)</string>
+    <string name="send_error_own_address">Não é possível enviar para o seu próprio endereço</string>
+    <string name="stake_error_invalid_validator">Endereço de validador inválido (pc1p…)</string>
+    <string name="settings_error_current_password_required">Insira sua senha atual</string>
+    <string name="settings_error_new_password_same">A nova senha deve ser diferente</string>
+    <string name="settings_password_changed">Senha alterada com sucesso</string>
+    <string name="settings_error_current_password_wrong">A senha atual está incorreta</string>
+    <string name="settings_error_change_password">Falha ao alterar a senha</string>
+    <string name="settings_error_enable_biometric">Falha ao ativar a biometria</string>
+    <string name="settings_biometric_enabled">Desbloqueio biométrico ativado</string>
+    <string name="settings_network_switched">Alterado para %1$s</string>
+    <string name="settings_error_network_switch">Falha ao trocar de rede</string>
+    <string name="settings_rpc_reverted">Endpoints padrão restaurados</string>
+    <string name="settings_rpc_saved">URL RPC personalizada salva</string>
+    <string name="settings_error_enter_password">Insira sua senha</string>
+    <string name="settings_error_decrypt_phrase">Falha ao descriptografar a frase</string>
+    <string name="settings_no_new_accounts">Nenhuma conta nova encontrada</string>
+    <string name="settings_error_recovery">Falha na recuperação de endereços</string>
+    <string name="settings_wallet_renamed">Carteira renomeada para %1$s</string>
+    <plurals name="settings_recovered_accounts">
+        <item quantity="one">%1$d conta recuperada</item>
+        <item quantity="many">%1$d contas recuperadas</item>
+        <item quantity="other">%1$d contas recuperadas</item>
+    </plurals>
 </resources>

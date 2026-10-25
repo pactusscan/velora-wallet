@@ -4,6 +4,13 @@
 
     <!-- Widget -->
     <string name="widget_description">Menampilkan saldo PAC di layar beranda</string>
+    <string name="app_logo_desc">Logo Velora</string>
+    <string name="password_strength_weak">Lemah</string>
+    <string name="password_strength_fair">Cukup</string>
+    <string name="password_strength_strong">Kuat</string>
+    <string name="password_strength_very_strong">Sangat kuat</string>
+    <string name="password_show">Tampilkan kata sandi</string>
+    <string name="password_hide">Sembunyikan kata sandi</string>
     <string name="widget_tap_to_open">Ketuk untuk membuka dompet</string>
 
     <!-- Bottom navigation -->
@@ -27,10 +34,14 @@
     <string name="action_hide">Sembunyikan</string>
     <string name="action_add">Tambah</string>
     <string name="action_delete">Hapus</string>
+    <string name="action_edit">Ubah</string>
+    <string name="swipe_custom">Lainnya</string>
     <string name="action_switch_wallet">Ganti dompet</string>
     <string name="common_balance">Saldo: %1$s</string>
     <string name="common_amount_placeholder">0.00</string>
     <string name="common_fee_placeholder">0.01</string>
+    <string name="common_unknown">Tidak diketahui</string>
+    <string name="common_unknown_error">Kesalahan tidak diketahui</string>
     <string name="balance_total_label">Total Saldo</string>
     <string name="balance_usd_estimate">≈ $%1$s</string>
 
@@ -58,6 +69,7 @@
     <string name="stake_validator_pubkey_placeholder">Hanya jika bukan validator Anda</string>
     <string name="stake_amount_label">Jumlah stake</string>
     <string name="stake_fee_label">Biaya jaringan</string>
+    <string name="stake_fee_auto">Perkirakan biaya otomatis</string>
     <string name="stake_memo_label">Memo (Opsional)</string>
     <string name="stake_memo_placeholder">Pesan opsional</string>
     <string name="stake_preview_button">Tinjau Bond/Stake</string>
@@ -70,6 +82,9 @@
     <string name="home_my_wallets">Dompet Saya</string>
     <string name="home_add_new">Tambah Baru</string>
     <string name="home_add_new_wallet">Tambah Dompet Baru</string>
+    <string name="home_default_wallet_name">Dompet Utama</string>
+    <string name="home_alert_action">Peringatan</string>
+    <string name="wallet_picker_active">Aktif</string>
     <string name="home_reset_wallet_title">Reset Dompet?</string>
     <string name="home_reset_wallet_message">Ini akan menghapus dompet Anda secara permanen dari perangkat ini. Pastikan Anda telah mencadangkan frasa seed sebelum melanjutkan.</string>
     <string name="home_delete_account_title">Hapus akun?</string>
@@ -131,6 +146,7 @@
     <string name="send_success_title">Transfer Berhasil</string>
     <string name="send_success_message">PAC Anda telah dikirim ke jaringan dan sedang diproses.</string>
     <string name="send_tx_id_copied">ID transaksi disalin</string>
+    <string name="send_tx_id_label">ID Transaksi</string>
     <string name="send_success">Transaksi terkirim! ID: %1$s…</string>
     <string name="send_unit_pac">PAC</string>
     <string name="send_unit_npac">nPAC</string>
@@ -157,6 +173,21 @@
     <string name="history_select_account">Pilih Akun</string>
     <string name="history_transaction_detail">Detail Transaksi</string>
     <string name="history_tx_id">ID Transaksi</string>
+    <string name="history_direction_received">Diterima</string>
+    <string name="history_direction_sent">Dikirim</string>
+    <string name="history_direction_self">Ke diri sendiri</string>
+    <string name="history_detail_status">Status</string>
+    <string name="history_detail_type">Jenis</string>
+    <string name="history_detail_from">Dari</string>
+    <string name="history_detail_to">Ke</string>
+    <string name="history_detail_fee">Biaya</string>
+    <string name="history_detail_block">Blok</string>
+    <string name="history_detail_date">Tanggal</string>
+    <string name="history_detail_memo">Memo</string>
+    <string name="history_copy_from_address">Salin alamat pengirim</string>
+    <string name="history_copy_to_address">Salin alamat penerima</string>
+    <string name="history_copy_tx_id">Salin ID transaksi</string>
+    <string name="history_toggle_date_mode">Ganti antara waktu lokal dan UTC</string>
     <string name="history_empty_title">Belum ada transaksi</string>
     <string name="history_empty_subtitle">Riwayat transaksi Anda akan muncul di sini</string>
     <string name="browser_close">Tutup browser</string>
@@ -166,15 +197,29 @@
     <string name="browser_go_forward">Maju</string>
     <string name="browser_stop">Berhenti</string>
     <string name="browser_reload">Muat ulang</string>
-    <string name="browser_search_placeholder">Cari atau masukkan URL</string>
+    <string name="browser_search_placeholder">Cari atau ketik URL</string>
     <string name="browser_ecosystem_title">Ekosistem Pactus</string>
     <string name="browser_ecosystem_subtitle">Jelajahi dunia terdesentralisasi Pactus</string>
+    <string name="browser_eco_website_title">Situs Pactus</string>
+    <string name="browser_eco_website_desc">Situs resmi blockchain Pactus.</string>
+    <string name="browser_eco_scan_desc">Penjelajah blok utama Pactus.</string>
+    <string name="browser_eco_docs_title">Dokumentasi Pactus</string>
+    <string name="browser_eco_docs_desc">Panduan dan dokumentasi teknis.</string>
+    <string name="browser_eco_github_desc">Kode sumber dan pengembangan.</string>
+    <string name="browser_eco_pips_desc">Proposal peningkatan Pactus.</string>
     <string name="browser_sign_title">Tanda Tangani Transaksi</string>
     <string name="browser_sign_from">Dari</string>
     <string name="browser_sign_to">Ke</string>
     <string name="browser_sign_amount">Jumlah</string>
     <string name="browser_sign_fee">Biaya</string>
     <string name="browser_sign_memo">Memo</string>
+    <string name="browser_connect_title">Hubungkan ke situs ini?</string>
+    <string name="browser_connect_message">Situs ini meminta untuk melihat alamat dompet Anda. Situs tidak dapat memindahkan dana tanpa persetujuan Anda pada setiap transaksi.</string>
+    <string name="browser_connect_button">Hubungkan</string>
+    <string name="browser_site">Situs</string>
+    <string name="browser_account">Akun</string>
+    <string name="browser_not_connected_note">Situs ini belum terhubung ke dompet Anda. Menyetujui juga akan menghubungkannya.</string>
+    <string name="browser_message_to_sign">Pesan yang ditandatangani</string>
 
     <!-- Security settings -->
     <string name="security_title">Keamanan</string>
@@ -304,6 +349,9 @@
     <string name="node_protocol">Protokol v%1$s</string>
     <string name="node_peer_id">PeerID: %1$s…%2$s</string>
     <string name="node_add_confirm">Tambah</string>
+    <string name="node_peer_info_missing">Informasi peer tidak tersedia</string>
+    <string name="node_avg_score_label">Skor rata-rata</string>
+    <string name="node_add_input_label">Alamat validator atau PeerID</string>
 
     <!-- Language selection -->
     <string name="language_select">Pilih Bahasa</string>
@@ -382,6 +430,63 @@
     <string name="security_setup_biometric_title">Aktifkan buka kunci biometrik</string>
     <string name="security_setup_biometric_subtitle">Gunakan sidik jari atau wajah untuk membuka kunci tanpa kata sandi</string>
     <string name="security_setup_create">Buat Dompet</string>
+    <string name="error_incorrect_password">Kata sandi salah</string>
+    <string name="error_unlock_failed">Gagal membuka dompet</string>
+    <string name="error_transaction_failed">Transaksi gagal</string>
+    <string name="error_signing_failed">Gagal menandatangani</string>
+    <string name="error_staking_failed">Staking gagal</string>
+    <string name="error_enter_valid_amount">Masukkan jumlah yang valid</string>
+    <string name="error_enter_fee">Masukkan jumlah biaya</string>
+    <string name="error_insufficient_balance">Saldo tidak cukup untuk jumlah + biaya</string>
+    <string name="error_enter_wallet_password">Masukkan kata sandi dompet Anda</string>
+    <string name="error_fee_estimation">Estimasi gagal — masukkan biaya secara manual</string>
+    <string name="error_password_min_length">Kata sandi minimal 8 karakter</string>
+    <string name="error_create_wallet">Gagal membuat dompet</string>
+    <string name="browser_bookmarked">Ditambahkan ke bookmark</string>
+    <string name="home_alert_saved">Peringatan saldo disimpan</string>
+    <string name="home_alert_removed">Peringatan saldo dihapus</string>
+    <string name="home_error_last_account">Tidak dapat menghapus satu-satunya akun di dompet ini</string>
+    <string name="home_account_deleted">Akun dihapus</string>
+    <string name="home_error_delete_account">Gagal menghapus akun</string>
+    <string name="home_error_switch_wallet">Gagal mengganti dompet</string>
+    <string name="home_wallet_deleted">Dompet dihapus</string>
+    <string name="home_error_delete_wallet">Gagal menghapus dompet</string>
+    <string name="home_wallet_created">Dompet \"%1$s\" dibuat</string>
+    <string name="home_error_add_account">Gagal menambah akun</string>
+    <string name="home_error_refresh">Tidak dapat memperbarui saldo</string>
+    <string name="node_error_invalid_input">Input tidak valid (harus alamat validator atau PeerID)</string>
+    <string name="node_error_already_added">Node sudah ditambahkan</string>
+    <string name="import_error_bls_soon">Impor akun BLS akan segera hadir</string>
+    <string name="import_error_key_unsupported">Jenis kunci ini belum didukung</string>
+    <string name="import_error_testnet_key">Ini kunci Testnet. Silakan beralih ke Testnet di pengaturan.</string>
+    <string name="import_error_mainnet_key">Ini kunci Mainnet. Silakan beralih ke Mainnet di pengaturan.</string>
+    <string name="import_error_key_format">Format kunci atau checksum tidak valid</string>
+    <string name="import_error_key_empty">Masukkan private key yang valid</string>
+    <string name="import_error_already_imported">Akun ini sudah diimpor</string>
+    <string name="watch_error_invalid_address">Masukkan alamat yang valid</string>
+    <string name="watch_error_address_prefix">Alamat harus diawali pc1</string>
+    <string name="restore_error_fill_words">Isi semua %1$d kata.</string>
+    <string name="restore_error_invalid_phrase">Frasa seed tidak valid. Periksa setiap kata lalu coba lagi.</string>
+    <string name="send_error_recipient_required">Alamat penerima wajib diisi</string>
+    <string name="send_error_invalid_address">Alamat Pactus tidak valid (mis. pc1r…)</string>
+    <string name="send_error_own_address">Tidak dapat mengirim ke alamat Anda sendiri</string>
+    <string name="stake_error_invalid_validator">Alamat validator tidak valid (pc1p…)</string>
+    <string name="settings_error_current_password_required">Masukkan kata sandi saat ini</string>
+    <string name="settings_error_new_password_same">Kata sandi baru harus berbeda</string>
+    <string name="settings_password_changed">Kata sandi berhasil diubah</string>
+    <string name="settings_error_current_password_wrong">Kata sandi saat ini salah</string>
+    <string name="settings_error_change_password">Gagal mengubah kata sandi</string>
+    <string name="settings_error_enable_biometric">Gagal mengaktifkan biometrik</string>
+    <string name="settings_biometric_enabled">Buka dengan biometrik diaktifkan</string>
+    <string name="settings_network_switched">Beralih ke %1$s</string>
+    <string name="settings_error_network_switch">Gagal mengganti jaringan</string>
+    <string name="settings_rpc_reverted">Kembali ke endpoint bawaan</string>
+    <string name="settings_rpc_saved">URL RPC kustom disimpan</string>
+    <string name="settings_error_enter_password">Masukkan kata sandi Anda</string>
+    <string name="settings_error_decrypt_phrase">Gagal mendekripsi frasa</string>
+    <string name="settings_no_new_accounts">Tidak ada akun baru yang ditemukan</string>
+    <string name="settings_error_recovery">Pemulihan alamat gagal</string>
+    <string name="settings_wallet_renamed">Nama dompet diubah menjadi %1$s</string>
     <string name="browser_sign_message_title">Tanda Tangani Pesan</string>
     <string name="browser_sign_message_signer">Akun penanda tangan</string>
     <string name="browser_sign_message_signer_requested">Diminta oleh situs ini</string>
@@ -421,4 +526,7 @@
     <string name="sites_empty">Belum ada situs yang terhubung.</string>
     <string name="sites_connected_on">Terhubung %1$s</string>
     <string name="action_revoke">Cabut</string>
+    <plurals name="settings_recovered_accounts">
+        <item quantity="other">%1$d akun dipulihkan</item>
+    </plurals>
 </resources>
