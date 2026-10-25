@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.settings
 
+import com.andrutstudio.velora.R
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
@@ -90,8 +91,8 @@ class SettingsViewModel @Inject constructor(
     val effect = _effect.receiveAsFlow()
 
     init {
-        val currentLocale = AppCompatDelegate.getApplicationLocales().get(0)?.language ?: "en"
-        _state.update { it.copy(currentLanguage = currentLocale) }
+        val currentLocale = AppCompatDelegate.getApplicationLocales().get(0)?.toLanguageTag() ?: "en"
+        _state.update { it.copy(currentLanguage = languageOf(currentLocale)) }
 
         viewModelScope.launch {
             walletRepository.observeWallet().filterNotNull().first().let { wallet ->
@@ -455,7 +456,7 @@ class SettingsViewModel @Inject constructor(
     fun onLanguageChange(languageCode: String) {
         val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
         AppCompatDelegate.setApplicationLocales(appLocale)
-        _state.update { it.copy(currentLanguage = languageCode, showLanguageSelector = false) }
+        _state.update { it.copy(currentLanguage = languageOf(languageCode), showLanguageSelector = false) }
     }
 
     // ── Theme ─────────────────────────────────────────────────────────────────
@@ -475,3 +476,27 @@ class SettingsViewModel @Inject constructor(
         }
     }
 }
+
+/**
+ * App languages: BCP 47 tag matching a values-* resource folder (keep in sync with
+ * res/xml/locales_config.xml) and its display name.
+ */
+val AppLanguages: List<Pair<String, Int>> = listOf(
+    "en" to R.string.language_english,
+    "es" to R.string.language_spanish,
+    "fr" to R.string.language_french,
+    "in" to R.string.language_indonesian,
+    "ms" to R.string.language_malay,
+    "vi" to R.string.language_vietnamese,
+    "de" to R.string.language_german,
+    "pt-BR" to R.string.language_portuguese,
+    "ru" to R.string.language_russian,
+    "zh-CN" to R.string.language_chinese,
+)
+
+/** Language part of a tag, so "pt-BR" and "pt" compare equal; Indonesian may be "id" or "in". */
+fun languageOf(tag: String): String =
+    when (val language = tag.substringBefore('-').substringBefore('_').lowercase()) {
+        "id" -> "in"
+        else -> language
+    }
