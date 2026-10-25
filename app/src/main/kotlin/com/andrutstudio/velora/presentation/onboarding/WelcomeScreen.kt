@@ -90,7 +90,7 @@ fun WelcomeScreen(
             ) {
                 Image(
                     painter = painterResource(R.drawable.ic_velora_logo),
-                    contentDescription = "Velora logo",
+                    contentDescription = stringResource(R.string.app_logo_desc),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillBounds
                 )

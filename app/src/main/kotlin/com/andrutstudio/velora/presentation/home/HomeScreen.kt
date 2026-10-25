@@ -294,7 +294,7 @@ private fun WalletTab(
         ) {
             item {
                 WalletSelectorBar(
-                    walletName = state.wallet?.name ?: "Main Wallet",
+                    walletName = state.wallet?.name ?: stringResource(R.string.home_default_wallet_name),
                     onSelectWallet = onSelectWallet,
                     onAddWallet = onAddWallet,
                 )
@@ -374,7 +374,7 @@ private fun WalletTab(
                         onDelete = { onDeleteAccount(account.address) },
                         onCustom = { onShowAlert(account.address) },
                         customIcon = Icons.Rounded.NotificationsActive,
-                        customLabel = "Alert",
+                        customLabel = stringResource(R.string.home_alert_action),
                         customColor = MaterialTheme.colorScheme.tertiary
                     ) {
                         AccountCard(

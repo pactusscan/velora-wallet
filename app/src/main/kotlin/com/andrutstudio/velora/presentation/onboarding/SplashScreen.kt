@@ -41,7 +41,7 @@ fun SplashScreen() {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_splash_logo),
-            contentDescription = "Velora Logo",
+            contentDescription = stringResource(R.string.app_logo_desc),
             modifier = Modifier
                 .size(160.dp) // Match system icon size better
                 .align(Alignment.Center)

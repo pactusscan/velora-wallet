@@ -66,8 +66,8 @@ fun ConfirmStakeSheet(
                     .padding(bottom = 20.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    ConfirmRow(label = stringResource(R.string.stake_sender_label), value = state.selectedAccount?.address ?: "")
-                    ConfirmRow(label = stringResource(R.string.stake_validator_label), value = state.validatorAddress)
+                    ConfirmRow(label = stringResource(R.string.stake_sender_label), value = state.selectedAccount?.address ?: "", isAddress = true)
+                    ConfirmRow(label = stringResource(R.string.stake_validator_label), value = state.validatorAddress, isAddress = true)
                     
                     HorizontalDivider(
                         modifier = Modifier.padding(vertical = 12.dp),
@@ -196,8 +196,9 @@ fun ConfirmStakeSheet(
 }
 
 @Composable
-private fun ConfirmRow(label: String, value: String, isHighlight: Boolean = false) {
-    val displayValue = if (label == "Sender" || label == "Validator") value.truncateAddress() else value
+// isAddress rows are shortened and shown in monospace.
+private fun ConfirmRow(label: String, value: String, isHighlight: Boolean = false, isAddress: Boolean = false) {
+    val displayValue = if (isAddress) value.truncateAddress() else value
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -213,7 +214,7 @@ private fun ConfirmRow(label: String, value: String, isHighlight: Boolean = fals
         Text(
             text = displayValue,
             style = if (isHighlight) MaterialTheme.typography.bodyLarge else MaterialTheme.typography.bodyMedium,
-            fontFamily = if (label == "Sender" || label == "Validator") FontFamily.Monospace else FontFamily.Default,
+            fontFamily = if (isAddress) FontFamily.Monospace else FontFamily.Default,
             color = if (isHighlight) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
             fontWeight = if (isHighlight) FontWeight.SemiBold else FontWeight.Normal,
             lineHeight = 18.sp

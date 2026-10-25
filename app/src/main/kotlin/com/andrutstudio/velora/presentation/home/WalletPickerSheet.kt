@@ -236,7 +236,7 @@ private fun WalletPickerItem(
                 ) {
                     Icon(
                         Icons.Rounded.Check,
-                        contentDescription = "Active",
+                        contentDescription = stringResource(R.string.wallet_picker_active),
                         tint = Color.White,
                         modifier = Modifier.size(17.dp),
                     )

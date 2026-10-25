@@ -385,7 +385,7 @@ private fun NodeLoadedContent(
 ) {
     val peer = data.peer ?: run {
         NodeErrorContent(
-            message = "Peer information missing",
+            message = stringResource(R.string.node_peer_info_missing),
             onRetry = { }
         )
         return
@@ -421,7 +421,7 @@ private fun NodeLoadedContent(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "PeerID: ${peer.peerId.take(12)}...${peer.peerId.takeLast(6)}",
+            text = stringResource(R.string.node_peer_id, peer.peerId.take(12), peer.peerId.takeLast(6)),
             style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontFamily = FontFamily.Monospace,
@@ -449,7 +449,7 @@ private fun NodeLoadedContent(
         NodeChip((agent.arch ?: "unknown").uppercase(Locale.ROOT))
         NodeChip((agent.nodeType ?: "unknown").uppercase(Locale.ROOT))
         NodeChip("v${agent.nodeVersion}")
-        NodeChip("PROTOCOL v${agent.protocolVersion ?: "0"}")
+        NodeChip(stringResource(R.string.node_protocol, agent.protocolVersion ?: "0").uppercase())
     }
 
     Spacer(Modifier.height(10.dp))
@@ -533,9 +533,9 @@ private fun NodeChip(label: String) {
 @Composable
 private fun DirectionBadge(direction: Int) {
     val (arrow, color) = when (direction) {
-        1 -> "↑ INBOUND" to BrandTeal
-        2 -> "↓ OUTBOUND" to Color(0xFF82B1FF)
-        else -> "⟷ UNKNOWN" to MaterialTheme.colorScheme.onSurfaceVariant
+        1 -> "↑ " + stringResource(R.string.node_direction_inbound).uppercase() to BrandTeal
+        2 -> "↓ " + stringResource(R.string.node_direction_outbound).uppercase() to Color(0xFF82B1FF)
+        else -> "⟷ " + stringResource(R.string.node_direction_unknown).uppercase() to MaterialTheme.colorScheme.onSurfaceVariant
     }
     Surface(
         shape = RoundedCornerShape(4.dp),
@@ -632,7 +632,7 @@ private fun ScoreBadge(score: Double) {
     }
     Column(horizontalAlignment = Alignment.End) {
         Text(
-            "AVG SCORE",
+            stringResource(R.string.node_avg_score_label).uppercase(),
             style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -789,7 +789,7 @@ private fun AddNodeDialog(
                 OutlinedTextField(
                     value = input,
                     onValueChange = onInputChange,
-                    label = { Text("Validator address or PeerID") },
+                    label = { Text(stringResource(R.string.node_add_input_label)) },
                     placeholder = {
                         Text(
                             "pc1p… or 12D3…",

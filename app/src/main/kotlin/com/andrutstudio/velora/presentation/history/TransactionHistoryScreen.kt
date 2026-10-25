@@ -274,9 +274,9 @@ private fun FilterRow(
                 label = {
                     Text(
                         when (filter) {
-                            TransactionHistoryViewModel.Filter.ALL -> "All"
-                            TransactionHistoryViewModel.Filter.TRANSFER -> "Transfers"
-                            TransactionHistoryViewModel.Filter.BOND -> "Bonds"
+                            TransactionHistoryViewModel.Filter.ALL -> stringResource(R.string.history_filter_all)
+                            TransactionHistoryViewModel.Filter.TRANSFER -> stringResource(R.string.history_filter_transfers)
+                            TransactionHistoryViewModel.Filter.BOND -> stringResource(R.string.history_filter_bonds)
                         },
                     )
                 },
@@ -399,9 +399,9 @@ private fun TransactionItem(
 @Composable
 private fun StatusChip(status: TransactionStatus) {
     val (label, color) = when (status) {
-        TransactionStatus.PENDING -> "Pending" to MaterialTheme.colorScheme.secondary
-        TransactionStatus.FAILED -> "Failed" to MaterialTheme.colorScheme.error
-        TransactionStatus.CONFIRMED -> "Confirmed" to BrandTeal
+        TransactionStatus.PENDING -> stringResource(R.string.history_status_pending) to MaterialTheme.colorScheme.secondary
+        TransactionStatus.FAILED -> stringResource(R.string.history_status_failed) to MaterialTheme.colorScheme.error
+        TransactionStatus.CONFIRMED -> stringResource(R.string.history_status_confirmed) to BrandTeal
     }
     Surface(
         color = color.copy(alpha = 0.15f),

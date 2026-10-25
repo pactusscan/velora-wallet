@@ -229,7 +229,7 @@ private fun CustomRpcField(
                     CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
                 } else if (value.isNotBlank()) {
                     IconButton(onClick = onSave) {
-                        Icon(Icons.Rounded.Check, contentDescription = "Save", tint = BrandTeal)
+                        Icon(Icons.Rounded.Check, contentDescription = stringResource(R.string.action_save), tint = BrandTeal)
                     }
                 }
             },
@@ -279,7 +279,7 @@ private fun NetworkCard(
             } else if (isSelected) {
                 Icon(
                     Icons.Rounded.CheckCircle,
-                    contentDescription = "Selected",
+                    contentDescription = stringResource(R.string.network_selected),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
