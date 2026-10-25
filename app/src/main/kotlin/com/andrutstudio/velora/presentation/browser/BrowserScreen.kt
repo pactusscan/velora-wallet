@@ -79,7 +79,11 @@ import kotlinx.coroutines.launch
 import com.andrutstudio.velora.R
 import com.andrutstudio.velora.data.local.db.BookmarkEntity
 import com.andrutstudio.velora.data.local.db.BrowserHistoryEntity
+import androidx.fragment.app.FragmentActivity
 import com.andrutstudio.velora.domain.model.Account
+import com.andrutstudio.velora.presentation.components.UnlockWalletDialog
+import com.andrutstudio.velora.presentation.home.BiometricEntryPoint
+import dagger.hilt.android.EntryPointAccessors
 import com.andrutstudio.velora.domain.model.AccountType
 import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.presentation.components.MainBottomNavigation
@@ -99,8 +103,12 @@ fun BrowserScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val activity = context as? FragmentActivity
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val biometricHelper = remember {
+        EntryPointAccessors.fromApplication(context.applicationContext, BiometricEntryPoint::class.java).biometricHelper()
+    }
 
     val webView = remember {
         WebView(context).apply {
@@ -258,6 +266,15 @@ fun BrowserScreen(
                 is BrowserViewModel.Effect.ShowSnackbar -> {
                     scope.launch { snackbarHostState.showSnackbar(effect.message) }
                 }
+                is BrowserViewModel.Effect.RequestBiometricUnlock -> {
+                    if (activity != null) {
+                        biometricHelper.showBiometricPromptForDecryption(
+                            activity = activity,
+                            onSuccess = viewModel::onBiometricUnlockSuccess,
+                            onError = {},
+                        )
+                    }
+                }
             }
         }
     }
@@ -288,6 +305,18 @@ fun BrowserScreen(
             onSelectSigner = viewModel::onSelectMessageSigner,
             onConfirm = viewModel::onConfirmSignMessage,
             onCancel = viewModel::onCancelSign,
+        )
+    }
+
+    // Shown over a sign sheet when the wallet is still locked
+    if (state.showUnlockDialog) {
+        UnlockWalletDialog(
+            isLoading = state.isUnlocking,
+            error = state.unlockError,
+            isBiometricEnabled = state.isBiometricEnabled,
+            onBiometricClick = viewModel::onBiometricUnlockTriggered,
+            onDismiss = viewModel::onDismissUnlock,
+            onUnlock = viewModel::onUnlock,
         )
     }
 
