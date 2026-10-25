@@ -1,5 +1,7 @@
 package com.andrutstudio.velora.presentation.stake
 
+import com.andrutstudio.velora.presentation.components.UiText
+import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -142,14 +144,14 @@ fun ConfirmStakeSheet(
                     imeAction = ImeAction.Done,
                 ),
                 isError = state.passwordError != null,
-                supportingText = state.passwordError?.let { { Text(it) } },
+                supportingText = state.passwordError?.let { { Text(it.asString()) } },
                 enabled = !state.isStaking,
             )
 
             Spacer(Modifier.height(20.dp))
 
             state.stakeError?.let { error ->
-                TxErrorBox(message = error)
+                TxErrorBox(message = error.asString())
                 Spacer(Modifier.height(16.dp))
             }
 
@@ -262,7 +264,7 @@ private fun ConfirmStakeSheetErrorPreview() {
                 validatorAddress = "pc1p...",
                 amountText = "100.0",
                 password = "secret",
-                stakeError = "invalid transaction: insufficient fee",
+                stakeError = UiText.Raw("invalid transaction: insufficient fee"),
                 isConfirmVisible = true
             ),
             onDismiss = {},

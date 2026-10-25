@@ -1,5 +1,8 @@
 package com.andrutstudio.velora.presentation.browser
 
+import com.andrutstudio.velora.R
+import com.andrutstudio.velora.presentation.components.toUiText
+import com.andrutstudio.velora.presentation.components.UiText
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -57,7 +60,7 @@ class BrowserViewModel @Inject constructor(
         // sign sheet opens the unlock dialog and resumes the signing afterwards.
         val showUnlockDialog: Boolean = false,
         val isUnlocking: Boolean = false,
-        val unlockError: String? = null,
+        val unlockError: UiText? = null,
         val isBiometricEnabled: Boolean = false,
     )
 
@@ -104,7 +107,7 @@ class BrowserViewModel @Inject constructor(
         data class ResolveConnect(val requestId: String) : Effect
         data class ResolveSign(val requestId: String, val txId: String) : Effect
         data class RejectSign(val requestId: String, val error: String) : Effect
-        data class ShowSnackbar(val message: String) : Effect
+        data class ShowSnackbar(val message: UiText) : Effect
         data object RequestBiometricUnlock : Effect
     }
 
@@ -207,7 +210,7 @@ class BrowserViewModel @Inject constructor(
             } else {
                 browserDao.insertBookmark(BookmarkEntity(url = url, title = title))
                 _state.update { it.copy(isBookmarked = true) }
-                _effect.send(Effect.ShowSnackbar("Bookmarked"))
+                _effect.send(Effect.ShowSnackbar(UiText.Res(R.string.browser_bookmarked)))
             }
         }
     }
@@ -410,7 +413,7 @@ class BrowserViewModel @Inject constructor(
             }.onFailure { e ->
                 _state.update { it.copy(isSigning = false, pendingSignRequest = null) }
                 _effect.send(Effect.RejectSign(req.requestId, e.message ?: "Transaction failed"))
-                _effect.send(Effect.ShowSnackbar(e.message ?: "Transaction failed"))
+                _effect.send(Effect.ShowSnackbar(e.toUiText(R.string.error_transaction_failed)))
             }
         }
     }
@@ -445,7 +448,7 @@ class BrowserViewModel @Inject constructor(
             }.onFailure { e ->
                 _state.update { it.copy(isSigning = false, pendingSignMessageRequest = null) }
                 _effect.send(Effect.RejectSign(req.requestId, e.message ?: "Signing failed"))
-                _effect.send(Effect.ShowSnackbar(e.message ?: "Signing failed"))
+                _effect.send(Effect.ShowSnackbar(e.toUiText(R.string.error_signing_failed)))
             }
         }
     }
@@ -498,7 +501,7 @@ class BrowserViewModel @Inject constructor(
             _state.update { it.copy(isUnlocking = true, unlockError = null) }
             try {
                 if (!walletRepository.unlockWallet(password)) {
-                    _state.update { it.copy(isUnlocking = false, unlockError = "Incorrect password") }
+                    _state.update { it.copy(isUnlocking = false, unlockError = UiText.Res(R.string.error_incorrect_password)) }
                     return@launch
                 }
                 _state.update { it.copy(isUnlocking = false, showUnlockDialog = false) }
@@ -515,7 +518,7 @@ class BrowserViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _state.update { it.copy(isUnlocking = false, unlockError = e.message ?: "Unlock failed") }
+                _state.update { it.copy(isUnlocking = false, unlockError = e.toUiText(R.string.error_unlock_failed)) }
             }
         }
     }

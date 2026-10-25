@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.onboarding.create
 
+import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -83,7 +84,7 @@ fun CreateWalletScreen(
                 placeholder = { Text(stringResource(R.string.create_wallet_name_placeholder)) },
                 singleLine = true,
                 isError = state.nameError != null,
-                supportingText = state.nameError?.let { { Text(it) } },
+                supportingText = state.nameError?.let { { Text(it.asString()) } },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { onContinue() }),
                 modifier = Modifier

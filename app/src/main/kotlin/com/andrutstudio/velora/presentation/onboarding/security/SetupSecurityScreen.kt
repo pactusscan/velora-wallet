@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.onboarding.security
 
+import com.andrutstudio.velora.presentation.components.asString
 import androidx.biometric.BiometricManager
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -136,7 +137,7 @@ fun SetupSecurityContent(
                 label = stringResource(R.string.security_setup_confirm_label),
                 isError = confirm.isNotBlank() && !passwordsMatch,
                 supportingText = when {
-                    state.passwordError != null -> state.passwordError
+                    state.passwordError != null -> state.passwordError.asString()
                     confirm.isNotBlank() && !passwordsMatch -> stringResource(R.string.security_setup_passwords_mismatch)
                     else -> null
                 },

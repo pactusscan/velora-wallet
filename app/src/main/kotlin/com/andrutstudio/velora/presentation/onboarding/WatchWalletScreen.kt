@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.onboarding
 
+import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -100,7 +101,7 @@ fun WatchWalletScreen(
                 placeholder = { Text(stringResource(R.string.send_to_placeholder)) },
                 modifier = Modifier.fillMaxWidth(),
                 isError = state.watchAddressError != null,
-                supportingText = state.watchAddressError?.let { { Text(it) } },
+                supportingText = state.watchAddressError?.let { { Text(it.asString()) } },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
             )
 

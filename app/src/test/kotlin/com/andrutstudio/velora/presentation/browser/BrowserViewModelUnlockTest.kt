@@ -1,6 +1,8 @@
 package com.andrutstudio.velora.presentation.browser
 
 import androidx.lifecycle.SavedStateHandle
+import com.andrutstudio.velora.R
+import com.andrutstudio.velora.presentation.components.UiText
 import com.andrutstudio.velora.data.local.db.BrowserDao
 import com.andrutstudio.velora.domain.model.Account
 import com.andrutstudio.velora.domain.model.AccountType
@@ -101,7 +103,7 @@ class BrowserViewModelUnlockTest {
         vm.onUnlock("wrong")
 
         assertTrue(vm.state.value.showUnlockDialog)
-        assertEquals("Incorrect password", vm.state.value.unlockError)
+        assertEquals(UiText.Res(R.string.error_incorrect_password), vm.state.value.unlockError)
         coVerify(exactly = 0) { walletRepository.signMessage(any(), any()) }
     }
 

@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.onboarding
 
+import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -64,7 +65,7 @@ fun ImportPrivateKeyScreen(
                 placeholder = { Text(stringResource(R.string.import_wallet_name_placeholder)) },
                 singleLine = true,
                 isError = state.nameError != null,
-                supportingText = state.nameError?.let { { Text(it) } },
+                supportingText = state.nameError?.let { { Text(it.asString()) } },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             )
 
@@ -82,7 +83,7 @@ fun ImportPrivateKeyScreen(
                     ) 
                 },
                 isError = pkError != null,
-                supportingText = pkError?.let { { Text(it) } },
+                supportingText = pkError?.let { { Text(it.asString()) } },
                 textStyle = pkTextStyle,
                 keyboardOptions = KeyboardOptions(
                     capitalization = KeyboardCapitalization.None,

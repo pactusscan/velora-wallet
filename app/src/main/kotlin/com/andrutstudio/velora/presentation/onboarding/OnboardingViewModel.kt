@@ -1,5 +1,9 @@
 package com.andrutstudio.velora.presentation.onboarding
 
+import com.andrutstudio.velora.R
+import com.andrutstudio.velora.presentation.components.toUiText
+import com.andrutstudio.velora.presentation.components.uiText
+import com.andrutstudio.velora.presentation.components.UiText
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,15 +43,15 @@ class OnboardingViewModel @Inject constructor(
         val privateKeyInput: String = "",
         val privateKeyHex: String = "",
         val watchAddress: String = "",
-        val privateKeyError: String? = null,
-        val watchAddressError: String? = null,
+        val privateKeyError: UiText? = null,
+        val watchAddressError: UiText? = null,
         val restoreWords: List<String> = List(12) { "" },
         val mnemonicText: String = "",
         val wordCount: Int = 12,
         val isLoading: Boolean = false,
-        val nameError: String? = null,
-        val mnemonicError: String? = null,
-        val passwordError: String? = null,
+        val nameError: UiText? = null,
+        val mnemonicError: UiText? = null,
+        val passwordError: UiText? = null,
     )
 
     sealed interface Effect {
@@ -55,7 +59,7 @@ class OnboardingViewModel @Inject constructor(
         data object NavigateToSecurity : Effect
         data object NavigateToHome : Effect
         data class RequestBiometricEnrollment(val password: String) : Effect
-        data class ShowError(val message: String) : Effect
+        data class ShowError(val message: UiText) : Effect
     }
 
     private val _state = MutableStateFlow(State())
@@ -110,36 +114,36 @@ class OnboardingViewModel @Inject constructor(
                 // Pactus Private Key Types: 1 = BLS, 3 = Ed25519
                 val accountType = when(type.toInt()) {
                     1 -> {
-                        _state.update { it.copy(privateKeyError = "BLS account import is coming soon") }
+                        _state.update { it.copy(privateKeyError = UiText.Res(R.string.import_error_bls_soon)) }
                         return
                     }
                     3 -> com.andrutstudio.velora.domain.model.AccountType.ED25519
                     else -> {
-                        _state.update { it.copy(privateKeyError = "This key type is not supported yet") }
+                        _state.update { it.copy(privateKeyError = UiText.Res(R.string.import_error_key_unsupported)) }
                         return
                     }
                 }
 
                 // Validate that the key matches the current network
                 if (currentNetwork == com.andrutstudio.velora.domain.model.Network.MAINNET && hrp != "secret") {
-                    _state.update { it.copy(privateKeyError = "This is a Testnet key. Please switch to Testnet in settings.") }
+                    _state.update { it.copy(privateKeyError = UiText.Res(R.string.import_error_testnet_key)) }
                     return
                 }
                 if (currentNetwork == com.andrutstudio.velora.domain.model.Network.TESTNET && hrp != "tsecret") {
-                    _state.update { it.copy(privateKeyError = "This is a Mainnet key. Please switch to Mainnet in settings.") }
+                    _state.update { it.copy(privateKeyError = UiText.Res(R.string.import_error_mainnet_key)) }
                     return
                 }
 
                 _state.update { it.copy(importedAccountType = accountType) }
                 bytes.joinToString("") { "%02x".format(it) }
             } catch (e: Exception) {
-                _state.update { it.copy(privateKeyError = "Invalid key format or checksum") }
+                _state.update { it.copy(privateKeyError = UiText.Res(R.string.import_error_key_format)) }
                 return
             }
         } else {
             val h = input.removePrefix("0x")
             if (!h.matches(Regex("[0-9a-fA-F]{64}"))) {
-                _state.update { it.copy(privateKeyError = "Please enter a valid private key") }
+                _state.update { it.copy(privateKeyError = UiText.Res(R.string.import_error_key_empty)) }
                 return
             }
             _state.update { it.copy(importedAccountType = com.andrutstudio.velora.domain.model.AccountType.ED25519) }
@@ -162,7 +166,7 @@ class OnboardingViewModel @Inject constructor(
                     wallet.accounts.any { it.address == address }
                 }
                 if (exists) {
-                    _state.update { it.copy(privateKeyError = "This account is already imported") }
+                    _state.update { it.copy(privateKeyError = UiText.Res(R.string.import_error_already_imported)) }
                     return@launch
                 }
             }
@@ -184,12 +188,12 @@ class OnboardingViewModel @Inject constructor(
     fun submitWatchWallet() {
         val address = _state.value.watchAddress.trim()
         if (address.isBlank()) {
-            _state.update { it.copy(watchAddressError = "Enter a valid address") }
+            _state.update { it.copy(watchAddressError = UiText.Res(R.string.watch_error_invalid_address)) }
             return
         }
         // Basic Pactus address validation (pc1...)
         if (!address.startsWith("pc1")) {
-            _state.update { it.copy(watchAddressError = "Address must start with pc1") }
+            _state.update { it.copy(watchAddressError = UiText.Res(R.string.watch_error_address_prefix)) }
             return
         }
 
@@ -203,7 +207,7 @@ class OnboardingViewModel @Inject constructor(
             }.onSuccess {
                 _effect.send(Effect.NavigateToHome)
             }.onFailure { e ->
-                _state.update { it.copy(isLoading = false, watchAddressError = e.message) }
+                _state.update { it.copy(isLoading = false, watchAddressError = e.toUiText(R.string.watch_error_invalid_address)) }
             }
         }
     }
@@ -255,7 +259,7 @@ class OnboardingViewModel @Inject constructor(
     fun submitRestore() {
         val words = _state.value.restoreWords
         if (words.any { it.isBlank() }) {
-            _state.update { it.copy(mnemonicError = "Please fill in all ${_state.value.wordCount} words.") }
+            _state.update { it.copy(mnemonicError = uiText(R.string.restore_error_fill_words, _state.value.wordCount)) }
             return
         }
         viewModelScope.launch {
@@ -269,7 +273,7 @@ class OnboardingViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        mnemonicError = "Invalid seed phrase. Check each word and try again.",
+                        mnemonicError = UiText.Res(R.string.restore_error_invalid_phrase),
                     )
                 }
             }
@@ -282,11 +286,11 @@ class OnboardingViewModel @Inject constructor(
         val state = _state.value
 
         if (password.length < 8) {
-            _state.update { it.copy(passwordError = "Password must be at least 8 characters.") }
+            _state.update { it.copy(passwordError = UiText.Res(R.string.error_password_min_length)) }
             return
         }
         if (password != confirmPassword) {
-            _state.update { it.copy(passwordError = "Passwords do not match.") }
+            _state.update { it.copy(passwordError = UiText.Res(R.string.security_setup_passwords_mismatch)) }
             return
         }
 
@@ -322,7 +326,7 @@ class OnboardingViewModel @Inject constructor(
             }.onFailure { e ->
                 android.util.Log.e("Onboarding", "Setup failed", e)
                 _state.update { it.copy(isLoading = false) }
-                _effect.send(Effect.ShowError(e.message ?: "Failed to create wallet."))
+                _effect.send(Effect.ShowError(e.toUiText(R.string.error_create_wallet)))
             }
         }
     }

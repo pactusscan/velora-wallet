@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.stake
 
+import com.andrutstudio.velora.presentation.components.asString
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -67,7 +68,7 @@ fun StakeScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is StakeViewModel.Effect.NavigateBack -> onNavigateBack()
-                is StakeViewModel.Effect.ShowError -> snackbarHostState.showSnackbar(effect.message)
+                is StakeViewModel.Effect.ShowError -> snackbarHostState.showSnackbar(effect.message.asString(context))
                 is StakeViewModel.Effect.ShowSuccess -> {
                     successTxId = effect.txId
                 }
@@ -209,7 +210,7 @@ private fun StakeScreenContent(
                     isError = state.validatorAddressError != null,
                     supportingText = {
                         Column {
-                            state.validatorAddressError?.let { Text(it) }
+                            state.validatorAddressError?.let { Text(it.asString()) }
                             state.validatorStake?.let {
                                 Text(
                                     text = stringResource(R.string.stake_current_label, formatPac(it)),
@@ -246,13 +247,7 @@ private fun StakeScreenContent(
                     ),
                     isError = state.amountError != null,
                     supportingText = {
-                        state.amountError?.let {
-                            if (state.maxStakableAmount != null) {
-                                Text(stringResource(R.string.stake_max_error, formatPac(state.maxStakableAmount)))
-                            } else {
-                                Text(it)
-                            }
-                        }
+                        state.amountError?.let { Text(it.asString()) }
                     },
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
@@ -279,7 +274,7 @@ private fun StakeScreenContent(
                         imeAction = ImeAction.Next,
                     ),
                     isError = state.feeError != null,
-                    supportingText = state.feeError?.let { { Text(it) } },
+                    supportingText = state.feeError?.let { { Text(it.asString()) } },
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
                 )

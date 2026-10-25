@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.browser
 
+import com.andrutstudio.velora.presentation.components.asString
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
@@ -264,7 +265,7 @@ fun BrowserScreen(
                     webView.evaluateJavascript("window.pactus._reject('${effect.requestId}','$escaped')", null)
                 }
                 is BrowserViewModel.Effect.ShowSnackbar -> {
-                    scope.launch { snackbarHostState.showSnackbar(effect.message) }
+                    scope.launch { snackbarHostState.showSnackbar(effect.message.asString(context)) }
                 }
                 is BrowserViewModel.Effect.RequestBiometricUnlock -> {
                     if (activity != null) {
@@ -312,7 +313,7 @@ fun BrowserScreen(
     if (state.showUnlockDialog) {
         UnlockWalletDialog(
             isLoading = state.isUnlocking,
-            error = state.unlockError,
+            error = state.unlockError?.asString(),
             isBiometricEnabled = state.isBiometricEnabled,
             onBiometricClick = viewModel::onBiometricUnlockTriggered,
             onDismiss = viewModel::onDismissUnlock,

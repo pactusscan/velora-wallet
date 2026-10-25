@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.settings
 
+import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -52,7 +53,7 @@ fun NetworkSettingsScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is SettingsViewModel.Effect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message)
+                is SettingsViewModel.Effect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message.asString(context))
                 is SettingsViewModel.Effect.RequestBiometricUnlock -> {
                     if (activity != null) {
                         biometricHelper.showBiometricPromptForDecryption(
@@ -70,7 +71,7 @@ fun NetworkSettingsScreen(
     if (state.showUnlockForNetwork) {
         UnlockWalletDialog(
             isLoading = state.isUnlocking,
-            error = state.unlockError,
+            error = state.unlockError?.asString(),
             onDismiss = viewModel::onDismissUnlock,
             onUnlock = viewModel::onUnlock,
             isBiometricEnabled = state.isBiometricEnabled,

@@ -1,5 +1,8 @@
 package com.andrutstudio.velora.presentation.settings
 
+import com.andrutstudio.velora.presentation.components.toUiText
+import com.andrutstudio.velora.presentation.components.uiText
+import com.andrutstudio.velora.presentation.components.UiText
 import com.andrutstudio.velora.R
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
@@ -41,11 +44,11 @@ class SettingsViewModel @Inject constructor(
         val oldPassword: String = "",
         val newPassword: String = "",
         val confirmPassword: String = "",
-        val passwordError: String? = null,
+        val passwordError: UiText? = null,
         val isPasswordLoading: Boolean = false,
         // Backup form
         val backupPassword: String = "",
-        val backupError: String? = null,
+        val backupError: UiText? = null,
         val isBackupLoading: Boolean = false,
         // PIP-41 address recovery
         val isRecoveringAccounts: Boolean = false,
@@ -54,7 +57,7 @@ class SettingsViewModel @Inject constructor(
         val showUnlockForNetwork: Boolean = false,
         val pendingNetwork: Network? = null,
         val isUnlocking: Boolean = false,
-        val unlockError: String? = null,
+        val unlockError: UiText? = null,
         // Custom RPC URLs
         val customRpcMainnet: String = "",
         val customRpcTestnet: String = "",
@@ -76,7 +79,7 @@ class SettingsViewModel @Inject constructor(
     enum class BiometricAction { REVEAL_MNEMONIC, SWITCH_NETWORK }
 
     sealed interface Effect {
-        data class ShowSnackbar(val message: String) : Effect
+        data class ShowSnackbar(val message: UiText) : Effect
         data object PasswordChanged : Effect
         data class MnemonicRevealed(val mnemonic: String) : Effect
         data object WalletReset : Effect
@@ -145,10 +148,10 @@ class SettingsViewModel @Inject constructor(
     fun onChangePassword() {
         val s = _state.value
         val error = when {
-            s.oldPassword.isBlank() -> "Enter your current password"
-            s.newPassword.length < 8 -> "New password must be at least 8 characters"
-            s.newPassword != s.confirmPassword -> "Passwords do not match"
-            s.newPassword == s.oldPassword -> "New password must be different"
+            s.oldPassword.isBlank() -> UiText.Res(R.string.settings_error_current_password_required)
+            s.newPassword.length < 8 -> UiText.Res(R.string.error_password_min_length)
+            s.newPassword != s.confirmPassword -> UiText.Res(R.string.security_setup_passwords_mismatch)
+            s.newPassword == s.oldPassword -> UiText.Res(R.string.settings_error_new_password_same)
             else -> null
         }
         if (error != null) {
@@ -170,10 +173,10 @@ class SettingsViewModel @Inject constructor(
                     )
                 }
                 _effect.send(Effect.PasswordChanged)
-                _effect.send(Effect.ShowSnackbar("Password changed successfully"))
+                _effect.send(Effect.ShowSnackbar(UiText.Res(R.string.settings_password_changed)))
             }.onFailure { e ->
-                val msg = if (e is WrongPasswordException) "Current password is incorrect"
-                else e.message ?: "Failed to change password"
+                val msg = if (e is WrongPasswordException) UiText.Res(R.string.settings_error_current_password_wrong)
+                else e.toUiText(R.string.settings_error_change_password)
                 _state.update { it.copy(isPasswordLoading = false, passwordError = msg) }
             }
         }
@@ -201,10 +204,10 @@ class SettingsViewModel @Inject constructor(
                     _state.update { it.copy(isUnlocking = false, showUnlockForBiometric = false) }
                     _effect.send(Effect.RequestBiometricEnrollment(password))
                 } else {
-                    _state.update { it.copy(isUnlocking = false, unlockError = "Incorrect password") }
+                    _state.update { it.copy(isUnlocking = false, unlockError = UiText.Res(R.string.error_incorrect_password)) }
                 }
             } catch (e: Exception) {
-                _state.update { it.copy(isUnlocking = false, unlockError = e.message ?: "Failed to enable biometric") }
+                _state.update { it.copy(isUnlocking = false, unlockError = e.toUiText(R.string.settings_error_enable_biometric)) }
             }
         }
     }
@@ -213,7 +216,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             walletRepository.setBiometricEnabled(true)
             _state.update { it.copy(isBiometricEnabled = true) }
-            _effect.send(Effect.ShowSnackbar("Biometric unlock enabled"))
+            _effect.send(Effect.ShowSnackbar(UiText.Res(R.string.settings_biometric_enabled)))
         }
     }
 
@@ -290,12 +293,12 @@ class SettingsViewModel @Inject constructor(
                     _state.update { it.copy(isUnlocking = false, showUnlockForNetwork = false, pendingNetwork = null) }
                     pending?.let { doSwitchNetwork(it) }
                 } else {
-                    _state.update { it.copy(isUnlocking = false, unlockError = "Incorrect password") }
+                    _state.update { it.copy(isUnlocking = false, unlockError = UiText.Res(R.string.error_incorrect_password)) }
                 }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _state.update { it.copy(isUnlocking = false, unlockError = e.message ?: "Unlock failed") }
+                _state.update { it.copy(isUnlocking = false, unlockError = e.toUiText(R.string.error_unlock_failed)) }
             }
         }
     }
@@ -307,11 +310,11 @@ class SettingsViewModel @Inject constructor(
                 .onSuccess {
                     networkProvider.setNetwork(network)
                     _state.update { it.copy(isNetworkLoading = false) }
-                    _effect.send(Effect.ShowSnackbar("Switched to ${network.displayName}"))
+                    _effect.send(Effect.ShowSnackbar(uiText(R.string.settings_network_switched, network.displayName)))
                 }
                 .onFailure { e ->
                     _state.update { it.copy(isNetworkLoading = false) }
-                    _effect.send(Effect.ShowSnackbar(e.message ?: "Network switch failed"))
+                    _effect.send(Effect.ShowSnackbar(e.toUiText(R.string.settings_error_network_switch)))
                 }
         }
     }
@@ -331,8 +334,8 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             networkProvider.setCustomRpcUrl(network, url.takeIf { it.isNotBlank() })
             _state.update { it.copy(isCustomRpcSaving = false) }
-            val msg = if (url.isBlank()) "Reverted to default endpoints"
-            else "Custom RPC URL saved"
+            val msg = if (url.isBlank()) UiText.Res(R.string.settings_rpc_reverted)
+            else UiText.Res(R.string.settings_rpc_saved)
             _effect.send(Effect.ShowSnackbar(msg))
         }
     }
@@ -350,7 +353,7 @@ class SettingsViewModel @Inject constructor(
                 _state.update { it.copy(biometricAction = BiometricAction.REVEAL_MNEMONIC) }
                 viewModelScope.launch { _effect.send(Effect.RequestBiometricUnlock) }
             } else {
-                _state.update { it.copy(backupError = "Enter your password") }
+                _state.update { it.copy(backupError = UiText.Res(R.string.settings_error_enter_password)) }
             }
             return
         }
@@ -376,8 +379,8 @@ class SettingsViewModel @Inject constructor(
                     _effect.send(Effect.MnemonicRevealed(finalValue))
                 }
                 .onFailure { e ->
-                    val msg = if (e is WrongPasswordException) "Incorrect password"
-                    else e.message ?: "Failed to decrypt phrase"
+                    val msg = if (e is WrongPasswordException) UiText.Res(R.string.error_incorrect_password)
+                    else e.toUiText(R.string.settings_error_decrypt_phrase)
                     _state.update { it.copy(isBackupLoading = false, backupError = msg) }
                 }
         }
@@ -403,14 +406,14 @@ class SettingsViewModel @Inject constructor(
             runCatching { walletRepository.recoverAccounts() }
                 .onSuccess { added ->
                     val message = when {
-                        added > 0 -> "Recovered $added account(s)"
-                        else -> "No new accounts found"
+                        added > 0 -> UiText.Plural(R.plurals.settings_recovered_accounts, added, listOf(added))
+                        else -> UiText.Res(R.string.settings_no_new_accounts)
                     }
                     _effect.send(Effect.ShowSnackbar(message))
                 }
                 .onFailure { e ->
                     if (e is CancellationException) throw e
-                    _effect.send(Effect.ShowSnackbar(e.message ?: "Address recovery failed"))
+                    _effect.send(Effect.ShowSnackbar(e.toUiText(R.string.settings_error_recovery)))
                 }
             _state.update { it.copy(isRecoveringAccounts = false) }
         }
@@ -439,7 +442,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             walletRepository.renameWallet(wallet.id, newName)
             _state.update { it.copy(isRenamingWallet = false, renameName = "") }
-            _effect.send(Effect.ShowSnackbar("Wallet renamed to $newName"))
+            _effect.send(Effect.ShowSnackbar(uiText(R.string.settings_wallet_renamed, newName)))
         }
     }
 

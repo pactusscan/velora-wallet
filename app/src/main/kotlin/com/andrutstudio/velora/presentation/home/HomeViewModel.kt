@@ -1,5 +1,9 @@
 package com.andrutstudio.velora.presentation.home
 
+import com.andrutstudio.velora.R
+import com.andrutstudio.velora.presentation.components.toUiText
+import com.andrutstudio.velora.presentation.components.uiText
+import com.andrutstudio.velora.presentation.components.UiText
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,19 +56,19 @@ class HomeViewModel @Inject constructor(
         val priceHistory: List<Double> = emptyList(),
         val isLoading: Boolean = true,
         val isRefreshing: Boolean = false,
-        val error: String? = null,
+        val error: UiText? = null,
         val showAddAccountSheet: Boolean = false,
         val isAddingAccount: Boolean = false,
         val showUnlockDialog: Boolean = false,
         val isUnlocking: Boolean = false,
-        val unlockError: String? = null,
+        val unlockError: UiText? = null,
         val renamingAddress: String? = null,
         val renameLabel: String = "",
         // Multi-wallet
         val showWalletPickerSheet: Boolean = false,
         val showAddWalletSheet: Boolean = false,
         val isCreatingWallet: Boolean = false,
-        val createWalletError: String? = null,
+        val createWalletError: UiText? = null,
         // Delete confirmations
         val pendingDeleteAccountAddress: String? = null,
         val pendingDeleteWalletId: String? = null,
@@ -85,8 +89,8 @@ class HomeViewModel @Inject constructor(
     sealed interface Effect {
         data class AddressCopied(val address: String) : Effect
         data class NavigateTo(val route: String) : Effect
-        data class ShowError(val message: String) : Effect
-        data class ShowMessage(val message: String) : Effect
+        data class ShowError(val message: UiText) : Effect
+        data class ShowMessage(val message: UiText) : Effect
         data object RequestBiometricUnlock : Effect
     }
 
@@ -154,7 +158,7 @@ class HomeViewModel @Inject constructor(
                 )
             )
             onDismissAlertSheet()
-            _effect.send(Effect.ShowMessage("Balance alert saved"))
+            _effect.send(Effect.ShowMessage(UiText.Res(R.string.home_alert_saved)))
         }
     }
 
@@ -164,7 +168,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             balanceAlertDao.deleteAlert(alert)
             onDismissAlertSheet()
-            _effect.send(Effect.ShowMessage("Balance alert removed"))
+            _effect.send(Effect.ShowMessage(UiText.Res(R.string.home_alert_removed)))
         }
     }
 
@@ -299,12 +303,12 @@ class HomeViewModel @Inject constructor(
                         ) 
                     }
                 } else {
-                    _state.update { it.copy(isUnlocking = false, unlockError = "Incorrect password") }
+                    _state.update { it.copy(isUnlocking = false, unlockError = UiText.Res(R.string.error_incorrect_password)) }
                 }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _state.update { it.copy(isUnlocking = false, unlockError = e.message ?: "Unlock failed") }
+                _state.update { it.copy(isUnlocking = false, unlockError = e.toUiText(R.string.error_unlock_failed)) }
             }
         }
     }
@@ -315,7 +319,7 @@ class HomeViewModel @Inject constructor(
         val wallet = _state.value.wallet ?: return
         if (wallet.accounts.size <= 1) {
             viewModelScope.launch {
-                _effect.send(Effect.ShowError("Cannot delete the only account in this wallet"))
+                _effect.send(Effect.ShowError(UiText.Res(R.string.home_error_last_account)))
             }
             return
         }
@@ -332,11 +336,11 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 walletRepository.deleteAccount(address)
-                _effect.send(Effect.ShowMessage("Account deleted"))
+                _effect.send(Effect.ShowMessage(UiText.Res(R.string.home_account_deleted)))
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _effect.send(Effect.ShowError(e.message ?: "Failed to delete account"))
+                _effect.send(Effect.ShowError(e.toUiText(R.string.home_error_delete_account)))
             }
         }
     }
@@ -363,7 +367,7 @@ class HomeViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _effect.send(Effect.ShowError(e.message ?: "Failed to switch wallet"))
+                _effect.send(Effect.ShowError(e.toUiText(R.string.home_error_switch_wallet)))
             }
         }
     }
@@ -382,11 +386,11 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 walletRepository.deleteWallet(id)
-                _effect.send(Effect.ShowMessage("Wallet deleted"))
+                _effect.send(Effect.ShowMessage(UiText.Res(R.string.home_wallet_deleted)))
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _effect.send(Effect.ShowError(e.message ?: "Failed to delete wallet"))
+                _effect.send(Effect.ShowError(e.toUiText(R.string.home_error_delete_wallet)))
             }
         }
     }
@@ -405,7 +409,7 @@ class HomeViewModel @Inject constructor(
     fun onCreateWallet(name: String, password: String) {
         val trimmedName = name.trim().ifEmpty { "Wallet ${_state.value.wallets.size + 1}" }
         if (password.length < 8) {
-            _state.update { it.copy(createWalletError = "Password must be at least 8 characters") }
+            _state.update { it.copy(createWalletError = UiText.Res(R.string.error_password_min_length)) }
             return
         }
         viewModelScope.launch {
@@ -414,12 +418,12 @@ class HomeViewModel @Inject constructor(
                 val mnemonic = walletRepository.generateMnemonic(12)
                 walletRepository.createWallet(trimmedName, mnemonic, password)
                 _state.update { it.copy(isCreatingWallet = false, showAddWalletSheet = false) }
-                _effect.send(Effect.ShowMessage("Wallet \"$trimmedName\" created"))
+                _effect.send(Effect.ShowMessage(uiText(R.string.home_wallet_created, trimmedName)))
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 _state.update {
-                    it.copy(isCreatingWallet = false, createWalletError = e.message ?: "Failed to create wallet")
+                    it.copy(isCreatingWallet = false, createWalletError = e.toUiText(R.string.error_create_wallet))
                 }
             }
         }
@@ -439,7 +443,7 @@ class HomeViewModel @Inject constructor(
                 throw e
             } catch (e: Exception) {
                 _state.update { it.copy(isAddingAccount = false) }
-                _effect.send(Effect.ShowError(e.message ?: "Failed to add account"))
+                _effect.send(Effect.ShowError(e.toUiText(R.string.home_error_add_account)))
             }
         }
     }
@@ -466,9 +470,9 @@ class HomeViewModel @Inject constructor(
             val isNetworkError = e is java.net.UnknownHostException || e is java.net.ConnectException || e is java.net.SocketTimeoutException
             if (isNetworkError) {
                 _state.update { it.copy(isRefreshing = false, isOffline = true) }
-                _effect.send(Effect.ShowMessage("You are offline. Reconnecting..."))
+                _effect.send(Effect.ShowMessage(UiText.Res(R.string.error_offline_reconnecting)))
             } else {
-                _state.update { it.copy(isRefreshing = false, error = e.message) }
+                _state.update { it.copy(isRefreshing = false, error = e.toUiText(R.string.home_error_refresh)) }
             }
         }
     }

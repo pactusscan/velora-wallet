@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.home
 
+import com.andrutstudio.velora.presentation.components.asString
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -110,7 +111,7 @@ fun HomeScreen(
     if (state.showUnlockDialog) {
         UnlockWalletDialog(
             isLoading = state.isUnlocking,
-            error = state.unlockError,
+            error = state.unlockError?.asString(),
             isBiometricEnabled = state.isBiometricEnabled,
             onBiometricClick = { viewModel.onBiometricUnlockTriggered() },
             onDismiss = viewModel::onDismissUnlock,
@@ -140,7 +141,7 @@ fun HomeScreen(
     if (state.showAddWalletSheet) {
         AddWalletSheet(
             isCreating = state.isCreatingWallet,
-            error = state.createWalletError,
+            error = state.createWalletError?.asString(),
             onDismiss = viewModel::onDismissAddWallet,
             onCreate = viewModel::onCreateWallet,
         )
@@ -203,8 +204,8 @@ fun HomeScreen(
                     snackbarHostState.showSnackbar(context.getString(R.string.home_address_copied))
                 }
                 is HomeViewModel.Effect.NavigateTo -> navController.navigate(effect.route)
-                is HomeViewModel.Effect.ShowError -> snackbarHostState.showSnackbar(effect.message)
-                is HomeViewModel.Effect.ShowMessage -> snackbarHostState.showSnackbar(effect.message)
+                is HomeViewModel.Effect.ShowError -> snackbarHostState.showSnackbar(effect.message.asString(context))
+                is HomeViewModel.Effect.ShowMessage -> snackbarHostState.showSnackbar(effect.message.asString(context))
                 is HomeViewModel.Effect.RequestBiometricUnlock -> {
                     if (activity != null) {
                         biometricHelper.showBiometricPromptForDecryption(
@@ -330,7 +331,7 @@ private fun WalletTab(
                     enter = expandVertically() + fadeIn(),
                     exit = shrinkVertically() + fadeOut(),
                 ) {
-                    ErrorBanner(message = state.error ?: "")
+                    ErrorBanner(message = state.error?.asString() ?: "")
                 }
             }
 

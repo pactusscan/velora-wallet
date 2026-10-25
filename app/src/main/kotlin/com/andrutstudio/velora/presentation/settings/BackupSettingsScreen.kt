@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.settings
 
+import com.andrutstudio.velora.presentation.components.asString
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -72,7 +73,7 @@ fun BackupSettingsScreen(
                     revealedMnemonic = effect.mnemonic
                 }
                 is SettingsViewModel.Effect.ShowSnackbar ->
-                    snackbarHostState.showSnackbar(effect.message)
+                    snackbarHostState.showSnackbar(effect.message.asString(context))
                 is SettingsViewModel.Effect.RequestBiometricUnlock -> {
                     if (activity != null) {
                         biometricHelper.showBiometricPromptForDecryption(
@@ -187,7 +188,7 @@ private fun BackupSettingsContent(
 
                 if (state.backupError != null) {
                     Text(
-                        text = state.backupError,
+                        text = state.backupError.asString(),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
                     )

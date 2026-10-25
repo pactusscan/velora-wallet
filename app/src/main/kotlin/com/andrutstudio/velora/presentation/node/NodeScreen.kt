@@ -1,5 +1,7 @@
 package com.andrutstudio.velora.presentation.node
 
+import androidx.compose.ui.platform.LocalContext
+import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
@@ -111,6 +113,7 @@ private val OnlineGreen = Color(0xFF00E676)
 fun NodeScreen(navController: NavController) {
     val viewModel: NodeViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
     var validatorsSheet by remember { mutableStateOf<List<ValidatorPeerInfo>?>(null) }
@@ -120,7 +123,7 @@ fun NodeScreen(navController: NavController) {
         viewModel.effect
             .onEach { effect ->
                 when (effect) {
-                    is NodeViewModel.Effect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message)
+                    is NodeViewModel.Effect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message.asString(context))
                 }
             }
             .launchIn(this)
@@ -216,7 +219,7 @@ fun NodeScreen(navController: NavController) {
     if (state.showAddDialog) {
         AddNodeDialog(
             input = state.addInput,
-            error = state.addError,
+            error = state.addError?.asString(),
             loading = state.addLoading,
             onInputChange = { viewModel.onEvent(NodeViewModel.Event.InputChanged(it)) },
             onConfirm = { viewModel.onEvent(NodeViewModel.Event.ConfirmAdd) },

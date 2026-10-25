@@ -1,6 +1,7 @@
 
 package com.andrutstudio.velora.presentation.settings
 
+import com.andrutstudio.velora.presentation.components.asString
 import android.content.Context
 import androidx.biometric.BiometricManager
 import androidx.compose.foundation.clickable
@@ -141,7 +142,7 @@ fun SettingsScreen(
     if (state.showUnlockForBiometric) {
         UnlockWalletDialog(
             isLoading = state.isUnlocking,
-            error = state.unlockError,
+            error = state.unlockError?.asString(),
             onDismiss = viewModel::onDismissBiometricUnlock,
             onUnlock = viewModel::onConfirmBiometricUnlock,
             isBiometricEnabled = false, // We're in the process of enabling it

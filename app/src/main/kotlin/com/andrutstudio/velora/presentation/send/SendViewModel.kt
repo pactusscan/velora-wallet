@@ -1,5 +1,8 @@
 package com.andrutstudio.velora.presentation.send
 
+import com.andrutstudio.velora.R
+import com.andrutstudio.velora.presentation.components.toUiText
+import com.andrutstudio.velora.presentation.components.UiText
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -51,16 +54,16 @@ class SendViewModel @Inject constructor(
         val feeText: String = "",
         val isFeeManual: Boolean = false,
         val isFeeLoading: Boolean = false,
-        val toAddressError: String? = null,
-        val amountError: String? = null,
-        val feeError: String? = null,
+        val toAddressError: UiText? = null,
+        val amountError: UiText? = null,
+        val feeError: UiText? = null,
         val isConfirmVisible: Boolean = false,
         val isSending: Boolean = false,
         val isLoading: Boolean = true,
         val password: String = "",
-        val passwordError: String? = null,
+        val passwordError: UiText? = null,
         // Shown inside the confirm sheet; a snackbar would be hidden behind the modal sheet.
-        val sendError: String? = null,
+        val sendError: UiText? = null,
         val isBiometricEnabled: Boolean = false,
         val addressBook: List<AddressBookEntity> = emptyList(),
         val isAddressBookVisible: Boolean = false,
@@ -80,7 +83,7 @@ class SendViewModel @Inject constructor(
 
     sealed interface Effect {
         data class TxSuccess(val txId: String) : Effect
-        data class ShowError(val message: String) : Effect
+        data class ShowError(val message: UiText) : Effect
         data object NavigateBack : Effect
         data object RequestBiometricUnlock : Effect
     }
@@ -260,7 +263,7 @@ class SendViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isFeeLoading = false,
-                        feeError = "Estimation failed — enter fee manually",
+                        feeError = UiText.Res(R.string.error_fee_estimation),
                     )
                 }
             }
@@ -280,14 +283,14 @@ class SendViewModel @Inject constructor(
 
         val amount = current.parsedAmount
         if (amount == null) {
-            _state.update { it.copy(amountError = "Enter a valid amount") }
+            _state.update { it.copy(amountError = UiText.Res(R.string.error_enter_valid_amount)) }
             hasError = true
         }
 
         val fee = current.parsedFee
         if (fee == null) {
             if (!current.isFeeLoading) {
-                _state.update { it.copy(feeError = "Enter a fee amount") }
+                _state.update { it.copy(feeError = UiText.Res(R.string.error_enter_fee)) }
                 hasError = true
             }
         }
@@ -295,7 +298,7 @@ class SendViewModel @Inject constructor(
         if (!hasError && amount != null && fee != null) {
             val total = amount.nanoPac + fee.nanoPac
             if (total > current.availableBalance.nanoPac) {
-                _state.update { it.copy(amountError = "Insufficient balance for amount + fee") }
+                _state.update { it.copy(amountError = UiText.Res(R.string.error_insufficient_balance)) }
                 return
             }
             _state.update { it.copy(isConfirmVisible = true, password = "", passwordError = null, sendError = null) }
@@ -320,7 +323,7 @@ class SendViewModel @Inject constructor(
             if (current.isBiometricEnabled) {
                 viewModelScope.launch { _effect.send(Effect.RequestBiometricUnlock) }
             } else {
-                _state.update { it.copy(passwordError = "Enter your wallet password") }
+                _state.update { it.copy(passwordError = UiText.Res(R.string.error_enter_wallet_password)) }
             }
             return
         }
@@ -343,7 +346,7 @@ class SendViewModel @Inject constructor(
             try {
                 val unlocked = walletRepository.unlockWallet(password)
                 if (!unlocked) {
-                    _state.update { it.copy(isSending = false, passwordError = "Incorrect password") }
+                    _state.update { it.copy(isSending = false, passwordError = UiText.Res(R.string.error_incorrect_password)) }
                     return@launch
                 }
                 val txId = sendTransaction(
@@ -364,16 +367,16 @@ class SendViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _state.update { it.copy(isSending = false, sendError = e.message ?: "Transaction failed") }
+                _state.update { it.copy(isSending = false, sendError = e.toUiText(R.string.error_transaction_failed)) }
             }
         }
     }
 
-    private fun validateRecipient(address: String, from: String?): String? {
-        if (address.isBlank()) return "Recipient address is required"
-        if (!isValidAccountAddress(address)) return "Invalid Pactus address (e.g. pc1r...)"
+    private fun validateRecipient(address: String, from: String?): UiText? {
+        if (address.isBlank()) return UiText.Res(R.string.send_error_recipient_required)
+        if (!isValidAccountAddress(address)) return UiText.Res(R.string.send_error_invalid_address)
         if (from != null && address.equals(from, ignoreCase = false)) {
-            return "Cannot send to your own address"
+            return UiText.Res(R.string.send_error_own_address)
         }
         return null
     }

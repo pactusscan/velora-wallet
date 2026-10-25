@@ -1,5 +1,7 @@
 package com.andrutstudio.velora.presentation.settings
 
+import androidx.compose.ui.platform.LocalContext
+import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -25,6 +27,7 @@ fun SecuritySettingsScreen(
     onNavigateBack: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -32,7 +35,7 @@ fun SecuritySettingsScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is SettingsViewModel.Effect.ShowSnackbar ->
-                    scope.launch { snackbarHostState.showSnackbar(effect.message) }
+                    scope.launch { snackbarHostState.showSnackbar(effect.message.asString(context)) }
                 else -> Unit
             }
         }
@@ -112,7 +115,7 @@ private fun SecuritySettingsContent(
 
             if (state.passwordError != null) {
                 Text(
-                    text = state.passwordError,
+                    text = state.passwordError.asString(),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error,
                 )

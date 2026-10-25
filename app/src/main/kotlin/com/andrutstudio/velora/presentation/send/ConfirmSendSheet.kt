@@ -1,5 +1,7 @@
 package com.andrutstudio.velora.presentation.send
 
+import com.andrutstudio.velora.presentation.components.UiText
+import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -144,7 +146,7 @@ fun ConfirmSendSheet(
                         imeAction = ImeAction.Done,
                     ),
                     isError = state.passwordError != null,
-                    supportingText = state.passwordError?.let { { Text(it) } },
+                    supportingText = state.passwordError?.let { { Text(it.asString()) } },
                     enabled = !state.isSending,
                 )
 
@@ -152,7 +154,7 @@ fun ConfirmSendSheet(
             }
 
             state.sendError?.let { error ->
-                TxErrorBox(message = error)
+                TxErrorBox(message = error.asString())
                 Spacer(Modifier.height(16.dp))
             }
 
@@ -265,7 +267,7 @@ private fun ConfirmSendSheetErrorPreview() {
                 amountText = "42.5",
                 feeText = "0.01",
                 password = "secret",
-                sendError = "invalid transaction: insufficient fee",
+                sendError = UiText.Raw("invalid transaction: insufficient fee"),
                 isConfirmVisible = true
             ),
             onDismiss = {},

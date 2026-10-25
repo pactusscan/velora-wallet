@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.send
 
+import com.andrutstudio.velora.presentation.components.asString
 import android.content.Context
 import android.content.ClipboardManager
 import android.content.ClipData
@@ -88,7 +89,7 @@ fun SendScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is SendViewModel.Effect.ShowError -> snackbarHostState.showSnackbar(effect.message)
+                is SendViewModel.Effect.ShowError -> snackbarHostState.showSnackbar(effect.message.asString(context))
                 is SendViewModel.Effect.TxSuccess -> {
                     successTxId = effect.txId
                 }
@@ -358,7 +359,7 @@ private fun SendScreenContent(
                         }
                     },
                     isError = state.toAddressError != null,
-                    supportingText = state.toAddressError?.let { { Text(it) } },
+                    supportingText = state.toAddressError?.let { { Text(it.asString()) } },
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
                 )
@@ -380,7 +381,7 @@ private fun SendScreenContent(
                         imeAction = ImeAction.Next,
                     ),
                     isError = state.amountError != null,
-                    supportingText = state.amountError?.let { { Text(it) } },
+                    supportingText = state.amountError?.let { { Text(it.asString()) } },
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
                 )
@@ -406,7 +407,7 @@ private fun SendScreenContent(
                         imeAction = ImeAction.Next,
                     ),
                     isError = state.feeError != null,
-                    supportingText = state.feeError?.let { { Text(it) } },
+                    supportingText = state.feeError?.let { { Text(it.asString()) } },
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
                 )
