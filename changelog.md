@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- **Choose the Account That Signs a Message**: dApps can ask for a signature from a specific address with `window.pactus.signMessage(message, { address })`, for example to prove ownership of that account. The approval sheet shows the requested account and it cannot be changed; if the wallet does not hold it, the request is refused. Without an address, the sheet now lets you pick which account signs (the first one is preselected).
+
 ## [0.1.5] - 2026-10-25
 
 ### Added

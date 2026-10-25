@@ -168,6 +168,8 @@
     <string name="browser_sign_amount">Valor</string>
     <string name="browser_sign_fee">Taxa</string>
     <string name="browser_sign_memo">Memo</string>
+    <string name="browser_sign_message_signer">Conta de assinatura</string>
+    <string name="browser_sign_message_signer_requested">Solicitada por este site</string>
     <string name="browser_bookmarks_header">Favoritos</string>
     <string name="browser_bookmarks_empty">Nenhum favorito ainda</string>
     <string name="browser_history_header">Histórico</string>

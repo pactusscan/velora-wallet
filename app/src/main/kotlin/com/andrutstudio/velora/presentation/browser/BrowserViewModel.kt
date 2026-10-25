@@ -23,6 +23,7 @@ import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.domain.model.Network
 import com.andrutstudio.velora.domain.repository.WalletRepository
 import com.andrutstudio.velora.domain.usecase.SendTransactionUseCase
+import com.andrutstudio.velora.domain.usecase.SignerPick
 import javax.inject.Inject
 
 @HiltViewModel
@@ -73,12 +74,18 @@ class BrowserViewModel @Inject constructor(
         val memo: String,
     )
 
+    // fromAddress is the account that will sign. When the dApp named it
+    // (signMessage(message, { address })) signerFixed is true and the sheet
+    // shows it without a picker; otherwise signerOptions lists the accounts the
+    // user can choose from.
     data class PendingSignMessageRequest(
         val requestId: String,
         val host: String,
         val needsConnect: Boolean,
         val fromAddress: String,
         val message: String,
+        val signerFixed: Boolean = false,
+        val signerOptions: List<Account> = emptyList(),
     )
 
     sealed interface Effect {
@@ -296,7 +303,7 @@ class BrowserViewModel @Inject constructor(
         }
     }
 
-    fun onSignMessageRequest(requestId: String, message: String) {
+    fun onSignMessageRequest(requestId: String, message: String, address: String) {
         // Refuse non-text messages: they could be transaction bytes smuggled
         // through the (prefix-less) message signer to bypass the transaction
         // approval flow.
@@ -306,23 +313,48 @@ class BrowserViewModel @Inject constructor(
             }
             return
         }
-        val fromAddress = _state.value.accounts.firstOrNull()?.address ?: run {
+        val accounts = _state.value.accounts
+        val candidates = SignerPick.candidates(accounts)
+        if (candidates.isEmpty()) {
             viewModelScope.launch { _effect.send(Effect.RejectSign(requestId, "No account available")) }
             return
         }
+        val requested = address.trim()
         val host = currentHost()
         viewModelScope.launch {
             val connected = host.isNotBlank() && browserDao.isSiteConnected(host)
+            // A named address must belong to this wallet; never fall back to
+            // another key. A connected site already sees the accounts, so it is
+            // told right away; an unconnected one only learns after the user
+            // responds, so it cannot probe which addresses the wallet holds.
+            val holdsRequested = requested.isEmpty() || SignerPick.requestedSignerIndex(accounts, requested) >= 0
+            if (!holdsRequested && connected) {
+                _effect.send(Effect.RejectSign(requestId, "No account available"))
+                return@launch
+            }
             _state.update {
                 it.copy(
                     pendingSignMessageRequest = PendingSignMessageRequest(
                         requestId = requestId,
                         host = host,
                         needsConnect = !connected,
-                        fromAddress = fromAddress,
+                        fromAddress = requested.ifEmpty { candidates.first().address },
                         message = message,
+                        signerFixed = requested.isNotEmpty(),
+                        signerOptions = if (requested.isEmpty()) candidates else emptyList(),
                     )
                 )
+            }
+        }
+    }
+
+    fun onSelectMessageSigner(address: String) {
+        _state.update { state ->
+            val req = state.pendingSignMessageRequest
+            if (req == null || req.signerFixed || req.signerOptions.none { it.address == address }) {
+                state
+            } else {
+                state.copy(pendingSignMessageRequest = req.copy(fromAddress = address))
             }
         }
     }
@@ -360,8 +392,19 @@ class BrowserViewModel @Inject constructor(
             if (req.needsConnect && req.host.isNotBlank()) {
                 browserDao.insertConnectedSite(ConnectedSiteEntity(host = req.host))
             }
+            val accounts = _state.value.accounts
+            val index = SignerPick.resolveSignerIndex(
+                accounts = accounts,
+                requested = if (req.signerFixed) req.fromAddress else "",
+                chosen = accounts.indexOfFirst { it.address == req.fromAddress }.takeIf { it >= 0 },
+            )
+            val signer = accounts.getOrNull(index) ?: run {
+                _state.update { it.copy(isSigning = false, pendingSignMessageRequest = null) }
+                _effect.send(Effect.RejectSign(req.requestId, "No account available"))
+                return@launch
+            }
             runCatching {
-                walletRepository.signMessage(req.message, req.fromAddress)
+                walletRepository.signMessage(req.message, signer.address)
             }.onSuccess { signature ->
                 _state.update { it.copy(isSigning = false, pendingSignMessageRequest = null) }
                 _effect.send(Effect.ResolveSign(req.requestId, signature))

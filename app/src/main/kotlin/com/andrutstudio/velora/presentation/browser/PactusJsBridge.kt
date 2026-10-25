@@ -7,7 +7,7 @@ class PactusJsBridge(
     private val onGetNetwork: () -> String,
     private val onConnectRequest: (requestId: String) -> Unit,
     private val onSignRequest: (requestId: String, to: String, amountNanoPac: String, feeNanoPac: String, memo: String) -> Unit,
-    private val onSignMessageRequest: (requestId: String, message: String) -> Unit,
+    private val onSignMessageRequest: (requestId: String, message: String, address: String) -> Unit,
 ) {
     @JavascriptInterface
     fun getAccounts(): String = onGetAccounts()
@@ -25,9 +25,11 @@ class PactusJsBridge(
         onSignRequest(requestId, to, amountNanoPac, feeNanoPac, memo)
     }
 
+    // address is the account the dApp wants the signature from, or "" to let
+    // the user pick in the approval sheet.
     @JavascriptInterface
-    fun requestSignMessage(requestId: String, message: String) {
-        onSignMessageRequest(requestId, message)
+    fun requestSignMessage(requestId: String, message: String, address: String) {
+        onSignMessageRequest(requestId, message, address)
     }
 
     companion object {
@@ -43,7 +45,9 @@ class PactusJsBridge(
          * Injected into every page, ideally at document-start so dApps that
          * check for the provider during startup (e.g. play.pactusscan) find it.
          * Creates window.pactus (same shape as the Velora browser extension:
-         * getAccounts / getNetwork / connect / signTransaction / signMessage),
+         * getAccounts / getNetwork / connect / signTransaction / signMessage,
+         * where signMessage(message, { address }) may name the signing account
+         * and declares two parameters so dApps can detect that support),
          * fires `pactus#initialized`, and speaks the multi-wallet announce
          * protocol (`pactus:requestProvider` / `pactus:announceProvider`).
          * Safe to evaluate more than once: bails if window.pactus exists.
@@ -79,11 +83,12 @@ class PactusJsBridge(
                     );
                   });
                 },
-                signMessage:function(message){
+                signMessage:function(message,options){
+                  var address=(options&&typeof options.address==='string')?options.address:'';
                   return new Promise(function(res,rej){
                     var id='m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
                     _cb[id]={resolve:res,reject:rej};
-                    PactusAndroid.requestSignMessage(id,message);
+                    PactusAndroid.requestSignMessage(id,String(message==null?'':message),address);
                   });
                 },
                 _resolve:function(id,r){if(_cb[id]){_cb[id].resolve(r);delete _cb[id];}},

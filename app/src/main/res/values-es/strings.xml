@@ -168,6 +168,8 @@
     <string name="browser_sign_amount">Cantidad</string>
     <string name="browser_sign_fee">Comisión</string>
     <string name="browser_sign_memo">Nota</string>
+    <string name="browser_sign_message_signer">Cuenta firmante</string>
+    <string name="browser_sign_message_signer_requested">Solicitada por este sitio</string>
     <string name="browser_bookmarks_header">Marcadores</string>
     <string name="browser_bookmarks_empty">Aún no hay marcadores</string>
     <string name="browser_history_header">Historial</string>
