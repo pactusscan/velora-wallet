@@ -1,5 +1,7 @@
 package com.andrutstudio.velora.data.crypto
 
+import com.andrutstudio.velora.domain.model.AnchorRequest
+
 /**
  * Reads a raw transaction returned by the node, so the wallet can check what it
  * is about to sign instead of trusting the node. Mirrors txDecode.ts in the
@@ -9,11 +11,17 @@ package com.andrutstudio.velora.data.crypto
  *   flags(1) | version(1) | lockTime(4, little-endian) | fee(varint)
  *   | memo(varString) | payloadType(1) | payload
  * Transfer payload: from(21) | to(21) | amount(varint)
+ * Anchor payload (PIP-50): from(21) | action(1), then for Set only
+ *   hashLen(1) | hash | uriLen(1) | uri | anchorType(1) | deposit(varint)
  * Addresses are a type byte plus a 20-byte hash. Integers are unsigned LEB128.
  */
 object TxDecoder {
 
     const val PAYLOAD_TRANSFER = 1
+    const val PAYLOAD_ANCHOR = 7
+
+    private const val ACTION_SET = 0
+    private const val ACTION_DELETE = 1
 
     private const val ADDRESS_SIZE = 21
 
@@ -25,6 +33,71 @@ object TxDecoder {
         val to: ByteArray,
         val amount: Long,
     )
+
+    data class Anchor(
+        val lockTime: Long,
+        val fee: Long,
+        val memo: String,
+        val from: ByteArray,
+        val action: Int,
+        val rootHash: String,
+        val manifestUri: String,
+        val anchorType: Int,
+        val deposit: Long,
+    )
+
+    /** Bytes after the payload are refused: everything here gets signed. */
+    fun decodeAnchor(rawHex: String): Anchor {
+        val reader = Reader(hexToBytes(rawHex))
+        val header = reader.header()
+        check(header.payloadType == PAYLOAD_ANCHOR) {
+            "Not an anchor transaction (payload type ${header.payloadType})"
+        }
+        var tx = Anchor(
+            lockTime = header.lockTime,
+            fee = header.fee,
+            memo = header.memo,
+            from = reader.take(ADDRESS_SIZE),
+            action = reader.u8(),
+            rootHash = "",
+            manifestUri = "",
+            anchorType = 0,
+            deposit = 0,
+        )
+        when (tx.action) {
+            ACTION_SET -> tx = tx.copy(
+                rootHash = reader.take(reader.u8()).joinToString("") { "%02x".format(it) },
+                manifestUri = reader.take(reader.u8()).toString(Charsets.UTF_8),
+                anchorType = reader.u8(),
+                deposit = reader.varint(),
+            )
+            ACTION_DELETE -> Unit
+            else -> error("Unknown anchor action ${tx.action}")
+        }
+        check(reader.atEnd()) { "Unexpected bytes after anchor payload" }
+        return tx
+    }
+
+    /**
+     * Fail-closed like [assertTransferMatches]. This also catches a root the node
+     * misread: it silently decodes a hex root_hash as base64 into other bytes.
+     */
+    fun assertAnchorMatches(rawHex: String, expected: AnchorRequest, lockTime: Long) {
+        val tx = decodeAnchor(rawHex)
+        throwOnMismatch(
+            listOf(
+                "sender" to addressMatches(tx.from, expected.sender),
+                "action" to (tx.action == if (expected.isDelete) ACTION_DELETE else ACTION_SET),
+                "root hash" to (tx.rootHash == expected.rootHash),
+                "manifest URI" to (tx.manifestUri == expected.manifestUri),
+                "anchor type" to (tx.anchorType == expected.anchorType),
+                "deposit" to (tx.deposit == expected.deposit.nanoPac),
+                "fee" to (tx.fee == expected.fee.nanoPac),
+                "memo" to (tx.memo == expected.memo),
+                "lock time" to (tx.lockTime == lockTime),
+            ),
+        )
+    }
 
     fun decodeTransfer(rawHex: String): Transfer {
         val reader = Reader(hexToBytes(rawHex))
@@ -78,7 +151,7 @@ object TxDecoder {
         return decoded.contentEquals(byteArrayOf(type) + hash)
     }
 
-    private fun hexToBytes(hex: String): ByteArray {
+    fun hexToBytes(hex: String): ByteArray {
         require(hex.length % 2 == 0) { "Raw transaction hex has odd length" }
         return ByteArray(hex.length / 2) { hex.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
     }
@@ -112,6 +185,8 @@ object TxDecoder {
             }
             error("Transaction integer is too large")
         }
+
+        fun atEnd(): Boolean = offset == bytes.size
 
         private fun u32le(): Long =
             (0..3).fold(0L) { value, index -> value or (u8().toLong() shl (8 * index)) }

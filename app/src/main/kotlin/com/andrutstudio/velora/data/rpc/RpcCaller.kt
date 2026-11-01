@@ -9,6 +9,8 @@ import com.andrutstudio.velora.data.rpc.model.RpcRequest
 import com.andrutstudio.velora.data.rpc.model.RpcError
 import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.domain.model.AnchorInfo
+import com.andrutstudio.velora.domain.model.AnchorRequest
+import com.andrutstudio.velora.data.crypto.TxDecoder
 import java.util.Base64
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -50,10 +52,10 @@ class RpcCaller @Inject constructor(
         updatedTime = anchor.get("updated_at_time")?.asLongSafe() ?: 0L,
     )
 
-    suspend fun calculateFee(amountNanoPac: Long): Amount {
+    suspend fun calculateFee(amountNanoPac: Long, payloadType: Int = 1): Amount {
         val params = mapOf(
             "amount" to amountNanoPac,
-            "payload_type" to 1
+            "payload_type" to payloadType
         )
         val result = call("pactus.transaction.calculate_fee", params)
         
@@ -163,6 +165,40 @@ class RpcCaller @Inject constructor(
         return RawTransferRpcData(
             rawTransactionHex = rawTx ?: error("Missing transaction data in RPC response"),
             signingHashHex = hash ?: "0000000000000000000000000000000000000000000000000000000000000000"
+        )
+    }
+
+    // PIP-50 names the first field `from`, node 1.17 reads `sender`. root_hash is
+    // proto bytes, so base64 in JSON.
+    suspend fun getRawAnchorTransaction(lockTime: Long, request: AnchorRequest): RawTransferRpcData {
+        val params = mutableMapOf<String, Any>(
+            "lock_time" to lockTime,
+            "sender" to request.sender,
+            "fee" to request.fee.nanoPac,
+        )
+        if (request.isDelete) {
+            params["action"] = 1
+        } else {
+            params["action"] = 0
+            params["root_hash"] = Base64.getEncoder().encodeToString(TxDecoder.hexToBytes(request.rootHash))
+            params["manifest_uri"] = request.manifestUri
+            params["anchor_type"] = request.anchorType
+            params["deposit"] = request.deposit.nanoPac
+        }
+        if (request.memo.isNotEmpty()) params["memo"] = request.memo
+
+        val result = call("pactus.transaction.get_raw_anchor_transaction", params)
+        val obj = result.asJsonObjectOrNull()
+        val rawTx = obj?.get("transaction")?.asStringSafe()
+            ?: obj?.get("raw_transaction")?.asStringSafe()
+            ?: result.asStringSafe()
+        val hash = obj?.get("id")?.asStringSafe()
+            ?: obj?.get("hash")?.asStringSafe()
+            ?: obj?.get("transaction_id")?.asStringSafe()
+
+        return RawTransferRpcData(
+            rawTransactionHex = rawTx ?: error("Missing transaction data in RPC response"),
+            signingHashHex = hash ?: "0000000000000000000000000000000000000000000000000000000000000000",
         )
     }
 

@@ -243,6 +243,7 @@ fun HomeScreen(
                 onSend = { navController.navigate(Screen.Send.withArgs()) },
                 onStake = { navController.navigate(Screen.Stake.route) },
                 onShowAlert = viewModel::onShowAlertSheet,
+                onOpenAnchor = { navController.navigate(Screen.Anchor.withAddress(it)) },
                 modifier = Modifier.fillMaxSize(),
             )
 
@@ -277,6 +278,7 @@ private fun WalletTab(
     onSend: () -> Unit = {},
     onStake: () -> Unit = {},
     onShowAlert: (String) -> Unit = {},
+    onOpenAnchor: (String) -> Unit = {},
 ) {
     PullToRefreshBox(
         isRefreshing = state.isRefreshing,
@@ -376,7 +378,12 @@ private fun WalletTab(
                         onCustom = { onShowAlert(account.address) },
                         customIcon = Icons.Rounded.NotificationsActive,
                         customLabel = stringResource(R.string.home_alert_action),
-                        customColor = MaterialTheme.colorScheme.tertiary
+                        customColor = MaterialTheme.colorScheme.tertiary,
+                        onSecondCustom = { onOpenAnchor(account.address) },
+                        secondCustomIcon = Icons.Rounded.Anchor,
+                        secondCustomLabel = stringResource(R.string.anchor_title),
+                        secondCustomColor = MaterialTheme.colorScheme.primary,
+                        actionWidth = 72.dp,
                     ) {
                         AccountCard(
                             account = account,

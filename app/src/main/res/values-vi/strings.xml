@@ -539,4 +539,36 @@
     </plurals>
     <string name="anchor_title">Anchor</string>
     <string name="home_locked_in_anchor">%1$s bị khóa</string>
+    <string name="anchor_none_title">Không có anchor đang hoạt động</string>
+    <string name="anchor_none_body">Anchor công bố dấu vân tay dữ liệu của bạn lên blockchain để bất kỳ ai cũng có thể xác minh sau này.</string>
+    <string name="anchor_root_hash">Root hash</string>
+    <string name="anchor_manifest_uri">Manifest URI</string>
+    <string name="anchor_type">Loại anchor</string>
+    <string name="anchor_locked">Khoản ký quỹ bị khóa</string>
+    <string name="anchor_updated">Root đã công bố</string>
+    <string name="anchor_publish_action">Công bố root</string>
+    <string name="anchor_replace_action">Thay root</string>
+    <string name="anchor_publish_title">Công bố anchor</string>
+    <string name="anchor_delete_title">Xóa anchor</string>
+    <string name="anchor_root_label">Root hash (hex, 32 đến 64 byte)</string>
+    <string name="anchor_uri_label">Manifest URI (tùy chọn)</string>
+    <string name="anchor_deposit">Khoản ký quỹ sẽ khóa</string>
+    <string name="anchor_review">Xem lại</string>
+    <string name="anchor_replace_hint">Tài khoản này đã có anchor. Công bố sẽ thay thế anchor đó.</string>
+    <string name="anchor_delete_hint">Anchor ngừng hoạt động và khoản ký quỹ bị khóa trở về tài khoản này, trừ đi phí.</string>
+    <string name="anchor_sent">Đã gửi. Sẽ cập nhật sau khối tiếp theo.</string>
+    <string name="anchor_watch_only">Đây là ví chỉ xem nên không thể công bố anchor.</string>
+    <string name="anchor_confirm_publish">Xác nhận và công bố</string>
+    <string name="anchor_confirm_delete">Xác nhận và xóa</string>
+    <string name="anchor_error_root">Nhập 32 đến 64 byte hex.</string>
+    <string name="anchor_error_uri">Manifest URI quá dài.</string>
+    <string name="anchor_error_load">Không thể tải anchor này.</string>
+    <string name="anchor_retry">Thử lại</string>
+    <string name="anchor_paste">Dán</string>
+    <string name="anchor_type_0">Digest chung</string>
+    <string name="anchor_type_1">Manifest dịch vụ</string>
+    <string name="anchor_type_2">Tài liệu DID</string>
+    <string name="anchor_type_3">Chứng chỉ hoặc danh sách thu hồi</string>
+    <string name="anchor_type_255">Riêng tư hoặc đã mã hóa</string>
+    <string name="anchor_error_memo">Memo quá dài.</string>
 </resources>

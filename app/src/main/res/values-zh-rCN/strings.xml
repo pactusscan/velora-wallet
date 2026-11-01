@@ -540,4 +540,36 @@
     </plurals>
     <string name="anchor_title">Anchor</string>
     <string name="home_locked_in_anchor">已锁定 %1$s</string>
+    <string name="anchor_none_title">没有活跃的 Anchor</string>
+    <string name="anchor_none_body">Anchor 将您数据的指纹发布到区块链上，任何人都可以在之后验证。</string>
+    <string name="anchor_root_hash">根哈希</string>
+    <string name="anchor_manifest_uri">Manifest URI</string>
+    <string name="anchor_type">Anchor 类型</string>
+    <string name="anchor_locked">已锁定押金</string>
+    <string name="anchor_updated">根已发布</string>
+    <string name="anchor_publish_action">发布根</string>
+    <string name="anchor_replace_action">替换根</string>
+    <string name="anchor_publish_title">发布 Anchor</string>
+    <string name="anchor_delete_title">删除 Anchor</string>
+    <string name="anchor_root_label">根哈希（十六进制，32 到 64 字节）</string>
+    <string name="anchor_uri_label">Manifest URI（可选）</string>
+    <string name="anchor_deposit">要锁定的押金</string>
+    <string name="anchor_review">查看</string>
+    <string name="anchor_replace_hint">此账户已有 Anchor，发布后将被替换。</string>
+    <string name="anchor_delete_hint">Anchor 将停止生效，锁定的押金扣除手续费后退回此账户。</string>
+    <string name="anchor_sent">已发送，将在下一个区块后更新。</string>
+    <string name="anchor_watch_only">这是仅观察钱包，无法发布 Anchor。</string>
+    <string name="anchor_confirm_publish">确认并发布</string>
+    <string name="anchor_confirm_delete">确认并删除</string>
+    <string name="anchor_error_root">请输入 32 到 64 字节的十六进制。</string>
+    <string name="anchor_error_uri">Manifest URI 太长。</string>
+    <string name="anchor_error_load">无法加载此 Anchor。</string>
+    <string name="anchor_retry">重试</string>
+    <string name="anchor_paste">粘贴</string>
+    <string name="anchor_type_0">通用摘要</string>
+    <string name="anchor_type_1">服务清单</string>
+    <string name="anchor_type_2">DID 文档</string>
+    <string name="anchor_type_3">凭证或吊销列表</string>
+    <string name="anchor_type_255">私有或加密</string>
+    <string name="anchor_error_memo">备注太长。</string>
 </resources>

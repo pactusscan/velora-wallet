@@ -541,4 +541,36 @@
     </plurals>
     <string name="anchor_title">Anchor</string>
     <string name="home_locked_in_anchor">Verrouillé : %1$s</string>
+    <string name="anchor_none_title">Aucun anchor actif</string>
+    <string name="anchor_none_body">Un anchor publie une empreinte de vos données sur la blockchain, afin que chacun puisse la vérifier plus tard.</string>
+    <string name="anchor_root_hash">Hash racine</string>
+    <string name="anchor_manifest_uri">Manifest URI</string>
+    <string name="anchor_type">Type d\'anchor</string>
+    <string name="anchor_locked">Dépôt verrouillé</string>
+    <string name="anchor_updated">Racine publiée</string>
+    <string name="anchor_publish_action">Publier une racine</string>
+    <string name="anchor_replace_action">Remplacer la racine</string>
+    <string name="anchor_publish_title">Publier l\'anchor</string>
+    <string name="anchor_delete_title">Supprimer l\'anchor</string>
+    <string name="anchor_root_label">Hash racine (hex, 32 à 64 octets)</string>
+    <string name="anchor_uri_label">Manifest URI (facultatif)</string>
+    <string name="anchor_deposit">Dépôt à verrouiller</string>
+    <string name="anchor_review">Vérifier</string>
+    <string name="anchor_replace_hint">Ce compte possède déjà un anchor. La publication le remplace.</string>
+    <string name="anchor_delete_hint">L\'anchor n\'est plus actif et le dépôt verrouillé revient sur ce compte, moins les frais.</string>
+    <string name="anchor_sent">Envoyé. Mise à jour après le prochain bloc.</string>
+    <string name="anchor_watch_only">Ce portefeuille est en lecture seule et ne peut pas publier d\'anchors.</string>
+    <string name="anchor_confirm_publish">Confirmer et publier</string>
+    <string name="anchor_confirm_delete">Confirmer et supprimer</string>
+    <string name="anchor_error_root">Saisissez 32 à 64 octets en hex.</string>
+    <string name="anchor_error_uri">Le manifest URI est trop long.</string>
+    <string name="anchor_error_load">Impossible de charger cet anchor.</string>
+    <string name="anchor_retry">Réessayer</string>
+    <string name="anchor_paste">Coller</string>
+    <string name="anchor_type_0">Empreinte générique</string>
+    <string name="anchor_type_1">Manifeste de service</string>
+    <string name="anchor_type_2">Document DID</string>
+    <string name="anchor_type_3">Justificatif ou liste de révocation</string>
+    <string name="anchor_type_255">Privé ou chiffré</string>
+    <string name="anchor_error_memo">Le mémo est trop long.</string>
 </resources>

@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- **Anchors**: Swipe an account and tap Anchor to see its PIP-50 anchor, publish a root by hand or delete it to get the deposit back. The transaction is checked against what you approved before signing.
+
 ### Fixed & Improved
 - **Anchor Transactions in History**: Anchor transactions are now shown as Anchor instead of a transfer, and accounts show the deposit locked by their anchor.
 - **Transfers Are Checked Before Signing**: Velora now compares the transaction from the node with what you approved, and refuses to sign if the sender, receiver, amount, fee or memo differ.
