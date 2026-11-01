@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- **dApps Can Publish Anchors**: In the dApp browser, `window.pactus.signAnchor` now publishes or deletes an anchor after you approve it, the same way as the browser extension.
 - **Anchors**: Swipe an account and tap Anchor to see its PIP-50 anchor, publish a root by hand or delete it to get the deposit back. The transaction is checked against what you approved before signing.
 
 ### Fixed & Improved
