@@ -539,4 +539,6 @@
         <item quantity="many">%1$d comptes récupérés</item>
         <item quantity="other">%1$d comptes récupérés</item>
     </plurals>
+    <string name="anchor_title">Anchor</string>
+    <string name="home_locked_in_anchor">Verrouillé : %1$s</string>
 </resources>

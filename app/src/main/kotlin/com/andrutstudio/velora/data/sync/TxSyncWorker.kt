@@ -257,6 +257,7 @@ class TxSyncWorker @AssistedInject constructor(
         3 -> "SORTITION"
         5 -> "WITHDRAW"
         6 -> "BATCH_TRANSFER"
+        7 -> "ANCHOR"
         else -> "TRANSFER"
     }
 }

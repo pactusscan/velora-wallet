@@ -26,6 +26,7 @@ import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.History
+import androidx.compose.material.icons.rounded.Anchor
 import androidx.compose.material.icons.rounded.Layers
 import androidx.compose.material.icons.rounded.Payments
 import androidx.compose.material.icons.rounded.QuestionMark
@@ -358,6 +359,7 @@ private fun TransactionItem(
                         TransactionType.SORTITION -> Icons.Rounded.Shuffle
                         TransactionType.WITHDRAW -> Icons.Rounded.Payments
                         TransactionType.BATCH_TRANSFER -> Icons.Rounded.Layers
+                        TransactionType.ANCHOR -> Icons.Rounded.Anchor
                         TransactionType.SELF -> Icons.Rounded.QuestionMark
                     },
                     contentDescription = null,
@@ -369,7 +371,11 @@ private fun TransactionItem(
             // Address + time
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = if (isIncoming) tx.from.truncate() else tx.to?.truncate() ?: "—",
+                    text = when {
+                        tx.type == TransactionType.ANCHOR -> stringResource(R.string.anchor_title)
+                        isIncoming -> tx.from.truncate()
+                        else -> tx.to?.truncate() ?: "—"
+                    },
                     style = MaterialTheme.typography.bodyMedium,
                     fontFamily = FontFamily.Monospace,
                     color = MaterialTheme.colorScheme.onSurface,

@@ -537,4 +537,6 @@
     <plurals name="settings_recovered_accounts">
         <item quantity="other">Đã khôi phục %1$d tài khoản</item>
     </plurals>
+    <string name="anchor_title">Anchor</string>
+    <string name="home_locked_in_anchor">%1$s bị khóa</string>
 </resources>

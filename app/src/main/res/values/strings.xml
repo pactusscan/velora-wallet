@@ -541,4 +541,6 @@
         <item quantity="one">Recovered %1$d account</item>
         <item quantity="other">Recovered %1$d accounts</item>
     </plurals>
+    <string name="anchor_title">Anchor</string>
+    <string name="home_locked_in_anchor">%1$s locked</string>
 </resources>

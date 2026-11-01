@@ -23,6 +23,7 @@ import androidx.work.WorkManager
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import com.andrutstudio.velora.data.crypto.TxDecoder
+import com.andrutstudio.velora.domain.model.AnchorInfo
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,6 +45,17 @@ class BlockchainRepositoryImpl @Inject constructor(
             Amount.ZERO
         }
         // Network/IO exceptions propagate so HomeViewModel can show the error banner
+    }
+
+    override suspend fun getAnchor(address: String): AnchorInfo? = withContext(Dispatchers.IO) {
+        try {
+            rpc.getAccount(address).anchor
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: RpcException) {
+            // An account the chain has not seen yet has no anchor
+            if (e.message.contains("not found", ignoreCase = true)) null else throw e
+        }
     }
 
     override suspend fun getBlockHeight(): Long = withContext(Dispatchers.IO) {
@@ -232,6 +244,7 @@ class BlockchainRepositoryImpl @Inject constructor(
         4 -> TransactionType.UNBOND
         5 -> TransactionType.WITHDRAW
         6 -> TransactionType.BATCH_TRANSFER
+        7 -> TransactionType.ANCHOR
         else -> TransactionType.TRANSFER
     }
 
@@ -239,6 +252,7 @@ class BlockchainRepositoryImpl @Inject constructor(
         contains("UNBOND", ignoreCase = true) -> TransactionType.UNBOND
         contains("BOND", ignoreCase = true) -> TransactionType.BOND
         contains("SORTITION", ignoreCase = true) -> TransactionType.SORTITION
+        contains("ANCHOR", ignoreCase = true) -> TransactionType.ANCHOR
         else -> TransactionType.TRANSFER
     }
 }

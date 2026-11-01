@@ -538,4 +538,6 @@
     <plurals name="settings_recovered_accounts">
         <item quantity="other">已恢复 %1$d 个账户</item>
     </plurals>
+    <string name="anchor_title">Anchor</string>
+    <string name="home_locked_in_anchor">已锁定 %1$s</string>
 </resources>

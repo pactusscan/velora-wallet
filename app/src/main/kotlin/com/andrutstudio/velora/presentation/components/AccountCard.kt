@@ -34,6 +34,7 @@ fun AccountCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     hasAlert: Boolean = false,
+    lockedDeposit: Amount? = null,
 ) {
     Card(
         onClick = onClick,
@@ -104,6 +105,13 @@ fun AccountCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold
                 )
+                if (lockedDeposit != null) {
+                    Text(
+                        text = stringResource(R.string.home_locked_in_anchor, formatPac(lockedDeposit)),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
         }
     }
@@ -125,7 +133,8 @@ private fun AccountCardPreview() {
             ),
             balance = Amount.fromPac(1234.56),
             onClick = {},
-            hasAlert = true
+            hasAlert = true,
+            lockedDeposit = Amount.fromPac(1.0),
         )
     }
 }

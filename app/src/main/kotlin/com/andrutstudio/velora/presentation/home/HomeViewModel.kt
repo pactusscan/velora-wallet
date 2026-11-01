@@ -52,6 +52,8 @@ class HomeViewModel @Inject constructor(
         val wallet: Wallet? = null,
         val wallets: List<Wallet> = emptyList(),
         val balances: Map<String, Amount> = emptyMap(),
+        // PIP-50 deposits. Only accounts with an active anchor are listed.
+        val lockedDeposits: Map<String, Amount> = emptyMap(),
         val pacPriceUsd: Double? = null,
         val priceHistory: List<Double> = emptyList(),
         val isLoading: Boolean = true,
@@ -464,6 +466,7 @@ class HomeViewModel @Inject constructor(
                 networkName = wallet.network.displayName,
             )
             checkAndNotifyAlerts(wallet.accounts, balances)
+            viewModelScope.launch { fetchLockedDeposits(wallet) }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -475,6 +478,15 @@ class HomeViewModel @Inject constructor(
                 _state.update { it.copy(isRefreshing = false, error = e.toUiText(R.string.home_error_refresh)) }
             }
         }
+    }
+
+    // Extra detail on the account cards: a failure here must not look like a balance error
+    private suspend fun fetchLockedDeposits(wallet: Wallet) {
+        val locked = wallet.accounts.mapNotNull { account ->
+            val anchor = runCatching { blockchainRepository.getAnchor(account.address) }.getOrNull()
+            anchor?.let { account.address to it.lockedDeposit }
+        }.toMap()
+        _state.update { it.copy(lockedDeposits = locked) }
     }
 
     private suspend fun checkAndNotifyAlerts(accounts: List<Account>, balances: Map<String, Amount>) {
