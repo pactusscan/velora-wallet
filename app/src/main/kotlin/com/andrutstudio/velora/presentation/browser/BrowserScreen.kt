@@ -78,6 +78,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
 import com.andrutstudio.velora.R
+import com.andrutstudio.velora.presentation.components.formatPac
+import com.andrutstudio.velora.presentation.anchor.anchorTypeName
+import com.andrutstudio.velora.domain.model.AnchorRequest
 import com.andrutstudio.velora.data.local.db.BookmarkEntity
 import com.andrutstudio.velora.data.local.db.BrowserHistoryEntity
 import androidx.fragment.app.FragmentActivity
@@ -174,6 +177,7 @@ fun BrowserScreen(
         onSignMessageRequest = { id, message, address ->
             viewModel.onSignMessageRequest(id, message, address)
         },
+        onSignAnchorRequest = viewModel::onSignAnchorRequest,
     )
 }
 
@@ -305,6 +309,16 @@ fun BrowserScreen(
             isSigning = state.isSigning,
             onSelectSigner = viewModel::onSelectMessageSigner,
             onConfirm = viewModel::onConfirmSignMessage,
+            onCancel = viewModel::onCancelSign,
+        )
+    }
+
+    if (state.pendingAnchorRequest != null) {
+        SignAnchorRequestSheet(
+            request = state.pendingAnchorRequest!!,
+            isSigning = state.isSigning,
+            onSelectSigner = viewModel::onSelectAnchorSigner,
+            onConfirm = viewModel::onConfirmSignAnchor,
             onCancel = viewModel::onCancelSign,
         )
     }
@@ -905,6 +919,114 @@ private fun SignMessageSheetContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SignAnchorRequestSheet(
+    request: BrowserViewModel.PendingAnchorRequest,
+    isSigning: Boolean,
+    onSelectSigner: (String) -> Unit,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit,
+) {
+    ModalBottomSheet(
+        onDismissRequest = onCancel,
+        sheetState = rememberModalBottomSheetState(),
+    ) {
+        SignAnchorSheetContent(request, isSigning, onSelectSigner, onConfirm, onCancel)
+    }
+}
+
+@Composable
+private fun SignAnchorSheetContent(
+    request: BrowserViewModel.PendingAnchorRequest,
+    isSigning: Boolean,
+    onSelectSigner: (String) -> Unit,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit,
+) {
+    val anchor = request.request
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 32.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Text(
+            stringResource(if (anchor.isDelete) R.string.anchor_delete_title else R.string.anchor_publish_title),
+            style = MaterialTheme.typography.titleLarge,
+        )
+
+        if (request.needsConnect) {
+            Text(
+                stringResource(R.string.browser_not_connected_note),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        SignRow(stringResource(R.string.browser_site), request.host)
+        if (request.signerOptions.size > 1) {
+            SignerPicker(
+                options = request.signerOptions,
+                selected = request.fromAddress,
+                enabled = !isSigning,
+                onSelect = onSelectSigner,
+            )
+        } else {
+            SignRow(stringResource(R.string.browser_sign_from), request.fromAddress)
+        }
+
+        if (anchor.isDelete) {
+            Text(stringResource(R.string.anchor_delete_hint), style = MaterialTheme.typography.bodyMedium)
+        } else {
+            SignRow(stringResource(R.string.anchor_root_hash), anchor.rootHash)
+            if (anchor.manifestUri.isNotEmpty()) {
+                SignRow(stringResource(R.string.anchor_manifest_uri), anchor.manifestUri)
+            }
+            SignRow(stringResource(R.string.anchor_type), anchorTypeName(anchor.anchorType))
+            SignRow(stringResource(R.string.anchor_deposit), formatPac(request.deposit))
+            if (request.hasAnchor) {
+                Text(
+                    stringResource(R.string.anchor_replace_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+        }
+
+        HorizontalDivider()
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            OutlinedButton(
+                onClick = onCancel,
+                modifier = Modifier.weight(1f),
+                enabled = !isSigning,
+            ) { Text(stringResource(R.string.action_reject)) }
+
+            Button(
+                onClick = onConfirm,
+                modifier = Modifier.weight(1f),
+                enabled = !isSigning,
+            ) {
+                if (isSigning) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                } else {
+                    Text(stringResource(R.string.action_confirm))
+                }
+            }
+        }
+    }
+}
+
 @Composable
 private fun SignerPicker(
     options: List<Account>,
@@ -1094,6 +1216,29 @@ private fun SignMessageSheetPickerPreview() {
 }
 
 @Preview(showBackground = true)
+@Composable
+private fun SignAnchorSheetPreview() {
+    VeloraTheme {
+        SignAnchorSheetContent(
+            request = BrowserViewModel.PendingAnchorRequest(
+                requestId = "1",
+                host = "dapps.pactusscan.com",
+                needsConnect = true,
+                fromAddress = "pc1r0hrct8eycrceqm5g0examplezc4vf59d80vg7",
+                request = AnchorRequest(sender = "", isDelete = false, rootHash = "ab".repeat(32), anchorType = 3),
+                requestedDeposit = null,
+                feeNanoPac = 0,
+                anchored = setOf("pc1r0hrct8eycrceqm5g0examplezc4vf59d80vg7"),
+            ),
+            isSigning = false,
+            onSelectSigner = {},
+            onConfirm = {},
+            onCancel = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF0B0E1E)
 @Composable
 private fun SignMessageSheetRequestedPreview() {
     VeloraTheme {

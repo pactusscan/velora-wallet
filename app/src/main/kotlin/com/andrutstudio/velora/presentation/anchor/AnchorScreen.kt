@@ -551,7 +551,7 @@ private fun DetailRow(label: String, value: String, modifier: Modifier = Modifie
 }
 
 @Composable
-private fun anchorTypeName(type: Int): String = when (type) {
+fun anchorTypeName(type: Int): String = when (type) {
     0 -> stringResource(R.string.anchor_type_0)
     1 -> stringResource(R.string.anchor_type_1)
     2 -> stringResource(R.string.anchor_type_2)

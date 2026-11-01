@@ -64,7 +64,7 @@ class BrowserViewModelUnlockTest {
     }
 
     private fun viewModel() =
-        BrowserViewModel(walletRepository, sendTransaction, browserDao, SavedStateHandle())
+        BrowserViewModel(walletRepository, sendTransaction, mockk(relaxed = true), mockk(relaxed = true), browserDao, SavedStateHandle())
 
     @Test
     fun `confirming while locked opens the unlock dialog instead of signing`() {

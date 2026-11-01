@@ -8,6 +8,17 @@ class PactusJsBridge(
     private val onConnectRequest: (requestId: String) -> Unit,
     private val onSignRequest: (requestId: String, to: String, amountNanoPac: String, feeNanoPac: String, memo: String) -> Unit,
     private val onSignMessageRequest: (requestId: String, message: String, address: String) -> Unit,
+    private val onSignAnchorRequest: (
+        requestId: String,
+        action: String,
+        rootHash: String,
+        manifestUri: String,
+        anchorType: String,
+        depositNanoPac: String,
+        feeNanoPac: String,
+        memo: String,
+        address: String,
+    ) -> Unit,
 ) {
     @JavascriptInterface
     fun getAccounts(): String = onGetAccounts()
@@ -32,6 +43,22 @@ class PactusJsBridge(
         onSignMessageRequest(requestId, message, address)
     }
 
+    // depositNanoPac is "" to let the wallet choose, address "" to let the user pick.
+    @JavascriptInterface
+    fun requestSignAnchor(
+        requestId: String,
+        action: String,
+        rootHash: String,
+        manifestUri: String,
+        anchorType: String,
+        depositNanoPac: String,
+        feeNanoPac: String,
+        memo: String,
+        address: String,
+    ) {
+        onSignAnchorRequest(requestId, action, rootHash, manifestUri, anchorType, depositNanoPac, feeNanoPac, memo, address)
+    }
+
     companion object {
         /**
          * Official Velora logo shown in dApp wallet pickers. Minified from
@@ -45,7 +72,7 @@ class PactusJsBridge(
          * Injected into every page, ideally at document-start so dApps that
          * check for the provider during startup (e.g. play.pactusscan) find it.
          * Creates window.pactus (same shape as the Velora browser extension:
-         * getAccounts / getNetwork / connect / signTransaction / signMessage,
+         * getAccounts / getNetwork / connect / signTransaction / signMessage / signAnchor,
          * where signMessage(message, { address }) may name the signing account
          * and declares two parameters so dApps can detect that support),
          * fires `pactus#initialized`, and speaks the multi-wallet announce
@@ -89,6 +116,24 @@ class PactusJsBridge(
                     var id='m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
                     _cb[id]={resolve:res,reject:rej};
                     PactusAndroid.requestSignMessage(id,String(message==null?'':message),address);
+                  });
+                },
+                signAnchor:function(p){
+                  p=p||{};
+                  return new Promise(function(res,rej){
+                    var id='a'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+                    _cb[id]={resolve:res,reject:rej};
+                    PactusAndroid.requestSignAnchor(
+                      id,
+                      String(p.action||''),
+                      String(p.rootHash||''),
+                      String(p.manifestUri||''),
+                      String(p.anchorType==null?'':p.anchorType),
+                      String(p.depositNanoPac==null?'':p.depositNanoPac),
+                      String(p.feeNanoPac||0),
+                      String(p.memo||''),
+                      String(p.address||'')
+                    );
                   });
                 },
                 _resolve:function(id,r){if(_cb[id]){_cb[id].resolve(r);delete _cb[id];}},

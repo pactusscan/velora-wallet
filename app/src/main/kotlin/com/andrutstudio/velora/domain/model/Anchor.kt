@@ -46,6 +46,43 @@ object AnchorRules {
     fun isValidType(type: Int): Boolean = type in 0..255
 
     /**
+     * Validates what a dApp asks for, before anything reaches the node or the
+     * approval sheet. The sender and fee are settled when the user confirms, and
+     * deposit stays zero until then: [requestedDeposit] holds what the dApp named.
+     */
+    fun parseDappRequest(
+        action: String,
+        rootHash: String,
+        manifestUri: String,
+        anchorType: String,
+        memo: String,
+    ): AnchorRequest {
+        require(isValidMemo(memo)) { "Memo is too long" }
+        if (action == "delete") return AnchorRequest(sender = "", isDelete = true, memo = memo)
+        require(action == "set") { "Anchor action must be set or delete" }
+        val root = requireNotNull(normalizeRoot(rootHash)) { "Anchor root must be 32 to 64 bytes of hex" }
+        require(isValidUri(manifestUri)) { "Manifest URI is too long" }
+        val type = anchorType.ifEmpty { "0" }.toIntOrNull()?.takeIf(::isValidType)
+        requireNotNull(type) { "Anchor type must be 0 to 255" }
+        return AnchorRequest(
+            sender = "",
+            isDelete = false,
+            rootHash = root,
+            manifestUri = manifestUri,
+            anchorType = type,
+            memo = memo,
+        )
+    }
+
+    /** Null means the wallet chooses, see [deposit]. */
+    fun requestedDeposit(value: String): Amount? {
+        if (value.isEmpty()) return null
+        val nanoPac = requireNotNull(value.toLongOrNull()) { "Anchor deposit is not a number" }
+        require(nanoPac >= 0) { "Anchor deposit cannot be negative" }
+        return Amount.fromNanoPac(nanoPac)
+    }
+
+    /**
      * A Set adds to the locked deposit, so by default a new slot locks the minimum
      * and replacing a live one locks nothing more.
      */
