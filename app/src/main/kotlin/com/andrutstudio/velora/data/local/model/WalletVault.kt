@@ -39,6 +39,13 @@ data class VaultAccount(
     val balanceNanoPac: Long = 0L,
 )
 
+// Lowest unused index, so a deleted account can be added back. The account
+// count would derive an existing account again once there is a gap.
+fun List<VaultAccount>.nextDerivationIndex(type: String): Int {
+    val used = filter { it.type == type }.map { it.derivationIndex }.toSet()
+    return generateSequence(0) { it + 1 }.first { it !in used }
+}
+
 /**
  * Top-level container for multi-wallet storage. Holds an ordered list of
  * vaults plus a pointer to the currently active one.
