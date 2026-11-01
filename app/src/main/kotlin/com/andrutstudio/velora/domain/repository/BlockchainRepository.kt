@@ -2,11 +2,13 @@ package com.andrutstudio.velora.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import com.andrutstudio.velora.domain.model.Amount
+import com.andrutstudio.velora.domain.model.AnchorInfo
 import com.andrutstudio.velora.domain.model.RawTransaction
 import com.andrutstudio.velora.domain.model.Transaction
 
 interface BlockchainRepository {
     suspend fun getBalance(address: String): Amount
+    suspend fun getAnchor(address: String): AnchorInfo?
     suspend fun getBlockHeight(): Long
     suspend fun getTransactionHistory(address: String, page: Int): List<Transaction>
     fun observeTransactionHistory(addresses: List<String>): Flow<List<Transaction>>

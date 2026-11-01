@@ -25,6 +25,7 @@ import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.History
+import androidx.compose.material.icons.rounded.Anchor
 import androidx.compose.material.icons.rounded.Layers
 import androidx.compose.material.icons.rounded.OpenInNew
 import androidx.compose.material.icons.rounded.Payments
@@ -196,6 +197,7 @@ private fun TxDetailContent(
                         TransactionType.SORTITION -> Icons.Rounded.Shuffle
                         TransactionType.WITHDRAW -> Icons.Rounded.Payments
                         TransactionType.BATCH_TRANSFER -> Icons.Rounded.Layers
+                        TransactionType.ANCHOR -> Icons.Rounded.Anchor
                         TransactionType.SELF -> Icons.Rounded.QuestionMark
                     },
                     contentDescription = null,
@@ -215,9 +217,10 @@ private fun TxDetailContent(
                     color = accentColor,
                 )
                 Text(
-                    text = when (tx.direction) {
-                        1 -> stringResource(R.string.history_direction_received)
-                        2 -> stringResource(R.string.history_direction_sent)
+                    text = when {
+                        tx.type == TransactionType.ANCHOR -> stringResource(R.string.anchor_title)
+                        tx.direction == 1 -> stringResource(R.string.history_direction_received)
+                        tx.direction == 2 -> stringResource(R.string.history_direction_sent)
                         else -> stringResource(R.string.history_direction_self)
                     },
                     style = MaterialTheme.typography.bodyMedium,

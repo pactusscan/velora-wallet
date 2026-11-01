@@ -539,4 +539,6 @@
         <item quantity="one">%1$d Konto wiederhergestellt</item>
         <item quantity="other">%1$d Konten wiederhergestellt</item>
     </plurals>
+    <string name="anchor_title">Anchor</string>
+    <string name="home_locked_in_anchor">%1$s gesperrt</string>
 </resources>

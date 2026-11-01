@@ -539,4 +539,6 @@
         <item quantity="many">%1$d cuentas recuperadas</item>
         <item quantity="other">%1$d cuentas recuperadas</item>
     </plurals>
+    <string name="anchor_title">Anchor</string>
+    <string name="home_locked_in_anchor">%1$s bloqueados</string>
 </resources>

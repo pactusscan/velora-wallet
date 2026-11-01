@@ -8,6 +8,8 @@ import kotlinx.coroutines.CancellationException
 import com.andrutstudio.velora.data.rpc.model.RpcRequest
 import com.andrutstudio.velora.data.rpc.model.RpcError
 import com.andrutstudio.velora.domain.model.Amount
+import com.andrutstudio.velora.domain.model.AnchorInfo
+import java.util.Base64
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,8 +36,19 @@ class RpcCaller @Inject constructor(
             address = account?.get("address")?.asStringSafe() ?: address,
             balance = Amount.fromNanoPac(account?.get("balance")?.asLongSafe() ?: 0L),
             sequence = account?.get("sequence")?.asIntSafe() ?: 0,
+            anchor = account?.get("anchor").asJsonObjectOrNull()?.let(::parseAnchor),
         )
     }
+
+    // root_hash is proto bytes, so base64 in JSON
+    private fun parseAnchor(anchor: JsonObject): AnchorInfo = AnchorInfo(
+        rootHash = Base64.getDecoder().decode(anchor.get("root_hash")?.asStringSafe().orEmpty())
+            .joinToString("") { "%02x".format(it) },
+        manifestUri = anchor.get("manifest_uri")?.asStringSafe().orEmpty(),
+        anchorType = anchor.get("anchor_type")?.asIntSafe() ?: 0,
+        lockedDeposit = Amount.fromNanoPac(anchor.get("locked_deposit")?.asLongSafe() ?: 0L),
+        updatedTime = anchor.get("updated_at_time")?.asLongSafe() ?: 0L,
+    )
 
     suspend fun calculateFee(amountNanoPac: Long): Amount {
         val params = mapOf(
@@ -285,6 +298,7 @@ data class AccountRpcData(
     val address: String,
     val balance: Amount,
     val sequence: Int,
+    val anchor: AnchorInfo? = null,
 )
 
 data class RawTransferRpcData(

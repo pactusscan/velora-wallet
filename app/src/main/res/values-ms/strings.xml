@@ -537,4 +537,6 @@
     <plurals name="settings_recovered_accounts">
         <item quantity="other">%1$d akaun dipulihkan</item>
     </plurals>
+    <string name="anchor_title">Anchor</string>
+    <string name="home_locked_in_anchor">%1$s dikunci</string>
 </resources>

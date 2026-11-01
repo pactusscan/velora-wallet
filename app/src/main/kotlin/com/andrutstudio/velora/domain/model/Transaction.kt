@@ -22,7 +22,8 @@ enum class TransactionType {
     SORTITION, 
     UNBOND, 
     WITHDRAW, 
-    BATCH_TRANSFER 
+    BATCH_TRANSFER,
+    ANCHOR,
 }
 
 enum class TransactionStatus { PENDING, CONFIRMED, FAILED }

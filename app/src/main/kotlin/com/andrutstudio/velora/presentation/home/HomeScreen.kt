@@ -381,6 +381,7 @@ private fun WalletTab(
                         AccountCard(
                             account = account,
                             balance = state.balances[account.address] ?: Amount.ZERO,
+                            lockedDeposit = state.lockedDeposits[account.address],
                             onClick = { onCopyAddress(account.address) },
                             hasAlert = state.alerts.containsKey(account.address)
                         )
