@@ -22,6 +22,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import com.andrutstudio.velora.data.crypto.TxDecoder
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -67,6 +68,14 @@ class BlockchainRepositoryImpl @Inject constructor(
             receiver = to,
             amountNanoPac = amount.nanoPac,
             feeNanoPac = fee.nanoPac,
+            memo = memo,
+        )
+        TxDecoder.assertTransferMatches(
+            rawHex = raw.rawTransactionHex,
+            sender = from,
+            receiver = to,
+            amount = amount.nanoPac,
+            fee = fee.nanoPac,
             memo = memo,
         )
         RawTransaction(

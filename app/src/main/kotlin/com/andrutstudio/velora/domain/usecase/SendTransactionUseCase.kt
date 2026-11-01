@@ -19,11 +19,13 @@ class SendTransactionUseCase @Inject constructor(
         fee: Amount,
         memo: String?,
     ): String {
+        // dApps send fee 0 to mean automatic. The wallet settles the fee itself, so
+        // the transaction can be checked against it before signing.
         val raw = blockchainRepository.buildTransferTransaction(
             from = from,
             to = to,
             amount = amount,
-            fee = fee,
+            fee = if (fee.nanoPac > 0) fee else estimateFee(amount),
             memo = memo?.takeIf { it.isNotBlank() },
         )
         val signedHex = walletRepository.signRawTransaction(
