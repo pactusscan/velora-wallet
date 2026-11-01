@@ -13,6 +13,7 @@ import com.andrutstudio.velora.data.local.WrongPasswordException
 import com.andrutstudio.velora.data.local.model.MultiVault
 import com.andrutstudio.velora.data.local.model.VaultAccount
 import com.andrutstudio.velora.data.local.model.WalletVault
+import com.andrutstudio.velora.data.local.model.nextDerivationIndex
 import com.andrutstudio.velora.data.rpc.NetworkProvider
 import com.andrutstudio.velora.data.rpc.RpcCaller
 import com.andrutstudio.velora.data.rpc.RpcException
@@ -132,10 +133,11 @@ class WalletRepositoryImpl @Inject constructor(
             isAccountIndexed(address)
         }
 
-        val existingCount = vault.accounts.count { it.type == type.name }
-        if (recoveredCount <= existingCount) return@withContext 0
+        val usedIndexes = vault.accounts.filter { it.type == type.name }.map { it.derivationIndex }.toSet()
+        val missingIndexes = (0 until recoveredCount).filterNot { it in usedIndexes }
+        if (missingIndexes.isEmpty()) return@withContext 0
 
-        val recoveredAccounts = (existingCount until recoveredCount).map { index ->
+        val recoveredAccounts = missingIndexes.map { index ->
             val derived = keyManager.deriveAccount(mnemonic, network, type, index)
             VaultAccount(
                 address = derived.address,
@@ -275,7 +277,7 @@ class WalletRepositoryImpl @Inject constructor(
             }
             val network = Network.valueOf(vault.network)
 
-            val nextIndex = vault.accounts.count { it.type == type.name }
+            val nextIndex = vault.accounts.nextDerivationIndex(type.name)
             val derived = keyManager.deriveAccount(mnemonic, network, type, nextIndex)
 
             val updatedVault = vault.copy(
