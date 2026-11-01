@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed & Improved
+- **Transfers Are Checked Before Signing**: Velora now compares the transaction from the node with what you approved, and refuses to sign if the sender, receiver, amount, fee or memo differ.
 - **Private Nodes Are Skipped**: A public node that started asking for a login could stop balances and sends from working. Velora now moves on to the next node.
 - **No Duplicate Accounts After a Delete**: Adding an account after deleting one could list an existing address twice. New accounts now fill the gap, so a deleted account can also be added back. Recover addresses follows the same rule.
 - **Unlock Dialog Wording**: The unlock dialog on Home and Settings now offers "Cancel" instead of "Reject". In the dApp browser it still says "Reject", because there it also declines the site's request.
