@@ -57,7 +57,8 @@ class NetworkProvider @Inject constructor(
             async {
                 val start = System.currentTimeMillis()
                 val success = withTimeoutOrNull(2000) {
-                    runCatching { service.call(url, checkRequest) }.isSuccess
+                    // A node that refuses calls still answers HTTP 200
+                    runCatching { service.call(url, checkRequest).error == null }.getOrDefault(false)
                 } ?: false
                 if (success) url to (System.currentTimeMillis() - start) else url to Long.MAX_VALUE
             }

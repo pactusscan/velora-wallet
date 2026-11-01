@@ -6,6 +6,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
 import com.andrutstudio.velora.data.rpc.model.RpcRequest
+import com.andrutstudio.velora.data.rpc.model.RpcError
 import com.andrutstudio.velora.domain.model.Amount
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -236,8 +237,15 @@ class RpcCaller @Inject constructor(
                     id = idCounter.getAndIncrement(),
                 )
                 val response = service.call(url, request)
-                if (response.error != null) {
-                    throw RpcException(response.error.code, response.error.message)
+                val rpcError = response.error
+                if (rpcError != null) {
+                    val error = RpcException(rpcError.code, rpcError.message)
+                    // A private node says nothing about the request, so try the next one.
+                    // Any other node error is authoritative.
+                    if (!rpcError.isPrivateNode()) throw error
+                    networkProvider.reportFailure(url)
+                    lastException = error
+                    continue
                 }
                 return response.result ?: throw RpcException(-1, "Empty result for method: $method")
             } catch (e: CancellationException) {
@@ -287,6 +295,8 @@ data class RawTransferRpcData(
 const val MIN_FEE_NANO_PAC = 10_000_000L // 0.01 PAC
 
 class RpcException(val code: Int, override val message: String) : Exception(message)
+
+fun RpcError.isPrivateNode(): Boolean = message.contains("unauthenticated", ignoreCase = true)
 
 data class TxRpcData(
     val id: String,
