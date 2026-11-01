@@ -995,6 +995,10 @@ private fun SignAnchorSheetContent(
                 )
             }
         }
+        if (anchor.memo.isNotEmpty()) {
+            SignRow(stringResource(R.string.browser_sign_memo), anchor.memo)
+        }
+        SignRow(stringResource(R.string.stake_fee_label), request.fee?.let(::formatPac).orEmpty())
 
         HorizontalDivider()
 
@@ -1011,7 +1015,7 @@ private fun SignAnchorSheetContent(
             Button(
                 onClick = onConfirm,
                 modifier = Modifier.weight(1f),
-                enabled = !isSigning,
+                enabled = !isSigning && request.fee != null,
             ) {
                 if (isSigning) {
                     CircularProgressIndicator(
@@ -1227,7 +1231,8 @@ private fun SignAnchorSheetPreview() {
                 fromAddress = "pc1r0hrct8eycrceqm5g0examplezc4vf59d80vg7",
                 request = AnchorRequest(sender = "", isDelete = false, rootHash = "ab".repeat(32), anchorType = 3),
                 requestedDeposit = null,
-                feeNanoPac = 0,
+                requestedFee = Amount.ZERO,
+                fee = Amount.fromPac(0.01),
                 anchored = setOf("pc1r0hrct8eycrceqm5g0examplezc4vf59d80vg7"),
             ),
             isSigning = false,

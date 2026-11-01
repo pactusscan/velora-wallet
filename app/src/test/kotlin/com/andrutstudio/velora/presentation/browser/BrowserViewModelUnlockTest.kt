@@ -9,6 +9,12 @@ import com.andrutstudio.velora.domain.model.AccountType
 import com.andrutstudio.velora.domain.model.Wallet
 import com.andrutstudio.velora.domain.repository.WalletRepository
 import com.andrutstudio.velora.domain.usecase.SendTransactionUseCase
+import com.andrutstudio.velora.domain.model.Amount
+import com.andrutstudio.velora.domain.model.AnchorInfo
+import com.andrutstudio.velora.domain.model.AnchorRequest
+import com.andrutstudio.velora.domain.model.RawTransaction
+import com.andrutstudio.velora.domain.repository.BlockchainRepository
+import com.andrutstudio.velora.domain.usecase.SendAnchorUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -29,6 +35,8 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+
+private const val ESTIMATED_FEE = 10_000_000L
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BrowserViewModelUnlockTest {
@@ -52,6 +60,19 @@ class BrowserViewModelUnlockTest {
         coEvery { isSiteConnected(any()) } returns true
     }
     private val sendTransaction = mockk<SendTransactionUseCase>(relaxed = true)
+    private var builtAnchor: AnchorRequest? = null
+
+    // A plain fake: mockk cannot return the Amount value class from a suspend call
+    private val chain = object : BlockchainRepository by mockk<BlockchainRepository>(relaxed = true) {
+        override suspend fun getAnchor(address: String): AnchorInfo? = null
+        override suspend fun calculateAnchorFee(deposit: Amount) = Amount.fromNanoPac(ESTIMATED_FEE)
+        override suspend fun buildAnchorTransaction(request: AnchorRequest): RawTransaction {
+            builtAnchor = request
+            return RawTransaction("00", "", 0, request.fee)
+        }
+        override suspend fun broadcastTransaction(signedHex: String) = "tx"
+    }
+    private val sendAnchor by lazy { SendAnchorUseCase(chain, walletRepository) }
 
     @Before
     fun setUp() {
@@ -64,7 +85,32 @@ class BrowserViewModelUnlockTest {
     }
 
     private fun viewModel() =
-        BrowserViewModel(walletRepository, sendTransaction, mockk(relaxed = true), mockk(relaxed = true), browserDao, SavedStateHandle())
+        BrowserViewModel(walletRepository, sendTransaction, sendAnchor, chain, browserDao, SavedStateHandle())
+
+    private fun signAnchorRequest(vm: BrowserViewModel, fee: String) =
+        vm.onSignAnchorRequest("a1", "set", "ab".repeat(32), "", "0", "", fee, "", "")
+
+    @Test
+    fun `the anchor fee on the sheet is the one that gets signed`() {
+        unlocked = true
+        val vm = viewModel()
+        signAnchorRequest(vm, "0")
+
+        assertEquals(ESTIMATED_FEE, vm.state.value.pendingAnchorRequest?.fee?.nanoPac)
+        vm.onConfirmSignAnchor()
+
+        assertEquals(ESTIMATED_FEE, builtAnchor?.fee?.nanoPac)
+    }
+
+    @Test
+    fun `an anchor fee named by the dApp is shown before signing`() {
+        unlocked = true
+        val vm = viewModel()
+        signAnchorRequest(vm, "5000000000")
+
+        assertEquals(5_000_000_000L, vm.state.value.pendingAnchorRequest?.fee?.nanoPac)
+        assertEquals(null, builtAnchor)
+    }
 
     @Test
     fun `confirming while locked opens the unlock dialog instead of signing`() {

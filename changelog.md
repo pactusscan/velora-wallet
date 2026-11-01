@@ -7,6 +7,7 @@
 - **Anchors**: Swipe an account and tap Anchor to see its PIP-50 anchor, publish a root by hand or delete it to get the deposit back. The transaction is checked against what you approved before signing.
 
 ### Fixed & Improved
+- **dApp Fees Shown Before You Approve**: When a dApp leaves the fee to the wallet, the approval sheet now shows the fee that will actually be signed.
 - **Anchor Transactions in History**: Anchor transactions are now shown as Anchor instead of a transfer, and accounts show the deposit locked by their anchor.
 - **Transfers Are Checked Before Signing**: Velora now compares the transaction from the node with what you approved, and refuses to sign if the sender, receiver, amount, fee or memo differ.
 - **Private Nodes Are Skipped**: A public node that started asking for a login could stop balances and sends from working. Velora now moves on to the next node.

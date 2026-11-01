@@ -105,9 +105,10 @@ class BrowserViewModel @Inject constructor(
         val signerOptions: List<Account> = emptyList(),
     )
 
-    // request carries what the dApp asked for. The signer, deposit and fee are
-    // settled when the user confirms. anchored lists the accounts holding an
-    // anchor, read first so the deposit on the sheet is the one that is sent.
+    // request carries what the dApp asked for. anchored lists the accounts holding
+    // an anchor, read first so the deposit on the sheet is the one that is sent.
+    // fee is what gets signed; it is null while it is being worked out for a newly
+    // picked signer, and the sheet cannot be confirmed until it is known.
     data class PendingAnchorRequest(
         val requestId: String,
         val host: String,
@@ -115,7 +116,8 @@ class BrowserViewModel @Inject constructor(
         val fromAddress: String,
         val request: AnchorRequest,
         val requestedDeposit: Amount?,
-        val feeNanoPac: Long,
+        val requestedFee: Amount,
+        val fee: Amount?,
         val anchored: Set<String>,
         val signerFixed: Boolean = false,
         val signerOptions: List<Account> = emptyList(),
@@ -338,6 +340,10 @@ class BrowserViewModel @Inject constructor(
                 _effect.send(Effect.RejectSign(requestId, ERR_REQUEST_PENDING))
                 return@launch
             }
+            // Fee 0 means automatic. Settled here so the sheet shows what gets signed.
+            val settledFee = if (fee > 0) fee else {
+                runCatching { sendTransaction.estimateFee(Amount.fromNanoPac(amount)).nanoPac }.getOrDefault(0L)
+            }
             _state.update {
                 it.copy(
                     pendingSignRequest = PendingSignRequest(
@@ -347,7 +353,7 @@ class BrowserViewModel @Inject constructor(
                         fromAddress = fromAddress,
                         to = to,
                         amountNanoPac = amount,
-                        feeNanoPac = fee,
+                        feeNanoPac = settledFee,
                         memo = memo,
                     )
                 )
@@ -446,24 +452,30 @@ class BrowserViewModel @Inject constructor(
             val anchored = candidates.filter {
                 runCatching { blockchainRepository.getAnchor(it.address) }.getOrNull() != null
             }.map { it.address }.toSet()
-            _state.update {
-                it.copy(
-                    pendingAnchorRequest = PendingAnchorRequest(
-                        requestId = requestId,
-                        host = host,
-                        needsConnect = !connected,
-                        fromAddress = requested.ifEmpty { candidates.first().address },
-                        request = parsed.first,
-                        requestedDeposit = parsed.second,
-                        feeNanoPac = feeNanoPac.toLongOrNull() ?: 0L,
-                        anchored = anchored,
-                        signerFixed = requested.isNotEmpty(),
-                        signerOptions = if (requested.isEmpty()) candidates else emptyList(),
-                    )
-                )
+            val pending = PendingAnchorRequest(
+                requestId = requestId,
+                host = host,
+                needsConnect = !connected,
+                fromAddress = requested.ifEmpty { candidates.first().address },
+                request = parsed.first,
+                requestedDeposit = parsed.second,
+                requestedFee = Amount.fromNanoPac(feeNanoPac.toLongOrNull() ?: 0L),
+                fee = null,
+                anchored = anchored,
+                signerFixed = requested.isNotEmpty(),
+                signerOptions = if (requested.isEmpty()) candidates else emptyList(),
+            )
+            val fee = runCatching { settleFee(pending) }.getOrElse {
+                _effect.send(Effect.RejectSign(requestId, "Transaction failed"))
+                return@launch
             }
+            _state.update { it.copy(pendingAnchorRequest = pending.copy(fee = fee)) }
         }
     }
+
+    // A fee named by the dApp is shown on the sheet, so the user approves it.
+    private suspend fun settleFee(req: PendingAnchorRequest): Amount =
+        req.requestedFee.takeIf { it.nanoPac > 0 } ?: sendAnchor.estimateFee(req.deposit)
 
     fun onSelectAnchorSigner(address: String) {
         _state.update { state ->
@@ -471,13 +483,27 @@ class BrowserViewModel @Inject constructor(
             if (req == null || req.signerFixed || req.signerOptions.none { it.address == address }) {
                 state
             } else {
-                state.copy(pendingAnchorRequest = req.copy(fromAddress = address))
+                state.copy(pendingAnchorRequest = req.copy(fromAddress = address, fee = null))
+            }
+        }
+        // The deposit depends on the signer, and the fee on the deposit
+        val req = _state.value.pendingAnchorRequest ?: return
+        viewModelScope.launch {
+            val fee = runCatching { settleFee(req) }.getOrNull()
+            _state.update { state ->
+                val current = state.pendingAnchorRequest
+                if (current?.requestId == req.requestId && current.fromAddress == req.fromAddress) {
+                    state.copy(pendingAnchorRequest = current.copy(fee = fee))
+                } else {
+                    state
+                }
             }
         }
     }
 
     fun onConfirmSignAnchor() {
         val req = _state.value.pendingAnchorRequest ?: return
+        val fee = req.fee ?: return
         if (!walletRepository.isUnlocked()) {
             requestUnlock(req)
             return
@@ -499,8 +525,6 @@ class BrowserViewModel @Inject constructor(
                 return@launch
             }
             runCatching {
-                val fee = Amount.fromNanoPac(req.feeNanoPac).takeIf { it.nanoPac > 0 }
-                    ?: sendAnchor.estimateFee(req.deposit)
                 sendAnchor(req.request.copy(sender = signer.address, deposit = req.deposit, fee = fee))
             }.onSuccess { txId ->
                 _state.update { it.copy(isSigning = false, pendingAnchorRequest = null) }
