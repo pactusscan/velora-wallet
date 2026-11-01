@@ -543,4 +543,36 @@
     </plurals>
     <string name="anchor_title">Anchor</string>
     <string name="home_locked_in_anchor">%1$s locked</string>
+    <string name="anchor_none_title">No active anchor</string>
+    <string name="anchor_none_body">An anchor publishes a fingerprint of your data on the blockchain, so anyone can verify it later.</string>
+    <string name="anchor_root_hash">Root hash</string>
+    <string name="anchor_manifest_uri">Manifest URI</string>
+    <string name="anchor_type">Anchor type</string>
+    <string name="anchor_locked">Locked deposit</string>
+    <string name="anchor_updated">Root published</string>
+    <string name="anchor_publish_action">Publish a root</string>
+    <string name="anchor_replace_action">Replace root</string>
+    <string name="anchor_publish_title">Publish anchor</string>
+    <string name="anchor_delete_title">Delete anchor</string>
+    <string name="anchor_root_label">Root hash (hex, 32 to 64 bytes)</string>
+    <string name="anchor_uri_label">Manifest URI (optional)</string>
+    <string name="anchor_deposit">Deposit to lock</string>
+    <string name="anchor_review">Review</string>
+    <string name="anchor_replace_hint">This account already has an anchor. Publishing replaces it.</string>
+    <string name="anchor_delete_hint">The anchor stops being active and the locked deposit returns to this account, minus the fee.</string>
+    <string name="anchor_sent">Sent. It updates after the next block.</string>
+    <string name="anchor_watch_only">This is a watch-only wallet, so it cannot publish anchors.</string>
+    <string name="anchor_confirm_publish">Confirm and Publish</string>
+    <string name="anchor_confirm_delete">Confirm and Delete</string>
+    <string name="anchor_error_root">Enter 32 to 64 bytes of hex.</string>
+    <string name="anchor_error_uri">The manifest URI is too long.</string>
+    <string name="anchor_error_load">Could not load this anchor.</string>
+    <string name="anchor_retry">Try again</string>
+    <string name="anchor_paste">Paste</string>
+    <string name="anchor_type_0">Generic digest</string>
+    <string name="anchor_type_1">Service manifest</string>
+    <string name="anchor_type_2">DID document</string>
+    <string name="anchor_type_3">Credential or revocation list</string>
+    <string name="anchor_type_255">Private or encrypted</string>
+    <string name="anchor_error_memo">The memo is too long.</string>
 </resources>

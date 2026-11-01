@@ -50,6 +50,7 @@ import com.andrutstudio.velora.presentation.onboarding.WatchWalletScreen
 import com.andrutstudio.velora.presentation.onboarding.WelcomeScreen
 import com.andrutstudio.velora.presentation.receive.ReceiveScreen
 import com.andrutstudio.velora.presentation.send.SendScreen
+import com.andrutstudio.velora.presentation.anchor.AnchorScreen
 import com.andrutstudio.velora.presentation.stake.StakeScreen
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
 
@@ -371,6 +372,13 @@ fun AppNavGraph(
                 navController = navController,
                 onNavigateBack = { navController.popBackStack() }
             )
+        }
+
+        composable(
+            route = Screen.Anchor.route,
+            arguments = listOf(navArgument("address") { type = NavType.StringType }),
+        ) {
+            AnchorScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable(Screen.TransactionHistory.route) {

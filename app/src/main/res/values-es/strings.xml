@@ -541,4 +541,36 @@
     </plurals>
     <string name="anchor_title">Anchor</string>
     <string name="home_locked_in_anchor">%1$s bloqueados</string>
+    <string name="anchor_none_title">Sin anchor activo</string>
+    <string name="anchor_none_body">Un anchor publica una huella de sus datos en la blockchain para que cualquiera pueda verificarla más tarde.</string>
+    <string name="anchor_root_hash">Hash raíz</string>
+    <string name="anchor_manifest_uri">Manifest URI</string>
+    <string name="anchor_type">Tipo de anchor</string>
+    <string name="anchor_locked">Depósito bloqueado</string>
+    <string name="anchor_updated">Raíz publicada</string>
+    <string name="anchor_publish_action">Publicar una raíz</string>
+    <string name="anchor_replace_action">Reemplazar raíz</string>
+    <string name="anchor_publish_title">Publicar anchor</string>
+    <string name="anchor_delete_title">Eliminar anchor</string>
+    <string name="anchor_root_label">Hash raíz (hex, 32 a 64 bytes)</string>
+    <string name="anchor_uri_label">Manifest URI (opcional)</string>
+    <string name="anchor_deposit">Depósito a bloquear</string>
+    <string name="anchor_review">Revisar</string>
+    <string name="anchor_replace_hint">Esta cuenta ya tiene un anchor. Al publicar se reemplaza.</string>
+    <string name="anchor_delete_hint">El anchor deja de estar activo y el depósito bloqueado vuelve a esta cuenta, menos la comisión.</string>
+    <string name="anchor_sent">Enviado. Se actualiza tras el siguiente bloque.</string>
+    <string name="anchor_watch_only">Esta es una billetera de solo lectura y no puede publicar anchors.</string>
+    <string name="anchor_confirm_publish">Confirmar y publicar</string>
+    <string name="anchor_confirm_delete">Confirmar y eliminar</string>
+    <string name="anchor_error_root">Introduzca de 32 a 64 bytes en hex.</string>
+    <string name="anchor_error_uri">El manifest URI es demasiado largo.</string>
+    <string name="anchor_error_load">No se pudo cargar este anchor.</string>
+    <string name="anchor_retry">Reintentar</string>
+    <string name="anchor_paste">Pegar</string>
+    <string name="anchor_type_0">Digest genérico</string>
+    <string name="anchor_type_1">Manifiesto de servicio</string>
+    <string name="anchor_type_2">Documento DID</string>
+    <string name="anchor_type_3">Credencial o lista de revocación</string>
+    <string name="anchor_type_255">Privado o cifrado</string>
+    <string name="anchor_error_memo">El memo es demasiado largo.</string>
 </resources>

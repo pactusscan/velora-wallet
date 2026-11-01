@@ -48,6 +48,10 @@ fun SwipeRevealCard(
     customIcon: ImageVector = Icons.Rounded.Edit,
     customLabel: String = stringResource(R.string.swipe_custom),
     customColor: Color = Color(0xFF1F8FE5),
+    onSecondCustom: (() -> Unit)? = null,
+    secondCustomIcon: ImageVector = Icons.Rounded.Edit,
+    secondCustomLabel: String = "",
+    secondCustomColor: Color = Color(0xFF1F8FE5),
     actionWidth: androidx.compose.ui.unit.Dp = 80.dp,
     content: @Composable () -> Unit,
 ) {
@@ -60,7 +64,8 @@ fun SwipeRevealCard(
         AnchoredDraggableState(
             initialValue = RevealState.Resting,
             anchors = DraggableAnchors {
-                val leftAnchor = if (onCustom != null) actionWidthPx * 2 else actionWidthPx
+                val leftActions = 1 + listOfNotNull(onCustom, onSecondCustom).size
+                val leftAnchor = actionWidthPx * leftActions
                 RevealState.LeftRevealed at leftAnchor
                 RevealState.Resting at 0f
                 RevealState.RightRevealed at -actionWidthPx
@@ -92,6 +97,20 @@ fun SwipeRevealCard(
                             container = customColor,
                             onClick = {
                                 onCustom()
+                                reset()
+                            },
+                            modifier = Modifier
+                                .width(actionWidth)
+                                .fillMaxHeight(),
+                        )
+                    }
+                    if (onSecondCustom != null) {
+                        RevealAction(
+                            icon = secondCustomIcon,
+                            label = secondCustomLabel,
+                            container = secondCustomColor,
+                            onClick = {
+                                onSecondCustom()
                                 reset()
                             },
                             modifier = Modifier

@@ -543,4 +543,36 @@
     </plurals>
     <string name="anchor_title">Anchor</string>
     <string name="home_locked_in_anchor">Заблокировано: %1$s</string>
+    <string name="anchor_none_title">Нет активного anchor</string>
+    <string name="anchor_none_body">Anchor публикует отпечаток ваших данных в блокчейне, чтобы любой мог проверить его позже.</string>
+    <string name="anchor_root_hash">Корневой хеш</string>
+    <string name="anchor_manifest_uri">Manifest URI</string>
+    <string name="anchor_type">Тип anchor</string>
+    <string name="anchor_locked">Заблокированный депозит</string>
+    <string name="anchor_updated">Корень опубликован</string>
+    <string name="anchor_publish_action">Опубликовать корень</string>
+    <string name="anchor_replace_action">Заменить корень</string>
+    <string name="anchor_publish_title">Опубликовать anchor</string>
+    <string name="anchor_delete_title">Удалить anchor</string>
+    <string name="anchor_root_label">Корневой хеш (hex, от 32 до 64 байт)</string>
+    <string name="anchor_uri_label">Manifest URI (необязательно)</string>
+    <string name="anchor_deposit">Депозит к блокировке</string>
+    <string name="anchor_review">Проверить</string>
+    <string name="anchor_replace_hint">У этого аккаунта уже есть anchor. Публикация заменит его.</string>
+    <string name="anchor_delete_hint">Anchor перестаёт быть активным, а заблокированный депозит возвращается на этот аккаунт за вычетом комиссии.</string>
+    <string name="anchor_sent">Отправлено. Обновится после следующего блока.</string>
+    <string name="anchor_watch_only">Это кошелёк только для просмотра, он не может публиковать anchor.</string>
+    <string name="anchor_confirm_publish">Подтвердить и опубликовать</string>
+    <string name="anchor_confirm_delete">Подтвердить и удалить</string>
+    <string name="anchor_error_root">Введите от 32 до 64 байт в hex.</string>
+    <string name="anchor_error_uri">Manifest URI слишком длинный.</string>
+    <string name="anchor_error_load">Не удалось загрузить этот anchor.</string>
+    <string name="anchor_retry">Повторить</string>
+    <string name="anchor_paste">Вставить</string>
+    <string name="anchor_type_0">Общий дайджест</string>
+    <string name="anchor_type_1">Манифест сервиса</string>
+    <string name="anchor_type_2">Документ DID</string>
+    <string name="anchor_type_3">Учётные данные или список отзыва</string>
+    <string name="anchor_type_255">Личное или зашифрованное</string>
+    <string name="anchor_error_memo">Мемо слишком длинное.</string>
 </resources>

@@ -3,6 +3,7 @@ package com.andrutstudio.velora.domain.repository
 import kotlinx.coroutines.flow.Flow
 import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.domain.model.AnchorInfo
+import com.andrutstudio.velora.domain.model.AnchorRequest
 import com.andrutstudio.velora.domain.model.RawTransaction
 import com.andrutstudio.velora.domain.model.Transaction
 
@@ -32,6 +33,8 @@ interface BlockchainRepository {
         validator: String,
         memo: String?,
     ): RawTransaction
+    suspend fun calculateAnchorFee(deposit: Amount): Amount
+    suspend fun buildAnchorTransaction(request: AnchorRequest): RawTransaction
     suspend fun broadcastTransaction(signedHex: String): String
     suspend fun getTransaction(txId: String): Transaction
     suspend fun getValidatorPeer(address: String): com.andrutstudio.velora.data.rpc.PeerDetailResponse

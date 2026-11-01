@@ -539,4 +539,36 @@
     </plurals>
     <string name="anchor_title">Anchor</string>
     <string name="home_locked_in_anchor">%1$s dikunci</string>
+    <string name="anchor_none_title">Tiada anchor aktif</string>
+    <string name="anchor_none_body">Anchor menerbitkan cap jari data anda di blockchain, supaya sesiapa boleh mengesahkannya kemudian.</string>
+    <string name="anchor_root_hash">Root hash</string>
+    <string name="anchor_manifest_uri">Manifest URI</string>
+    <string name="anchor_type">Jenis anchor</string>
+    <string name="anchor_locked">Deposit dikunci</string>
+    <string name="anchor_updated">Root diterbitkan</string>
+    <string name="anchor_publish_action">Terbitkan root</string>
+    <string name="anchor_replace_action">Ganti root</string>
+    <string name="anchor_publish_title">Terbitkan anchor</string>
+    <string name="anchor_delete_title">Padam anchor</string>
+    <string name="anchor_root_label">Root hash (hex, 32 hingga 64 bait)</string>
+    <string name="anchor_uri_label">Manifest URI (pilihan)</string>
+    <string name="anchor_deposit">Deposit untuk dikunci</string>
+    <string name="anchor_review">Semak</string>
+    <string name="anchor_replace_hint">Akaun ini sudah mempunyai anchor. Penerbitan akan menggantikannya.</string>
+    <string name="anchor_delete_hint">Anchor tidak lagi aktif dan deposit yang dikunci kembali ke akaun ini, ditolak yuran.</string>
+    <string name="anchor_sent">Dihantar. Dikemas kini selepas blok seterusnya.</string>
+    <string name="anchor_watch_only">Ini dompet pantau sahaja, jadi ia tidak boleh menerbitkan anchor.</string>
+    <string name="anchor_confirm_publish">Sahkan dan Terbitkan</string>
+    <string name="anchor_confirm_delete">Sahkan dan Padam</string>
+    <string name="anchor_error_root">Masukkan 32 hingga 64 bait hex.</string>
+    <string name="anchor_error_uri">Manifest URI terlalu panjang.</string>
+    <string name="anchor_error_load">Tidak dapat memuatkan anchor ini.</string>
+    <string name="anchor_retry">Cuba lagi</string>
+    <string name="anchor_paste">Tampal</string>
+    <string name="anchor_type_0">Digest umum</string>
+    <string name="anchor_type_1">Manifes perkhidmatan</string>
+    <string name="anchor_type_2">Dokumen DID</string>
+    <string name="anchor_type_3">Kelayakan atau senarai pembatalan</string>
+    <string name="anchor_type_255">Peribadi atau disulitkan</string>
+    <string name="anchor_error_memo">Memo terlalu panjang.</string>
 </resources>

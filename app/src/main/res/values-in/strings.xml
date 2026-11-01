@@ -531,4 +531,36 @@
     </plurals>
     <string name="anchor_title">Anchor</string>
     <string name="home_locked_in_anchor">%1$s terkunci</string>
+    <string name="anchor_none_title">Tidak ada anchor aktif</string>
+    <string name="anchor_none_body">Anchor menerbitkan sidik jari data Anda di blockchain, sehingga siapa pun dapat memverifikasinya nanti.</string>
+    <string name="anchor_root_hash">Root hash</string>
+    <string name="anchor_manifest_uri">Manifest URI</string>
+    <string name="anchor_type">Jenis anchor</string>
+    <string name="anchor_locked">Deposit terkunci</string>
+    <string name="anchor_updated">Root diterbitkan</string>
+    <string name="anchor_publish_action">Terbitkan root</string>
+    <string name="anchor_replace_action">Ganti root</string>
+    <string name="anchor_publish_title">Terbitkan anchor</string>
+    <string name="anchor_delete_title">Hapus anchor</string>
+    <string name="anchor_root_label">Root hash (hex, 32 sampai 64 byte)</string>
+    <string name="anchor_uri_label">Manifest URI (opsional)</string>
+    <string name="anchor_deposit">Deposit yang dikunci</string>
+    <string name="anchor_review">Tinjau</string>
+    <string name="anchor_replace_hint">Akun ini sudah memiliki anchor. Menerbitkan akan menggantinya.</string>
+    <string name="anchor_delete_hint">Anchor tidak lagi aktif dan deposit terkunci kembali ke akun ini, dikurangi biaya.</string>
+    <string name="anchor_sent">Terkirim. Diperbarui setelah blok berikutnya.</string>
+    <string name="anchor_watch_only">Ini dompet pantau saja, sehingga tidak dapat menerbitkan anchor.</string>
+    <string name="anchor_confirm_publish">Konfirmasi dan Terbitkan</string>
+    <string name="anchor_confirm_delete">Konfirmasi dan Hapus</string>
+    <string name="anchor_error_root">Masukkan 32 sampai 64 byte hex.</string>
+    <string name="anchor_error_uri">Manifest URI terlalu panjang.</string>
+    <string name="anchor_error_load">Tidak dapat memuat anchor ini.</string>
+    <string name="anchor_retry">Coba lagi</string>
+    <string name="anchor_paste">Tempel</string>
+    <string name="anchor_type_0">Digest umum</string>
+    <string name="anchor_type_1">Manifes layanan</string>
+    <string name="anchor_type_2">Dokumen DID</string>
+    <string name="anchor_type_3">Kredensial atau daftar pencabutan</string>
+    <string name="anchor_type_255">Pribadi atau terenkripsi</string>
+    <string name="anchor_error_memo">Memo terlalu panjang.</string>
 </resources>

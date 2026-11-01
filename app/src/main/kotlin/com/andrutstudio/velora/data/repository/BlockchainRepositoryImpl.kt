@@ -24,6 +24,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import com.andrutstudio.velora.data.crypto.TxDecoder
 import com.andrutstudio.velora.domain.model.AnchorInfo
+import com.andrutstudio.velora.domain.model.AnchorRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -141,6 +142,23 @@ class BlockchainRepositoryImpl @Inject constructor(
             fee = Amount.ZERO,
         )
     }
+
+    override suspend fun calculateAnchorFee(deposit: Amount): Amount = withContext(Dispatchers.IO) {
+        rpc.calculateFee(deposit.nanoPac, TxDecoder.PAYLOAD_ANCHOR)
+    }
+
+    override suspend fun buildAnchorTransaction(request: AnchorRequest): RawTransaction =
+        withContext(Dispatchers.IO) {
+            val lockTime = rpc.getBlockHeight()
+            val raw = rpc.getRawAnchorTransaction(lockTime, request)
+            TxDecoder.assertAnchorMatches(raw.rawTransactionHex, request, lockTime)
+            RawTransaction(
+                hex = raw.rawTransactionHex,
+                signingMessageHex = raw.signingHashHex,
+                lockTime = lockTime,
+                fee = request.fee,
+            )
+        }
 
     override suspend fun broadcastTransaction(signedHex: String): String =
         withContext(Dispatchers.IO) { rpc.broadcastTransaction(signedHex) }

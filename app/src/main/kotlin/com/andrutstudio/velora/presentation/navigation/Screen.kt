@@ -22,6 +22,9 @@ sealed class Screen(val route: String) {
         fun withAddress(address: String) = "receive/$address"
     }
     data object Stake : Screen("stake")
+    data object Anchor : Screen("anchor/{address}") {
+        fun withAddress(address: String) = "anchor/$address"
+    }
     data object TransactionHistory : Screen("history")
     data object TransactionDetail : Screen("tx/{txId}") {
         fun withId(txId: String) = "tx/$txId"

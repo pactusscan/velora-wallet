@@ -541,4 +541,36 @@
     </plurals>
     <string name="anchor_title">Anchor</string>
     <string name="home_locked_in_anchor">%1$s gesperrt</string>
+    <string name="anchor_none_title">Kein aktiver Anchor</string>
+    <string name="anchor_none_body">Ein Anchor veröffentlicht einen Fingerabdruck Ihrer Daten auf der Blockchain, damit ihn jeder später prüfen kann.</string>
+    <string name="anchor_root_hash">Root-Hash</string>
+    <string name="anchor_manifest_uri">Manifest URI</string>
+    <string name="anchor_type">Anchor-Typ</string>
+    <string name="anchor_locked">Gesperrte Einlage</string>
+    <string name="anchor_updated">Root veröffentlicht</string>
+    <string name="anchor_publish_action">Root veröffentlichen</string>
+    <string name="anchor_replace_action">Root ersetzen</string>
+    <string name="anchor_publish_title">Anchor veröffentlichen</string>
+    <string name="anchor_delete_title">Anchor löschen</string>
+    <string name="anchor_root_label">Root-Hash (Hex, 32 bis 64 Byte)</string>
+    <string name="anchor_uri_label">Manifest-URI (optional)</string>
+    <string name="anchor_deposit">Zu sperrende Einlage</string>
+    <string name="anchor_review">Prüfen</string>
+    <string name="anchor_replace_hint">Dieses Konto hat bereits einen Anchor. Die Veröffentlichung ersetzt ihn.</string>
+    <string name="anchor_delete_hint">Der Anchor ist nicht mehr aktiv und die gesperrte Einlage geht abzüglich der Gebühr an dieses Konto zurück.</string>
+    <string name="anchor_sent">Gesendet. Aktualisierung nach dem nächsten Block.</string>
+    <string name="anchor_watch_only">Dies ist eine Nur-Ansicht-Wallet und kann keine Anchors veröffentlichen.</string>
+    <string name="anchor_confirm_publish">Bestätigen und veröffentlichen</string>
+    <string name="anchor_confirm_delete">Bestätigen und löschen</string>
+    <string name="anchor_error_root">Geben Sie 32 bis 64 Byte Hex ein.</string>
+    <string name="anchor_error_uri">Die Manifest-URI ist zu lang.</string>
+    <string name="anchor_error_load">Dieser Anchor konnte nicht geladen werden.</string>
+    <string name="anchor_retry">Erneut versuchen</string>
+    <string name="anchor_paste">Einfügen</string>
+    <string name="anchor_type_0">Allgemeiner Digest</string>
+    <string name="anchor_type_1">Dienst-Manifest</string>
+    <string name="anchor_type_2">DID-Dokument</string>
+    <string name="anchor_type_3">Nachweis oder Sperrliste</string>
+    <string name="anchor_type_255">Privat oder verschlüsselt</string>
+    <string name="anchor_error_memo">Das Memo ist zu lang.</string>
 </resources>
