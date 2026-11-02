@@ -1,6 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.7] - 2026-11-02
+
+This release brings PIP-50 anchors to Velora, including the dApp browser, and checks transfers before signing. Anchors work on networks where PIP-50 is active.
 
 ### Added
 - **dApps Can Publish Anchors**: In the dApp browser, `window.pactus.signAnchor` now publishes or deletes an anchor after you approve it, the same way as the browser extension.
