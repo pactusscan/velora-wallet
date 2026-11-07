@@ -10,8 +10,10 @@ import javax.inject.Singleton
 
 @Singleton
 class PactusScanWebSocketManager @Inject constructor(
-    private val client: OkHttpClient
+    private val client: OkHttpClient,
+    private val networkProvider: NetworkProvider,
 ) {
+    private var connectedUrl: String? = null
     private var webSocket: WebSocket? = null
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -19,10 +21,14 @@ class PactusScanWebSocketManager @Inject constructor(
     val newBlockEvent = _newBlockEvent.asSharedFlow()
 
     fun connect() {
-        if (webSocket != null) return
+        // Reconnect when the wallet switched network since the last connect
+        val url = NetworkProvider.scanWsUrl(networkProvider.current)
+        if (webSocket != null && connectedUrl == url) return
+        webSocket?.close(1000, "Network changed")
+        connectedUrl = url
 
         val request = Request.Builder()
-            .url("wss://api.pactusscan.com/ws")
+            .url(url)
             .build()
 
         webSocket = client.newWebSocket(request, object : WebSocketListener() {

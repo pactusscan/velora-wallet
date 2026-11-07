@@ -378,16 +378,11 @@ class WalletRepositoryImpl @Inject constructor(
         fromAddress: String,
     ): String = withContext(Dispatchers.IO) {
         Log.d("Pactus", "Signing transaction: raw=$rawHex")
-        // Official pactus-wallet (web) logic:
-        // 1. rawTx from RPC starts with a flag (e.g. 0x02 for unsigned)
-        // 2. Data to sign is everything from index 1 onwards
-        // 3. Final signed tx is [0x00] + data_to_sign + signature + publicKey
-
+        // The node's raw tx starts with the flags byte; only the bytes after it are
+        // signed, and SignedTx keeps the flags (minus the not-signed bit)
         val rawBytes = rawHex.hexDecode()
         if (rawBytes.isEmpty()) error("Raw transaction hex is empty")
-        
-        // Prepare bytes to sign (removing the first byte/flag)
-        val bytesToSign = rawBytes.copyOfRange(1, rawBytes.size)
+        val bytesToSign = com.andrutstudio.velora.data.crypto.SignedTx.signBytes(rawBytes)
 
         val secret = requireUnlocked()
         val vault = vaultStorage.loadVault() ?: error("No vault found")
@@ -410,9 +405,8 @@ class WalletRepositoryImpl @Inject constructor(
             sig to pub
         }
 
-        // Construct final signed transaction: [0x00] + [bytesToSign] + [Signature] + [PublicKey]
-        val signedTxHeader = byteArrayOf(0x00) // 0x00 indicates signed
-        val finalHex = (signedTxHeader + bytesToSign + signatureBytes + publicKeyBytes).hexEncode()
+        val finalHex = com.andrutstudio.velora.data.crypto.SignedTx
+            .assemble(rawBytes, signatureBytes, publicKeyBytes).hexEncode()
 
         Log.d("Pactus", "Final signed transaction: $finalHex")
         finalHex
