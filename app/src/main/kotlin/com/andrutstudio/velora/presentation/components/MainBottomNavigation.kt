@@ -12,12 +12,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountBalanceWallet
-import androidx.compose.material.icons.rounded.Explore
-import androidx.compose.material.icons.rounded.Hub
-import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -132,7 +126,7 @@ fun MainBottomNavigation(
                             navController.navigate(Screen.Node.route) { launchSingleTop = true }
                         }
                     },
-                    icon = Icons.Rounded.Hub,
+                    icon = NavIcons.Node,
                     label = stringResource(R.string.nav_node)
                 )
             }
@@ -146,7 +140,7 @@ fun MainBottomNavigation(
                             }
                         }
                     },
-                    icon = Icons.Rounded.SwapHoriz,
+                    icon = NavIcons.Activity,
                     label = stringResource(R.string.nav_activity)
                 )
             }
@@ -164,7 +158,7 @@ fun MainBottomNavigation(
                             }
                         }
                     },
-                    icon = Icons.Rounded.Explore,
+                    icon = NavIcons.Discover,
                     label = stringResource(R.string.nav_discover)
                 )
             }
@@ -178,7 +172,7 @@ fun MainBottomNavigation(
                             }
                         }
                     },
-                    icon = Icons.Rounded.Settings,
+                    icon = NavIcons.Settings,
                     label = stringResource(R.string.nav_settings)
                 )
             }
@@ -220,7 +214,7 @@ fun MainBottomNavigation(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.AccountBalanceWallet,
+                    imageVector = NavIcons.Wallet,
                     contentDescription = stringResource(R.string.nav_wallet),
                     tint = Color.White,
                     modifier = Modifier.size(28.dp)
