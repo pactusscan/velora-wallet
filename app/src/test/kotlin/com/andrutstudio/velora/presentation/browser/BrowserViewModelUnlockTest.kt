@@ -73,6 +73,7 @@ class BrowserViewModelUnlockTest {
         override suspend fun broadcastTransaction(signedHex: String) = "tx"
     }
     private val sendAnchor by lazy { SendAnchorUseCase(chain, walletRepository) }
+    private val sendBond by lazy { com.andrutstudio.velora.domain.usecase.SendBondUseCase(chain, walletRepository) }
 
     @Before
     fun setUp() {
@@ -85,7 +86,7 @@ class BrowserViewModelUnlockTest {
     }
 
     private fun viewModel() =
-        BrowserViewModel(walletRepository, sendTransaction, sendAnchor, chain, browserDao, SavedStateHandle())
+        BrowserViewModel(walletRepository, sendTransaction, sendAnchor, sendBond, chain, browserDao, SavedStateHandle())
 
     private fun signAnchorRequest(vm: BrowserViewModel, fee: String) =
         vm.onSignAnchorRequest("a1", "set", "ab".repeat(32), "", "0", "", fee, "", "")
