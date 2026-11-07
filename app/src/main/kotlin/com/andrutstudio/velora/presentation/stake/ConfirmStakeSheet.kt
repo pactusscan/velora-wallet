@@ -52,7 +52,13 @@ fun ConfirmStakeSheet(
                 .padding(bottom = 32.dp),
         ) {
             Text(
-                text = stringResource(R.string.stake_confirm_title),
+                text = stringResource(
+                    when {
+                        state.action == StakeViewModel.Action.UNBOND -> R.string.stake_unbond_confirm_title
+                        state.delegate -> R.string.bond_title
+                        else -> R.string.stake_confirm_title
+                    },
+                ),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp),
@@ -68,15 +74,26 @@ fun ConfirmStakeSheet(
                     .padding(bottom = 20.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
+                    if (state.action == StakeViewModel.Action.UNBOND) {
+                        // The Stake Owner signs the unbond of the delegated validator
+                        ConfirmRow(label = stringResource(R.string.stake_sender_label), value = state.ownedDelegation?.delegateOwner ?: "", isAddress = true)
+                        ConfirmRow(label = stringResource(R.string.stake_validator_label), value = state.validatorAddress, isAddress = true)
+                        return@Column
+                    }
                     ConfirmRow(label = stringResource(R.string.stake_sender_label), value = state.selectedAccount?.address ?: "", isAddress = true)
-                    ConfirmRow(label = stringResource(R.string.stake_validator_label), value = state.validatorAddress, isAddress = true)
+                    ConfirmRow(
+                        label = stringResource(if (state.delegate) R.string.bond_validator else R.string.stake_validator_label),
+                        value = state.validatorAddress,
+                        isAddress = true,
+                    )
+                    if (state.delegate) DelegationConfirmRows(state)
                     
                     HorizontalDivider(
                         modifier = Modifier.padding(vertical = 12.dp),
                         color = MaterialTheme.colorScheme.outlineVariant,
                     )
 
-                    val amount = state.parsedAmount ?: Amount.ZERO
+                    val amount = state.stakeAmount ?: Amount.ZERO
                     val fee = state.parsedFee ?: state.estimatedFee ?: Amount.ZERO
                     val total = amount + fee
 
@@ -179,7 +196,9 @@ fun ConfirmStakeSheet(
                     Spacer(Modifier.width(8.dp))
                     Text(
                         if (state.isBiometricEnabled && state.password.isEmpty()) 
-                            stringResource(R.string.stake_confirm_biometric) else stringResource(R.string.stake_confirm_button)
+                            stringResource(R.string.stake_confirm_biometric)
+                        else if (state.action == StakeViewModel.Action.UNBOND) stringResource(R.string.stake_unbond_button)
+                        else stringResource(R.string.stake_confirm_button)
                     )
                 }
             }

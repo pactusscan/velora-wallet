@@ -10,6 +10,8 @@ import com.andrutstudio.velora.data.rpc.model.RpcError
 import com.andrutstudio.velora.domain.model.Amount
 import com.andrutstudio.velora.domain.model.AnchorInfo
 import com.andrutstudio.velora.domain.model.AnchorRequest
+import com.andrutstudio.velora.domain.model.Delegation
+import com.andrutstudio.velora.domain.model.ValidatorInfo
 import com.andrutstudio.velora.data.crypto.TxDecoder
 import java.util.Base64
 import java.util.concurrent.atomic.AtomicInteger
@@ -39,6 +41,26 @@ class RpcCaller @Inject constructor(
             balance = Amount.fromNanoPac(account?.get("balance")?.asLongSafe() ?: 0L),
             sequence = account?.get("sequence")?.asIntSafe() ?: 0,
             anchor = account?.get("anchor").asJsonObjectOrNull()?.let(::parseAnchor),
+        )
+    }
+
+    /** The validator as the node knows it, or null when it was never bonded. */
+    suspend fun getValidator(address: String): ValidatorInfo? {
+        val result = try {
+            call("pactus.blockchain.get_validator", mapOf("address" to address))
+        } catch (e: RpcException) {
+            if (e.message.contains("not found", ignoreCase = true) || e.message.contains("notfound", ignoreCase = true)) return null
+            throw e
+        }
+        val v = result.asJsonObjectOrNull()?.let { it.getAsJsonObject("validator") ?: it } ?: return null
+        return ValidatorInfo(
+            address = v.get("address")?.asStringSafe() ?: address,
+            stake = Amount.fromNanoPac(v.get("stake")?.asLongSafe() ?: 0L),
+            unbondingHeight = v.get("unbonding_height")?.asLongSafe() ?: 0L,
+            delegated = v.get("is_delegated")?.let { runCatching { it.asBoolean }.getOrNull() } ?: false,
+            delegateOwner = v.get("delegate_owner")?.asStringSafe().orEmpty(),
+            delegateShareNanoPac = v.get("delegate_share")?.asLongSafe() ?: 0L,
+            delegateExpiry = v.get("delegate_expiry")?.asLongSafe() ?: 0L,
         )
     }
 
@@ -112,6 +134,7 @@ class RpcCaller @Inject constructor(
         publicKey: String?,
         feeNanoPac: Long,
         memo: String?,
+        delegation: Delegation? = null,
     ): RawTransferRpcData {
         val params = mutableMapOf<String, Any>(
             "lock_time" to lockTime,
@@ -122,6 +145,11 @@ class RpcCaller @Inject constructor(
         )
         if (!publicKey.isNullOrBlank()) params["public_key"] = publicKey
         if (!memo.isNullOrBlank()) params["memo"] = memo
+        if (delegation != null) {
+            params["delegate_owner"] = delegation.owner
+            params["delegate_share"] = delegation.shareNanoPac
+            params["delegate_expiry"] = delegation.expiry
+        }
 
         val result = call("pactus.transaction.get_raw_bond_transaction", params)
         val obj = result.asJsonObjectOrNull()
@@ -144,6 +172,7 @@ class RpcCaller @Inject constructor(
         lockTime: Long,
         validator: String,
         memo: String?,
+        delegateOwner: String? = null,
     ): RawTransferRpcData {
         // The node's field is validator_address (GetRawUnbondTransactionRequest);
         // it refuses "validator" as an unknown field
@@ -152,6 +181,8 @@ class RpcCaller @Inject constructor(
             "validator_address" to validator
         )
         if (!memo.isNullOrBlank()) params["memo"] = memo
+        // A delegated validator is unbonded by its Stake Owner, who signs
+        if (!delegateOwner.isNullOrBlank()) params["delegate_owner"] = delegateOwner
 
         val result = call("pactus.transaction.get_raw_unbond_transaction", params)
         val obj = result.asJsonObjectOrNull()

@@ -563,4 +563,37 @@
     <string name="anchor_type_3">Kredensial atau daftar pencabutan</string>
     <string name="anchor_type_255">Pribadi atau terenkripsi</string>
     <string name="anchor_error_memo">Memo terlalu panjang.</string>
+    <!-- PIP-49 delegated bond -->
+    <string name="stake_delegate_toggle">Delegasikan ke operator (PIP-49)</string>
+    <string name="stake_delegate_hint">Anda men-stake 1.000 PAC di validator yang dijalankan orang lain dan tetap menjadi Stake Owner: hanya Anda yang bisa unbond, setelah masa delegasi berakhir.</string>
+    <string name="stake_share_label" formatted="false">Bagian Anda dari setiap reward blok (%, 0 sampai 70)</string>
+    <string name="stake_term_label">Masa delegasi</string>
+    <string name="stake_term_months">%1$d bulan</string>
+    <string name="stake_term_date">Tanggal</string>
+    <string name="stake_term_block">Blok</string>
+    <string name="stake_term_block_label">Tinggi blok</string>
+    <string name="stake_term_ends">Berakhir di blok %1$s, sekitar %2$s.</string>
+    <string name="stake_term_needs_validator">Isi alamat validator dulu untuk membaca blok saat ini.</string>
+    <string name="stake_error_pick_term">Pilih kapan delegasi berakhir.</string>
+    <string name="stake_error_invalid_share">Bagian harus 0 sampai 70 persen.</string>
+    <string name="stake_error_delegate_needs_empty">Validator ini sudah punya stake. Bond delegasi butuh validator tanpa stake.</string>
+    <string name="stake_error_unbonded_validator">Validator ini sudah di-unbond dan tidak bisa di-bond lagi.</string>
+    <string name="stake_error_block_too_low">Blok harus di atas blok saat ini %1$s.</string>
+    <string name="stake_delegated_info">Terdelegasi. Stake Owner %1$s, delegasi berakhir di blok %2$s.</string>
+    <string name="stake_owner_title">Anda adalah Stake Owner</string>
+    <string name="stake_owner_can_unbond">Masa delegasi sudah berakhir. Anda bisa unbond; stake bisa ditarik sekitar 21 hari kemudian.</string>
+    <string name="stake_owner_locked">Anda bisa unbond mulai blok %1$s.</string>
+    <string name="stake_unbond">Unbond</string>
+    <string name="stake_unbond_confirm_title">Konfirmasi unbond</string>
+    <string name="stake_unbond_button">Konfirmasi dan unbond</string>
+    <string name="bond_title">Bond delegasi</string>
+    <string name="bond_owner_hint">Akun ini membayar 1.000 PAC dan menjadi Stake Owner. Hanya akun ini yang bisa unbond.</string>
+    <string name="bond_validator">Validator (dijalankan operator)</string>
+    <string name="bond_public_key">Public key validator (validator baru)</string>
+    <string name="bond_stake">Stake</string>
+    <string name="bond_share">Bagian Anda dari setiap reward blok</string>
+    <string name="bond_split">Operator %1$s, protokol 30%%</string>
+    <string name="bond_expiry">Delegasi berakhir</string>
+    <string name="bond_expiry_value">blok %1$s, sekitar %2$s</string>
+    <string name="bond_lock_hint">Anda tidak bisa unbond sebelum blok itu. Setelahnya validator tetap berjalan sampai Anda unbond.</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.andrutstudio.velora.data.crypto
 
 import com.andrutstudio.velora.domain.model.AnchorRequest
+import com.andrutstudio.velora.domain.model.Delegation
 
 /**
  * Reads a raw transaction returned by the node, so the wallet can check what it
@@ -13,17 +14,129 @@ import com.andrutstudio.velora.domain.model.AnchorRequest
  * Transfer payload: from(21) | to(21) | amount(varint)
  * Anchor payload (PIP-50): from(21) | action(1), then for Set only
  *   hashLen(1) | hash | uriLen(1) | uri | anchorType(1) | deposit(varint)
+ * Bond payload: from(21) | to(21) | keyLen(varint, 0 or 96) | key | stake(varint),
+ *   then with flag 0x04 (PIP-49) owner(21) | share(varint) | expiry(u32 LE)
+ * Unbond payload: validator(21), then with flag 0x04 owner(21)
  * Addresses are a type byte plus a 20-byte hash. Integers are unsigned LEB128.
  */
 object TxDecoder {
 
     const val PAYLOAD_TRANSFER = 1
+    const val PAYLOAD_BOND = 2
+    const val PAYLOAD_UNBOND = 4
     const val PAYLOAD_ANCHOR = 7
 
     private const val ACTION_SET = 0
     private const val ACTION_DELETE = 1
 
     private const val ADDRESS_SIZE = 21
+    private const val BLS_PUBLIC_KEY_SIZE = 96
+
+    data class Bond(
+        val lockTime: Long,
+        val fee: Long,
+        val memo: String,
+        val from: ByteArray,
+        val to: ByteArray,
+        val publicKey: String, // hex, empty without a key
+        val stake: Long,
+        val delegateOwner: ByteArray?, // non-null for a PIP-49 delegated bond
+        val delegateShare: Long,
+        val delegateExpiry: Long,
+    )
+
+    data class Unbond(
+        val lockTime: Long,
+        val fee: Long,
+        val memo: String,
+        val validator: ByteArray,
+        val delegateOwner: ByteArray?, // the Stake Owner signs a delegated unbond
+    )
+
+    fun decodeBond(rawHex: String): Bond {
+        val reader = Reader(hexToBytes(rawHex))
+        val header = reader.header()
+        check(header.payloadType == PAYLOAD_BOND) { "Not a bond transaction (payload type ${header.payloadType})" }
+        val from = reader.take(ADDRESS_SIZE)
+        val to = reader.take(ADDRESS_SIZE)
+        val keySize = reader.varint().toInt()
+        check(keySize == 0 || keySize == BLS_PUBLIC_KEY_SIZE) { "Invalid public key size $keySize" }
+        val key = reader.take(keySize).joinToString("") { "%02x".format(it) }
+        val stake = reader.varint()
+        var tx = Bond(header.lockTime, header.fee, header.memo, from, to, key, stake, null, 0, 0)
+        if (header.flags and SignedTx.FLAG_WITH_DELEGATION != 0) {
+            tx = tx.copy(
+                delegateOwner = reader.take(ADDRESS_SIZE),
+                delegateShare = reader.varint(),
+                delegateExpiry = reader.u32le(),
+            )
+        }
+        check(reader.atEnd()) { "Unexpected bytes after bond payload" }
+        return tx
+    }
+
+    fun decodeUnbond(rawHex: String): Unbond {
+        val reader = Reader(hexToBytes(rawHex))
+        val header = reader.header()
+        check(header.payloadType == PAYLOAD_UNBOND) { "Not an unbond transaction (payload type ${header.payloadType})" }
+        val validator = reader.take(ADDRESS_SIZE)
+        val owner = if (header.flags and SignedTx.FLAG_WITH_DELEGATION != 0) reader.take(ADDRESS_SIZE) else null
+        check(reader.atEnd()) { "Unexpected bytes after unbond payload" }
+        return Unbond(header.lockTime, header.fee, header.memo, validator, owner)
+    }
+
+    /**
+     * Fail-closed like [assertTransferMatches]: also checks the PIP-49 fields, and
+     * that a plain bond carries no delegation (and the other way round).
+     */
+    fun assertBondMatches(
+        rawHex: String,
+        sender: String,
+        validator: String,
+        stake: Long,
+        publicKey: String?, // public1p... string, only for a validator never bonded
+        fee: Long,
+        memo: String?,
+        delegation: Delegation?,
+    ) {
+        val tx = decodeBond(rawHex)
+        val key = publicKey?.takeIf { it.isNotEmpty() }?.let { publicKeyHex(it) }
+        val checks = mutableListOf(
+            "sender" to addressMatches(tx.from, sender),
+            "validator" to addressMatches(tx.to, validator),
+            "stake" to (tx.stake == stake),
+            "public key" to if (publicKey.isNullOrEmpty()) tx.publicKey.isEmpty() else (key != null && tx.publicKey == key),
+            "fee" to (tx.fee == fee),
+            "memo" to (tx.memo == memo.orEmpty()),
+            "delegation" to ((tx.delegateOwner != null) == (delegation != null)),
+        )
+        if (delegation != null) {
+            checks += "delegate owner" to (tx.delegateOwner?.let { addressMatches(it, delegation.owner) } == true)
+            checks += "delegate share" to (tx.delegateShare == delegation.shareNanoPac)
+            checks += "delegate expiry" to (tx.delegateExpiry == delegation.expiry)
+        }
+        throwOnMismatch(checks)
+    }
+
+    fun assertUnbondMatches(rawHex: String, validator: String, delegateOwner: String?, memo: String?) {
+        val tx = decodeUnbond(rawHex)
+        val ownerOk = if (delegateOwner == null) {
+            tx.delegateOwner == null
+        } else {
+            tx.delegateOwner?.let { addressMatches(it, delegateOwner) } == true
+        }
+        throwOnMismatch(
+            listOf(
+                "validator" to addressMatches(tx.validator, validator),
+                "delegate owner" to ownerOk,
+                "memo" to (tx.memo == memo.orEmpty()),
+            ),
+        )
+    }
+
+    // public1p... to the hex of its key bytes; null fails the comparison closed
+    private fun publicKeyHex(key: String): String? =
+        runCatching { Bech32m.decode(key).third.joinToString("") { "%02x".format(it) } }.getOrNull()
 
     data class Transfer(
         val lockTime: Long,
@@ -157,6 +270,7 @@ object TxDecoder {
     }
 
     private data class Header(
+        val flags: Int,
         val lockTime: Long,
         val fee: Long,
         val memo: String,
@@ -188,16 +302,16 @@ object TxDecoder {
 
         fun atEnd(): Boolean = offset == bytes.size
 
-        private fun u32le(): Long =
+        fun u32le(): Long =
             (0..3).fold(0L) { value, index -> value or (u8().toLong() shl (8 * index)) }
 
         fun header(): Header {
-            u8() // flags: not needed, the unsigned tx from the node marks itself
+            val flags = u8() // 0x04 marks a PIP-49 delegated bond or unbond
             u8() // version
             val lockTime = u32le()
             val fee = varint()
             val memo = take(varint().toInt()).toString(Charsets.UTF_8)
-            return Header(lockTime, fee, memo, u8())
+            return Header(flags, lockTime, fee, memo, u8())
         }
     }
 }

@@ -574,4 +574,37 @@
     <string name="anchor_type_3">Credencial ou lista de revogação</string>
     <string name="anchor_type_255">Privado ou criptografado</string>
     <string name="anchor_error_memo">O memo é muito longo.</string>
+    <!-- PIP-49 delegated bond -->
+    <string name="stake_delegate_toggle">Delegar a um operador (PIP-49)</string>
+    <string name="stake_delegate_hint">Você faz stake de 1.000 PAC em um validador que outra pessoa opera e continua sendo o Stake Owner: só você pode fazer unbond, após o fim do prazo.</string>
+    <string name="stake_share_label" formatted="false">Sua parte de cada recompensa de bloco (%, 0 a 70)</string>
+    <string name="stake_term_label">Prazo da delegação</string>
+    <string name="stake_term_months">%1$d meses</string>
+    <string name="stake_term_date">Data</string>
+    <string name="stake_term_block">Bloco</string>
+    <string name="stake_term_block_label">Altura do bloco</string>
+    <string name="stake_term_ends">Termina no bloco %1$s, por volta de %2$s.</string>
+    <string name="stake_term_needs_validator">Informe primeiro o validador para ler o bloco atual.</string>
+    <string name="stake_error_pick_term">Escolha quando a delegação termina.</string>
+    <string name="stake_error_invalid_share">A parte deve ser de 0 a 70 por cento.</string>
+    <string name="stake_error_delegate_needs_empty">Este validador já tem stake. Um bond delegado precisa de um validador sem stake.</string>
+    <string name="stake_error_unbonded_validator">Este validador já fez unbond e não pode receber bond novamente.</string>
+    <string name="stake_error_block_too_low">O bloco deve ser maior que o bloco atual %1$s.</string>
+    <string name="stake_delegated_info">Delegado. Stake Owner %1$s, a delegação termina no bloco %2$s.</string>
+    <string name="stake_owner_title">Você é o Stake Owner</string>
+    <string name="stake_owner_can_unbond">A delegação terminou. Você pode fazer unbond; o stake poderá ser sacado cerca de 21 dias depois.</string>
+    <string name="stake_owner_locked">Você pode fazer unbond a partir do bloco %1$s.</string>
+    <string name="stake_unbond">Unbond</string>
+    <string name="stake_unbond_confirm_title">Confirmar unbond</string>
+    <string name="stake_unbond_button">Confirmar e fazer unbond</string>
+    <string name="bond_title">Bond delegado</string>
+    <string name="bond_owner_hint">Esta conta paga 1.000 PAC e se torna o Stake Owner. Só ela pode fazer unbond.</string>
+    <string name="bond_validator">Validador (operado pelo operador)</string>
+    <string name="bond_public_key">Chave pública do validador (validador novo)</string>
+    <string name="bond_stake">Stake</string>
+    <string name="bond_share">Sua parte de cada recompensa de bloco</string>
+    <string name="bond_split">Operador %1$s, protocolo 30%%</string>
+    <string name="bond_expiry">Fim da delegação</string>
+    <string name="bond_expiry_value">bloco %1$s, por volta de %2$s</string>
+    <string name="bond_lock_hint">Você não pode fazer unbond antes desse bloco. Depois dele, o validador continua funcionando até você fazer unbond.</string>
 </resources>

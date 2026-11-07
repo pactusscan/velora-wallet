@@ -572,4 +572,37 @@
     <string name="anchor_type_3">凭证或吊销列表</string>
     <string name="anchor_type_255">私有或加密</string>
     <string name="anchor_error_memo">备注太长。</string>
+    <!-- PIP-49 delegated bond -->
+    <string name="stake_delegate_toggle">委托给运营者 (PIP-49)</string>
+    <string name="stake_delegate_hint">您将 1,000 PAC 质押到他人运行的验证者上，并保持 Stake Owner 身份：只有您能在期限结束后解除质押 (unbond)。</string>
+    <string name="stake_share_label" formatted="false">您在每个区块奖励中的份额 (%，0 到 70)</string>
+    <string name="stake_term_label">委托期限</string>
+    <string name="stake_term_months">%1$d 个月</string>
+    <string name="stake_term_date">日期</string>
+    <string name="stake_term_block">区块</string>
+    <string name="stake_term_block_label">区块高度</string>
+    <string name="stake_term_ends">在区块 %1$s 结束，约 %2$s。</string>
+    <string name="stake_term_needs_validator">请先输入验证者以读取当前区块。</string>
+    <string name="stake_error_pick_term">请选择委托结束时间。</string>
+    <string name="stake_error_invalid_share">份额必须为 0 到 70 之间的百分比。</string>
+    <string name="stake_error_delegate_needs_empty">该验证者已有质押。委托质押需要没有质押的验证者。</string>
+    <string name="stake_error_unbonded_validator">该验证者已解除质押，无法再次质押。</string>
+    <string name="stake_error_block_too_low">区块必须高于当前区块 %1$s。</string>
+    <string name="stake_delegated_info">已委托。Stake Owner %1$s，委托在区块 %2$s 结束。</string>
+    <string name="stake_owner_title">您是 Stake Owner</string>
+    <string name="stake_owner_can_unbond">委托已结束。您可以解除质押；约 21 天后可提取质押。</string>
+    <string name="stake_owner_locked">您可以从区块 %1$s 起解除质押。</string>
+    <string name="stake_unbond">解除质押</string>
+    <string name="stake_unbond_confirm_title">确认解除质押</string>
+    <string name="stake_unbond_button">确认并解除质押</string>
+    <string name="bond_title">委托质押</string>
+    <string name="bond_owner_hint">该账户支付 1,000 PAC 并成为 Stake Owner。只有它能解除质押。</string>
+    <string name="bond_validator">验证者（由运营者运行）</string>
+    <string name="bond_public_key">验证者公钥（新验证者）</string>
+    <string name="bond_stake">质押</string>
+    <string name="bond_share">您在每个区块奖励中的份额</string>
+    <string name="bond_split">运营者 %1$s，协议 30%%</string>
+    <string name="bond_expiry">委托结束</string>
+    <string name="bond_expiry_value">区块 %1$s，约 %2$s</string>
+    <string name="bond_lock_hint">在该区块之前无法解除质押。之后验证者会继续运行，直到您解除质押。</string>
 </resources>

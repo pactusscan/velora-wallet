@@ -99,7 +99,12 @@ fun StakeScreen(
         onDismissConfirm = viewModel::onDismissConfirm,
         onConfirmStake = viewModel::onConfirmStake,
         onPasswordChange = viewModel::onPasswordChange,
-        onSelectAccount = viewModel::onSelectAccount
+        onSelectAccount = viewModel::onSelectAccount,
+        onDelegateChange = viewModel::onDelegateChange,
+        onSharePercentChange = viewModel::onSharePercentChange,
+        onTermChange = viewModel::onTermChange,
+        onCustomBlockChange = viewModel::onCustomBlockChange,
+        onUnbondOwned = viewModel::onUnbondOwned,
     )
 
     if (successTxId != null) {
@@ -111,7 +116,7 @@ fun StakeScreen(
                 scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.stake_tx_id_copied)) }
             },
             onViewExplorer = {
-                val url = "https://pactusscan.com/transaction/$successTxId"
+                val url = "${state.network.explorerUrl}/transaction/$successTxId"
                 navController.navigate(Screen.Browser.withUrl(url))
             },
             onDismiss = {
@@ -139,6 +144,11 @@ private fun StakeScreenContent(
     onConfirmStake: () -> Unit,
     onPasswordChange: (String) -> Unit,
     onSelectAccount: (Account) -> Unit,
+    onDelegateChange: (Boolean) -> Unit = {},
+    onSharePercentChange: (String) -> Unit = {},
+    onTermChange: (StakeViewModel.Term) -> Unit = {},
+    onCustomBlockChange: (String) -> Unit = {},
+    onUnbondOwned: () -> Unit = {},
 ) {
     if (state.isConfirmVisible) {
         ConfirmStakeSheet(
@@ -211,20 +221,16 @@ private fun StakeScreenContent(
                     supportingText = {
                         Column {
                             state.validatorAddressError?.let { Text(it.asString()) }
-                            state.validatorStake?.let {
-                                Text(
-                                    text = stringResource(R.string.stake_current_label, formatPac(it)),
-                                    color = MaterialTheme.colorScheme.primary,
-                                    style = MaterialTheme.typography.labelSmall
-                                )
-                            }
                         }
                     },
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
                 )
 
-                OutlinedTextField(
+                ValidatorStatusCard(state = state, onUnbondOwned = onUnbondOwned)
+
+                // The node refuses a public key for a validator it already knows
+                if (state.validatorInfo == null) OutlinedTextField(
                     value = state.validatorPublicKey,
                     onValueChange = onValidatorPublicKeyChange,
                     modifier = Modifier.fillMaxWidth(),
@@ -234,7 +240,15 @@ private fun StakeScreenContent(
                     singleLine = true,
                 )
 
-                OutlinedTextField(
+                DelegationSection(
+                    state = state,
+                    onDelegateChange = onDelegateChange,
+                    onSharePercentChange = onSharePercentChange,
+                    onTermChange = onTermChange,
+                    onCustomBlockChange = onCustomBlockChange,
+                )
+
+                if (!state.delegate) OutlinedTextField(
                     value = state.amountText,
                     onValueChange = onAmountChange,
                     modifier = Modifier.fillMaxWidth(),

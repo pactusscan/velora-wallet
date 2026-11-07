@@ -575,4 +575,37 @@
     <string name="anchor_type_3">Учётные данные или список отзыва</string>
     <string name="anchor_type_255">Личное или зашифрованное</string>
     <string name="anchor_error_memo">Мемо слишком длинное.</string>
+    <!-- PIP-49 delegated bond -->
+    <string name="stake_delegate_toggle">Делегировать оператору (PIP-49)</string>
+    <string name="stake_delegate_hint">Вы стейкаете 1 000 PAC на валидатор, которым управляет другой человек, и остаётесь Stake Owner: только вы можете сделать unbond после окончания срока.</string>
+    <string name="stake_share_label" formatted="false">Ваша доля каждой награды за блок (%, от 0 до 70)</string>
+    <string name="stake_term_label">Срок делегирования</string>
+    <string name="stake_term_months">%1$d мес.</string>
+    <string name="stake_term_date">Дата</string>
+    <string name="stake_term_block">Блок</string>
+    <string name="stake_term_block_label">Высота блока</string>
+    <string name="stake_term_ends">Заканчивается на блоке %1$s, примерно %2$s.</string>
+    <string name="stake_term_needs_validator">Сначала введите валидатор, чтобы узнать текущий блок.</string>
+    <string name="stake_error_pick_term">Выберите, когда заканчивается делегирование.</string>
+    <string name="stake_error_invalid_share">Доля должна быть от 0 до 70 процентов.</string>
+    <string name="stake_error_delegate_needs_empty">У этого валидатора уже есть стейк. Для делегированного бонда нужен валидатор без стейка.</string>
+    <string name="stake_error_unbonded_validator">Этот валидатор уже сделал unbond и не может быть снова забондирован.</string>
+    <string name="stake_error_block_too_low">Блок должен быть выше текущего блока %1$s.</string>
+    <string name="stake_delegated_info">Делегирован. Stake Owner %1$s, делегирование заканчивается на блоке %2$s.</string>
+    <string name="stake_owner_title">Вы Stake Owner</string>
+    <string name="stake_owner_can_unbond">Делегирование закончилось. Вы можете сделать unbond; стейк можно будет вывести примерно через 21 день.</string>
+    <string name="stake_owner_locked">Вы можете сделать unbond начиная с блока %1$s.</string>
+    <string name="stake_unbond">Unbond</string>
+    <string name="stake_unbond_confirm_title">Подтвердить unbond</string>
+    <string name="stake_unbond_button">Подтвердить и сделать unbond</string>
+    <string name="bond_title">Делегированный бонд</string>
+    <string name="bond_owner_hint">Этот аккаунт платит 1 000 PAC и становится Stake Owner. Только он может сделать unbond.</string>
+    <string name="bond_validator">Валидатор (управляет оператор)</string>
+    <string name="bond_public_key">Публичный ключ валидатора (новый валидатор)</string>
+    <string name="bond_stake">Стейк</string>
+    <string name="bond_share">Ваша доля каждой награды за блок</string>
+    <string name="bond_split">Оператор %1$s, протокол 30%%</string>
+    <string name="bond_expiry">Окончание делегирования</string>
+    <string name="bond_expiry_value">блок %1$s, примерно %2$s</string>
+    <string name="bond_lock_hint">До этого блока сделать unbond нельзя. После него валидатор продолжает работать, пока вы не сделаете unbond.</string>
 </resources>

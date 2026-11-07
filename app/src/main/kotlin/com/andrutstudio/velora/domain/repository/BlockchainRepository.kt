@@ -28,11 +28,14 @@ interface BlockchainRepository {
         publicKey: String?,
         fee: Amount,
         memo: String?,
+        delegation: com.andrutstudio.velora.domain.model.Delegation? = null,
     ): RawTransaction
     suspend fun buildUnbondTransaction(
         validator: String,
         memo: String?,
+        delegateOwner: String? = null,
     ): RawTransaction
+    suspend fun getValidator(address: String): com.andrutstudio.velora.domain.model.ValidatorInfo?
     suspend fun calculateAnchorFee(deposit: Amount): Amount
     suspend fun buildAnchorTransaction(request: AnchorRequest): RawTransaction
     suspend fun broadcastTransaction(signedHex: String): String

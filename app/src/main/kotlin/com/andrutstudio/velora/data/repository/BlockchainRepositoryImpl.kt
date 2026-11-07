@@ -105,7 +105,8 @@ class BlockchainRepositoryImpl @Inject constructor(
         stake: Amount,
         publicKey: String?,
         fee: Amount,
-        memo: String?
+        memo: String?,
+        delegation: com.andrutstudio.velora.domain.model.Delegation?,
     ): RawTransaction = withContext(Dispatchers.IO) {
         val lockTime = rpc.getBlockHeight()
         val raw = rpc.getRawBondTransaction(
@@ -116,7 +117,10 @@ class BlockchainRepositoryImpl @Inject constructor(
             publicKey = publicKey,
             feeNanoPac = fee.nanoPac,
             memo = memo,
+            delegation = delegation,
         )
+        // Refuse to sign anything but what the user approved
+        TxDecoder.assertBondMatches(raw.rawTransactionHex, from, to, stake.nanoPac, publicKey, fee.nanoPac, memo, delegation)
         RawTransaction(
             hex = raw.rawTransactionHex,
             signingMessageHex = raw.signingHashHex,
@@ -127,14 +131,17 @@ class BlockchainRepositoryImpl @Inject constructor(
 
     override suspend fun buildUnbondTransaction(
         validator: String,
-        memo: String?
+        memo: String?,
+        delegateOwner: String?,
     ): RawTransaction = withContext(Dispatchers.IO) {
         val lockTime = rpc.getBlockHeight() + 1
         val raw = rpc.getRawUnbondTransaction(
             lockTime = lockTime,
             validator = validator,
             memo = memo,
+            delegateOwner = delegateOwner,
         )
+        TxDecoder.assertUnbondMatches(raw.rawTransactionHex, validator, delegateOwner, memo)
         RawTransaction(
             hex = raw.rawTransactionHex,
             signingMessageHex = raw.signingHashHex,
@@ -224,6 +231,9 @@ class BlockchainRepositoryImpl @Inject constructor(
             error("Transaction not found: $txId")
         }
     }
+
+    override suspend fun getValidator(address: String): com.andrutstudio.velora.domain.model.ValidatorInfo? =
+        withContext(Dispatchers.IO) { rpc.getValidator(address) }
 
     override suspend fun getValidatorPeer(address: String): com.andrutstudio.velora.data.rpc.PeerDetailResponse = withContext(Dispatchers.IO) {
         pactusScan.getValidatorPeer(address)

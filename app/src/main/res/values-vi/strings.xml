@@ -571,4 +571,37 @@
     <string name="anchor_type_3">Chứng chỉ hoặc danh sách thu hồi</string>
     <string name="anchor_type_255">Riêng tư hoặc đã mã hóa</string>
     <string name="anchor_error_memo">Memo quá dài.</string>
+    <!-- PIP-49 delegated bond -->
+    <string name="stake_delegate_toggle">Ủy quyền cho nhà vận hành (PIP-49)</string>
+    <string name="stake_delegate_hint">Bạn stake 1.000 PAC vào một validator do người khác vận hành và vẫn là Stake Owner: chỉ bạn mới có thể unbond, sau khi kỳ hạn kết thúc.</string>
+    <string name="stake_share_label" formatted="false">Phần của bạn trong mỗi phần thưởng khối (%, 0 đến 70)</string>
+    <string name="stake_term_label">Kỳ hạn ủy quyền</string>
+    <string name="stake_term_months">%1$d tháng</string>
+    <string name="stake_term_date">Ngày</string>
+    <string name="stake_term_block">Khối</string>
+    <string name="stake_term_block_label">Chiều cao khối</string>
+    <string name="stake_term_ends">Kết thúc ở khối %1$s, khoảng %2$s.</string>
+    <string name="stake_term_needs_validator">Nhập validator trước để đọc khối hiện tại.</string>
+    <string name="stake_error_pick_term">Chọn thời điểm kết thúc ủy quyền.</string>
+    <string name="stake_error_invalid_share">Phần chia phải từ 0 đến 70 phần trăm.</string>
+    <string name="stake_error_delegate_needs_empty">Validator này đã có stake. Bond ủy quyền cần một validator chưa có stake.</string>
+    <string name="stake_error_unbonded_validator">Validator này đã bị unbond và không thể bond lại.</string>
+    <string name="stake_error_block_too_low">Khối phải lớn hơn khối hiện tại %1$s.</string>
+    <string name="stake_delegated_info">Đã ủy quyền. Stake Owner %1$s, ủy quyền kết thúc ở khối %2$s.</string>
+    <string name="stake_owner_title">Bạn là Stake Owner</string>
+    <string name="stake_owner_can_unbond">Ủy quyền đã kết thúc. Bạn có thể unbond; stake có thể rút khoảng 21 ngày sau.</string>
+    <string name="stake_owner_locked">Bạn có thể unbond từ khối %1$s.</string>
+    <string name="stake_unbond">Unbond</string>
+    <string name="stake_unbond_confirm_title">Xác nhận unbond</string>
+    <string name="stake_unbond_button">Xác nhận và unbond</string>
+    <string name="bond_title">Bond ủy quyền</string>
+    <string name="bond_owner_hint">Tài khoản này trả 1.000 PAC và trở thành Stake Owner. Chỉ tài khoản này có thể unbond.</string>
+    <string name="bond_validator">Validator (do nhà vận hành chạy)</string>
+    <string name="bond_public_key">Khóa công khai validator (validator mới)</string>
+    <string name="bond_stake">Stake</string>
+    <string name="bond_share">Phần của bạn trong mỗi phần thưởng khối</string>
+    <string name="bond_split">Nhà vận hành %1$s, giao thức 30%%</string>
+    <string name="bond_expiry">Ủy quyền kết thúc</string>
+    <string name="bond_expiry_value">khối %1$s, khoảng %2$s</string>
+    <string name="bond_lock_hint">Bạn không thể unbond trước khối đó. Sau đó validator vẫn chạy cho đến khi bạn unbond.</string>
 </resources>

@@ -22,6 +22,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.andrutstudio.velora.domain.model.Account
 import com.andrutstudio.velora.domain.model.Amount
+import com.andrutstudio.velora.domain.model.Delegation
+import com.andrutstudio.velora.domain.model.DelegationRules
+import com.andrutstudio.velora.domain.model.Network
+import com.andrutstudio.velora.domain.model.ValidatorInfo
 import com.andrutstudio.velora.domain.model.Wallet
 import com.andrutstudio.velora.domain.repository.BlockchainRepository
 import com.andrutstudio.velora.domain.repository.WalletRepository
@@ -34,13 +38,27 @@ class StakeViewModel @Inject constructor(
     private val blockchainRepository: BlockchainRepository,
 ) : ViewModel() {
 
+    /** What the confirm sheet signs: a bond (plain or delegated) or the Stake Owner's unbond. */
+    enum class Action { BOND, UNBOND }
+
+    /** Delegation term: months from [DelegationRules.TERM_DAYS], a picked date or a typed block. */
+    sealed interface Term {
+        data class Months(val months: Int) : Term
+        data class Date(val epochMillis: Long?) : Term
+        data object Block : Term
+    }
+
     data class State(
         val wallet: Wallet? = null,
         val accounts: List<Account> = emptyList(),
         val selectedAccount: Account? = null,
         val availableBalance: Amount = Amount.ZERO,
         val validatorAddress: String = "",
-        val validatorStake: Amount? = null,
+        // The node's view of the validator (null: never bonded, or not looked up yet)
+        val validatorInfo: ValidatorInfo? = null,
+        val validatorLookedUp: Boolean = false,
+        val validatorMoniker: String = "",
+        val height: Long = 0,
         val maxStakableAmount: Amount? = null,
         val validatorPublicKey: String = "",
         val amountText: String = "",
@@ -53,6 +71,7 @@ class StakeViewModel @Inject constructor(
         val amountError: UiText? = null,
         val feeError: UiText? = null,
         val isConfirmVisible: Boolean = false,
+        val action: Action = Action.BOND,
         val isStaking: Boolean = false,
         val isLoading: Boolean = true,
         val password: String = "",
@@ -60,15 +79,51 @@ class StakeViewModel @Inject constructor(
         // Shown inside the confirm sheet; a snackbar would be hidden behind the modal sheet.
         val stakeError: UiText? = null,
         val isBiometricEnabled: Boolean = false,
+        // PIP-49 delegated bond
+        val delegate: Boolean = false,
+        val sharePercentText: String = "20",
+        val term: Term = Term.Months(6),
+        val customBlockText: String = "",
+        val delegationError: UiText? = null,
     ) {
+        val network: Network get() = wallet?.network ?: Network.MAINNET
+
+        val validatorStake: Amount? get() = validatorInfo?.stake
+
         val parsedAmount: Amount?
             get() = amountText.toDoubleOrNull()?.takeIf { it > 0 }?.let { Amount.fromPac(it) }
+
+        /** A delegated bond always stakes the maximum, 1,000 PAC. */
+        val stakeAmount: Amount?
+            get() = if (delegate) Amount.fromNanoPac(DelegationRules.MAX_STAKE_NANO_PAC) else parsedAmount
 
         val parsedFee: Amount?
             get() = feeText.toDoubleOrNull()?.takeIf { it > 0 }?.let { Amount.fromPac(it) }
 
+        val sharePercent: Double?
+            get() = sharePercentText.replace(',', '.').toDoubleOrNull()?.takeIf { it in 0.0..DelegationRules.MAX_SHARE_PERCENT }
+
+        /** The delegation's last block, or null while it cannot be computed. */
+        val expiry: Long?
+            get() {
+                if (height <= 0) return null
+                val block = when (val t = term) {
+                    is Term.Months -> DelegationRules.expiryForDays(height, DelegationRules.TERM_DAYS.getValue(t.months))
+                    is Term.Date -> t.epochMillis?.let {
+                        val days = Math.ceil((it - System.currentTimeMillis()) / 86_400_000.0).toInt()
+                        if (days > 0) DelegationRules.expiryForDays(height, days) else null
+                    }
+                    Term.Block -> customBlockText.trim().toLongOrNull()
+                }
+                return block?.takeIf { it > height }
+            }
+
+        /** The validator is a delegation owned by one of this wallet's accounts. */
+        val ownedDelegation: ValidatorInfo?
+            get() = validatorInfo?.takeIf { v -> v.delegated && accounts.any { it.address == v.delegateOwner } }
+
         val canPreview: Boolean
-            get() = validatorAddress.isNotBlank() && parsedAmount != null && !isStaking &&
+            get() = validatorAddress.isNotBlank() && stakeAmount != null && !isStaking &&
                     (parsedFee != null || estimatedFee != null)
     }
 
@@ -86,7 +141,7 @@ class StakeViewModel @Inject constructor(
     val effect = _effect.receiveAsFlow()
 
     private var feeJob: Job? = null
-    private var validatorStakeJob: Job? = null
+    private var validatorJob: Job? = null
 
     init {
         loadWallet()
@@ -96,14 +151,14 @@ class StakeViewModel @Inject constructor(
         viewModelScope.launch {
             val wallet = walletRepository.observeWallet().filterNotNull().first()
             val firstAccount = wallet.accounts.firstOrNull()
-            _state.update { 
+            _state.update {
                 it.copy(
                     wallet = wallet,
                     accounts = wallet.accounts,
-                    selectedAccount = firstAccount, 
+                    selectedAccount = firstAccount,
                     isLoading = false,
                     isBiometricEnabled = walletRepository.isBiometricEnabled()
-                ) 
+                )
             }
             firstAccount?.let { fetchBalance(it) }
         }
@@ -125,30 +180,32 @@ class StakeViewModel @Inject constructor(
 
     fun onValidatorAddressChange(address: String) {
         val trimmed = address.trim()
-        _state.update { it.copy(validatorAddress = trimmed, validatorAddressError = null) }
-        fetchValidatorStake(trimmed)
+        _state.update {
+            it.copy(
+                validatorAddress = trimmed, validatorAddressError = null,
+                validatorInfo = null, validatorLookedUp = false, validatorMoniker = "",
+            )
+        }
+        lookUpValidator(trimmed)
     }
 
-    private fun fetchValidatorStake(address: String) {
-        validatorStakeJob?.cancel()
-        if (!address.startsWith("pc1p") || address.length < 20) {
-            _state.update { it.copy(validatorStake = null) }
-            return
-        }
-
-        validatorStakeJob = viewModelScope.launch {
+    // The node is the source of truth for the bond rules (known validator,
+    // delegation); the explorer only adds the moniker
+    private fun lookUpValidator(address: String) {
+        validatorJob?.cancel()
+        if (!DelegationRules.isValidatorAddress(address, _state.value.network)) return
+        validatorJob = viewModelScope.launch {
             delay(500)
             try {
-                val response = blockchainRepository.getValidatorPeer(address)
-                val validator = response.validators.find { it.address == address }
-                if (validator != null) {
-                    _state.update { it.copy(validatorStake = Amount(validator.stake)) }
-                } else {
-                    _state.update { it.copy(validatorStake = null) }
-                }
+                val info = blockchainRepository.getValidator(address)
+                val height = blockchainRepository.getBlockHeight()
+                _state.update { it.copy(validatorInfo = info, validatorLookedUp = true, height = height) }
+                val moniker = runCatching { blockchainRepository.getValidatorPeer(address).peer?.moniker }.getOrNull()
+                if (!moniker.isNullOrBlank()) _state.update { it.copy(validatorMoniker = moniker) }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
-                if (e is CancellationException) throw e
-                _state.update { it.copy(validatorStake = null) }
+                _state.update { it.copy(validatorInfo = null, validatorLookedUp = false) }
             }
         }
     }
@@ -160,6 +217,23 @@ class StakeViewModel @Inject constructor(
     fun onAmountChange(amount: String) {
         _state.update { it.copy(amountText = amount, amountError = null) }
         scheduleFeeEstimate()
+    }
+
+    fun onDelegateChange(delegate: Boolean) {
+        _state.update { it.copy(delegate = delegate, amountError = null, delegationError = null) }
+        scheduleFeeEstimate()
+    }
+
+    fun onSharePercentChange(value: String) {
+        _state.update { it.copy(sharePercentText = value, delegationError = null) }
+    }
+
+    fun onTermChange(term: Term) {
+        _state.update { it.copy(term = term, delegationError = null) }
+    }
+
+    fun onCustomBlockChange(value: String) {
+        _state.update { it.copy(customBlockText = value.filter(Char::isDigit), delegationError = null) }
     }
 
     fun onFeeChange(value: String) {
@@ -189,12 +263,9 @@ class StakeViewModel @Inject constructor(
         feeJob?.cancel()
         feeJob = viewModelScope.launch {
             delay(700)
-            val amount = _state.value.parsedAmount ?: return@launch
+            val amount = _state.value.stakeAmount ?: return@launch
             _state.update { it.copy(isFeeLoading = true, feeError = null) }
             try {
-                // Bond transactions usually have same fee logic as transfers in Pactus?
-                // rpc.calculateFee(..., payload_type=2) could be used if RpcCaller supported it.
-                // For now use general calculateFee.
                 val fee = blockchainRepository.calculateFee(amount)
                 _state.update { current ->
                     current.copy(
@@ -220,15 +291,34 @@ class StakeViewModel @Inject constructor(
         val current = _state.value
         var hasError = false
 
-        if (current.validatorAddress.isBlank() || !current.validatorAddress.startsWith("pc1p")) {
+        if (!DelegationRules.isValidatorAddress(current.validatorAddress, current.network)) {
             _state.update { it.copy(validatorAddressError = UiText.Res(R.string.stake_error_invalid_validator)) }
+            hasError = true
+        } else if (current.validatorInfo?.isUnbonded == true) {
+            _state.update { it.copy(validatorAddressError = UiText.Res(R.string.stake_error_unbonded_validator)) }
             hasError = true
         }
 
-        val amount = current.parsedAmount
+        val amount = current.stakeAmount
         if (amount == null) {
             _state.update { it.copy(amountError = UiText.Res(R.string.error_enter_valid_amount)) }
             hasError = true
+        }
+
+        if (current.delegate) {
+            val error = when {
+                current.sharePercent == null -> UiText.Res(R.string.stake_error_invalid_share)
+                current.height <= 0 -> UiText.Res(R.string.stake_term_needs_validator)
+                current.term == Term.Block && (current.customBlockText.toLongOrNull() ?: 0) <= current.height ->
+                    uiText(R.string.stake_error_block_too_low, current.height.toString())
+                current.expiry == null -> UiText.Res(R.string.stake_error_pick_term)
+                (current.validatorInfo?.stake?.nanoPac ?: 0) > 0 -> UiText.Res(R.string.stake_error_delegate_needs_empty)
+                else -> null
+            }
+            if (error != null) {
+                _state.update { it.copy(delegationError = error) }
+                hasError = true
+            }
         }
 
         val fee = current.parsedFee
@@ -248,8 +338,8 @@ class StakeViewModel @Inject constructor(
 
             // Check validator stake limit (1000 PAC)
             current.validatorStake?.let { currentStake ->
-                if (currentStake.nanoPac + amount.nanoPac > 1_000_000_000_000L) {
-                    val remaining = Amount.fromNanoPac(1_000_000_000_000L - currentStake.nanoPac)
+                if (!current.delegate && currentStake.nanoPac + amount.nanoPac > DelegationRules.MAX_STAKE_NANO_PAC) {
+                    val remaining = Amount.fromNanoPac(DelegationRules.MAX_STAKE_NANO_PAC - currentStake.nanoPac)
                     _state.update { it.copy(
                         amountError = uiText(R.string.stake_max_error, formatPac(remaining)),
                         maxStakableAmount = remaining
@@ -258,7 +348,23 @@ class StakeViewModel @Inject constructor(
                 }
             }
 
-            _state.update { it.copy(isConfirmVisible = true, password = "", passwordError = null, stakeError = null, maxStakableAmount = null) }
+            openConfirm(Action.BOND)
+        }
+    }
+
+    /** The Stake Owner unbonds a delegated validator once the delegation has ended. */
+    fun onUnbondOwned() {
+        val owned = _state.value.ownedDelegation ?: return
+        if (_state.value.height < owned.delegateExpiry) return
+        openConfirm(Action.UNBOND)
+    }
+
+    private fun openConfirm(action: Action) {
+        _state.update {
+            it.copy(
+                isConfirmVisible = true, action = action, password = "", passwordError = null,
+                stakeError = null, maxStakableAmount = null,
+            )
         }
     }
 
@@ -270,13 +376,7 @@ class StakeViewModel @Inject constructor(
     fun onConfirmStake() {
         val current = _state.value
         if (current.isStaking) return
-
-        val from = current.selectedAccount?.address ?: return
-        val amount = current.parsedAmount ?: return
-        val fee = current.parsedFee ?: current.estimatedFee ?: return
-        val password = current.password
-
-        if (password.isEmpty()) {
+        if (current.password.isEmpty()) {
             if (current.isBiometricEnabled) {
                 viewModelScope.launch { _effect.send(Effect.RequestBiometricUnlock) }
             } else {
@@ -284,45 +384,21 @@ class StakeViewModel @Inject constructor(
             }
             return
         }
-
-        doStake(from, current.validatorAddress, current.validatorPublicKey, amount, fee, current.memo, password)
+        submit(current.password)
     }
 
-    fun onBiometricUnlockSuccess(password: String) {
+    fun onBiometricUnlockSuccess(password: String) = submit(password)
+
+    private fun submit(password: String) {
         val current = _state.value
-        val from = current.selectedAccount?.address ?: return
-        val amount = current.parsedAmount ?: return
-        val fee = current.parsedFee ?: current.estimatedFee ?: return
-        
-        doStake(from, current.validatorAddress, current.validatorPublicKey, amount, fee, current.memo, password)
-    }
-
-    private fun doStake(from: String, to: String, pubKey: String, amount: Amount, fee: Amount, memo: String, password: String) {
         _state.update { it.copy(isStaking = true, passwordError = null, stakeError = null) }
         viewModelScope.launch {
             try {
-                val unlocked = walletRepository.unlockWallet(password)
-                if (!unlocked) {
+                if (!walletRepository.unlockWallet(password)) {
                     _state.update { it.copy(isStaking = false, passwordError = UiText.Res(R.string.error_incorrect_password)) }
                     return@launch
                 }
-                
-                val rawTx = blockchainRepository.buildBondTransaction(
-                    from = from,
-                    to = to,
-                    stake = amount,
-                    publicKey = pubKey.takeIf { it.isNotBlank() },
-                    fee = fee,
-                    memo = memo.takeIf { it.isNotBlank() }
-                )
-
-                val signedHex = walletRepository.signRawTransaction(
-                    rawHex = rawTx.hex,
-                    signingMessageHex = rawTx.signingMessageHex,
-                    fromAddress = from,
-                )
-                val txId = blockchainRepository.broadcastTransaction(signedHex)
-
+                val txId = if (current.action == Action.UNBOND) unbondOwned(current) else bond(current)
                 _state.update { it.copy(isStaking = false, isConfirmVisible = false) }
                 _effect.send(Effect.ShowSuccess(txId))
             } catch (e: CancellationException) {
@@ -332,6 +408,47 @@ class StakeViewModel @Inject constructor(
             }
         }
     }
+
+    private suspend fun bond(current: State): String {
+        val from = checkNotNull(current.selectedAccount).address
+        val amount = checkNotNull(current.stakeAmount)
+        val fee = checkNotNull(current.parsedFee ?: current.estimatedFee)
+        val delegation = if (current.delegate) {
+            val share = DelegationRules.percentToShare(checkNotNull(current.sharePercent))
+            DelegationRules.checkShare(share)
+            val expiry = checkNotNull(current.expiry)
+            check(expiry > blockchainRepository.getBlockHeight()) { "The delegation must end after the current block" }
+            Delegation(owner = from, shareNanoPac = share, expiry = expiry)
+        } else null
+        val rawTx = blockchainRepository.buildBondTransaction(
+            from = from,
+            to = current.validatorAddress,
+            stake = amount,
+            // The node refuses a public key for a validator it already knows
+            publicKey = current.validatorPublicKey.takeIf { it.isNotBlank() && current.validatorInfo == null },
+            fee = fee,
+            memo = current.memo.takeIf { it.isNotBlank() },
+            delegation = delegation,
+        )
+        val signedHex = walletRepository.signRawTransaction(rawTx.hex, rawTx.signingMessageHex, from)
+        return blockchainRepository.broadcastTransaction(signedHex)
+    }
+
+    private suspend fun unbondOwned(current: State): String {
+        // Read the validator again: only its Stake Owner may unbond, after the expiry
+        val info = checkNotNull(blockchainRepository.getValidator(current.validatorAddress)) { "Validator not found" }
+        check(info.delegated && current.accounts.any { it.address == info.delegateOwner }) {
+            "Only the Stake Owner of this validator can unbond it"
+        }
+        check(info.delegateExpiry <= blockchainRepository.getBlockHeight()) {
+            "The delegation ends at block ${info.delegateExpiry}; unbonding opens after it"
+        }
+        val rawTx = blockchainRepository.buildUnbondTransaction(
+            validator = current.validatorAddress,
+            memo = current.memo.takeIf { it.isNotBlank() },
+            delegateOwner = info.delegateOwner,
+        )
+        val signedHex = walletRepository.signRawTransaction(rawTx.hex, rawTx.signingMessageHex, info.delegateOwner)
+        return blockchainRepository.broadcastTransaction(signedHex)
+    }
 }
-
-
