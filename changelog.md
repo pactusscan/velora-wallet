@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.1.8] - 2026-11-08
+
+This release brings PIP-49 delegated staking to Velora, in the wallet and in the dApp browser, the same way as the browser extension 0.1.4. If you use Testnet, updating is recommended: your history and validator data were empty.
+
+### Added
+- **Delegate to an Operator (PIP-49)**: On the Stake screen, tick "Delegate to an operator" to stake 1,000 PAC on a validator someone else runs while you stay the Stake Owner. Choose your share of each block reward and a term of 3, 6 or 12 months, a date or a block height; the screen shows when the delegation ends.
+- **Unbond as Stake Owner**: Enter a validator you delegated to and, once the term has ended, unbond it from the Stake screen. Only the Stake Owner's account can do this.
+- **dApps Can Ask for a Delegated Bond**: In the dApp browser, `window.pactus.bond` opens an approval sheet with the validator, your share, the operator part, the end block with an approximate date and the fee. You pick which account becomes the Stake Owner.
+- **Choose How Much an Anchor Locks**: When you publish an anchor, enter the total it should hold (at least 1 PAC). Velora shows what is locked now and adds only what is missing; amounts above 1 PAC are highlighted. A clear warning appears when publishing would replace a different kind of anchor.
+
+### Fixed & Improved
+- **Bonds and Unbonds Are Checked Before Signing**: Velora compares the bond or unbond transaction from the node with what you approved, including the delegation fields, and refuses to sign if anything differs.
+- **Testnet History and Validators**: Testnet wallets asked a PactusScan address that no longer exists, so their history, validator details and live updates were empty. They now use the PactusScan testnet API.
+- **Testnet Validators on the Stake Screen**: Testnet validator addresses (tpc1p) are accepted, and the explorer link after staking opens the right network.
+- **No Public Key for Known Validators**: The validator public key is only sent for a validator the network does not know yet, which the node otherwise refuses.
+- **Anchor Delete Refused Early**: Deleting an anchor whose locked deposit does not cover the fee is refused before signing instead of failing on the node.
+- **New Navigation Icons**: The bottom bar uses line icons, the same shapes as the browser extension.
+- **Translations**: All new texts are available in the ten languages of the app.
+
 ## [0.1.7] - 2026-11-02
 
 This release brings PIP-50 anchors to Velora, including the dApp browser, and checks transfers before signing. Anchors work on networks where PIP-50 is active.
