@@ -596,4 +596,12 @@
     <string name="bond_expiry">Delegasi berakhir</string>
     <string name="bond_expiry_value">blok %1$s, sekitar %2$s</string>
     <string name="bond_lock_hint">Anda tidak bisa unbond sebelum blok itu. Setelahnya validator tetap berjalan sampai Anda unbond.</string>
+    <!-- PIP-57 anchor total to lock -->
+    <string name="anchor_target_label">Total yang dikunci (PAC)</string>
+    <string name="anchor_locked_now">Terkunci sekarang</string>
+    <string name="anchor_adds">Transaksi ini menambah</string>
+    <string name="anchor_target_hint">Total yang harus dipegang anchor, minimal 1 PAC. Hanya kekurangannya yang ditambahkan; total yang lebih kecil tidak pernah melepas PAC (hanya Delete).</string>
+    <string name="anchor_replace_other_type">Akun ini memegang anchor %1$s. Satu akun hanya punya satu anchor, jadi publish akan menghapusnya dari chain.</string>
+    <string name="anchor_error_target">Isi total yang dikunci dalam PAC, misalnya 1.</string>
+    <string name="anchor_error_delete_fee">Deposit yang terkunci tidak menutupi biaya, jadi anchor ini tidak bisa dihapus.</string>
 </resources>

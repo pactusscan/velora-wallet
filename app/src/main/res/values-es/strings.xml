@@ -606,4 +606,12 @@
     <string name="bond_expiry">Fin de la delegación</string>
     <string name="bond_expiry_value">bloque %1$s, hacia el %2$s</string>
     <string name="bond_lock_hint">No puedes hacer unbond antes de ese bloque. Después, el validador sigue funcionando hasta que hagas unbond.</string>
+    <!-- PIP-57 anchor total to lock -->
+    <string name="anchor_target_label">Total a bloquear (PAC)</string>
+    <string name="anchor_locked_now">Bloqueado ahora</string>
+    <string name="anchor_adds">Esta transacción añade</string>
+    <string name="anchor_target_hint">El total que debe tener el anchor, al menos 1 PAC. Solo se añade lo que falta; un total menor nunca libera PAC (solo Delete lo hace).</string>
+    <string name="anchor_replace_other_type">Esta cuenta tiene un anchor %1$s. Una cuenta solo tiene un anchor, así que publicar lo elimina de la cadena.</string>
+    <string name="anchor_error_target">Introduce el total a bloquear en PAC, por ejemplo 1.</string>
+    <string name="anchor_error_delete_fee">El depósito bloqueado no cubre la comisión, así que este anchor no se puede eliminar.</string>
 </resources>

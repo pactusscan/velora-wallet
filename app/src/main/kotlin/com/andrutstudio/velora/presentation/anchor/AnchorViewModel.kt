@@ -51,6 +51,8 @@ class AnchorViewModel @Inject constructor(
         val manifestUri: String = "",
         val anchorType: Int = 0,
         val memo: String = "",
+        // PIP-57: the total the anchor should hold, in PAC
+        val targetText: String = "1",
         val rootError: UiText? = null,
         val uriError: UiText? = null,
         val memoError: UiText? = null,
@@ -64,7 +66,12 @@ class AnchorViewModel @Inject constructor(
         val isSending: Boolean = false,
         val isBiometricEnabled: Boolean = false,
     ) {
-        val deposit: Amount get() = AnchorRules.deposit(null, anchor != null)
+        val lockedNow: Amount get() = anchor?.lockedDeposit ?: Amount.ZERO
+
+        /** What this transaction adds to reach the target, or null for an invalid target. */
+        val deposit: Amount?
+            get() = AnchorRules.parsePac(targetText)
+                ?.let { Amount.fromNanoPac(AnchorRules.depositToAdd(it, lockedNow.nanoPac)) }
     }
 
     sealed interface Effect {
@@ -112,7 +119,7 @@ class AnchorViewModel @Inject constructor(
     fun onStartPublish() {
         _state.update {
             it.copy(
-                mode = Mode.PUBLISH, rootHash = "", manifestUri = "", anchorType = 0, memo = "",
+                mode = Mode.PUBLISH, rootHash = "", manifestUri = "", anchorType = 0, memo = "", targetText = "1",
                 rootError = null, uriError = null, memoError = null, formError = null,
             )
         }
@@ -134,6 +141,10 @@ class AnchorViewModel @Inject constructor(
         _state.update { it.copy(memo = value, memoError = null, formError = null) }
     }
 
+    fun onTargetChange(value: String) {
+        _state.update { it.copy(targetText = value, formError = null) }
+    }
+
     fun onAnchorTypeChange(value: Int) {
         _state.update { it.copy(anchorType = value) }
     }
@@ -151,6 +162,10 @@ class AnchorViewModel @Inject constructor(
             )
         }
         if (root == null || !AnchorRules.isValidUri(uri) || !AnchorRules.isValidMemo(memo)) return
+        val deposit = current.deposit ?: run {
+            _state.update { it.copy(formError = UiText.Res(R.string.anchor_error_target)) }
+            return
+        }
         prepare(
             AnchorRequest(
                 sender = address,
@@ -158,7 +173,7 @@ class AnchorViewModel @Inject constructor(
                 rootHash = root,
                 manifestUri = uri,
                 anchorType = current.anchorType,
-                deposit = current.deposit,
+                deposit = deposit,
                 memo = memo,
             ),
         )
@@ -171,6 +186,14 @@ class AnchorViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val fee = sendAnchor.estimateFee(request.deposit)
+                if (request.isDelete) {
+                    // The fee comes out of the refund, so the locked deposit must cover it
+                    val locked = blockchainRepository.getAnchor(address)?.lockedDeposit?.nanoPac ?: 0L
+                    if (!AnchorRules.canDelete(locked, fee.nanoPac)) {
+                        _state.update { it.copy(isPreparing = false, formError = UiText.Res(R.string.anchor_error_delete_fee)) }
+                        return@launch
+                    }
+                }
                 val balance = blockchainRepository.getBalance(address)
                 if (request.deposit.nanoPac + fee.nanoPac > balance.nanoPac) {
                     _state.update {

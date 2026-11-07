@@ -57,4 +57,31 @@ class AnchorRulesTest {
         assertEquals(0, AnchorRules.deposit(null, hasAnchor = true).nanoPac)
         assertEquals(5, AnchorRules.deposit(Amount.fromNanoPac(5), hasAnchor = true).nanoPac)
     }
+
+    @Test
+    fun `PIP-57 deposit adds only what is missing to reach the total`() {
+        val pac = 1_000_000_000L
+        assertEquals(pac, AnchorRules.depositToAdd(pac, 0))
+        assertEquals(pac, AnchorRules.depositToAdd(0, 0)) // at least 1 PAC
+        assertEquals(0, AnchorRules.depositToAdd(pac, pac))
+        assertEquals(4 * pac, AnchorRules.depositToAdd(5 * pac, pac))
+        assertEquals(0, AnchorRules.depositToAdd(pac, 3 * pac)) // never releases
+    }
+
+    @Test
+    fun `delete needs a locked deposit that covers the fee`() {
+        assertEquals(true, AnchorRules.canDelete(1_000_000_000, 10_000_000))
+        assertEquals(false, AnchorRules.canDelete(5_000_000, 10_000_000))
+        assertEquals(false, AnchorRules.canDelete(0, 0))
+    }
+
+    @Test
+    fun `PAC text parses to nano PAC`() {
+        assertEquals(1_000_000_000L, AnchorRules.parsePac("1"))
+        assertEquals(2_500_000_000L, AnchorRules.parsePac("2,5"))
+        assertEquals(1L, AnchorRules.parsePac("0.000000001"))
+        assertEquals(null, AnchorRules.parsePac("-1"))
+        assertEquals(null, AnchorRules.parsePac("1.0000000001"))
+        assertEquals(null, AnchorRules.parsePac(""))
+    }
 }

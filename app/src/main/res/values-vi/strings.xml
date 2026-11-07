@@ -604,4 +604,12 @@
     <string name="bond_expiry">Ủy quyền kết thúc</string>
     <string name="bond_expiry_value">khối %1$s, khoảng %2$s</string>
     <string name="bond_lock_hint">Bạn không thể unbond trước khối đó. Sau đó validator vẫn chạy cho đến khi bạn unbond.</string>
+    <!-- PIP-57 anchor total to lock -->
+    <string name="anchor_target_label">Tổng cần khóa (PAC)</string>
+    <string name="anchor_locked_now">Đang khóa</string>
+    <string name="anchor_adds">Giao dịch này thêm</string>
+    <string name="anchor_target_hint">Tổng anchor cần giữ, tối thiểu 1 PAC. Chỉ phần còn thiếu được thêm vào; tổng thấp hơn không bao giờ giải phóng PAC (chỉ Delete mới làm).</string>
+    <string name="anchor_replace_other_type">Tài khoản này đang giữ một anchor %1$s. Mỗi tài khoản chỉ có một anchor, nên publish sẽ xóa nó khỏi chain.</string>
+    <string name="anchor_error_target">Nhập tổng cần khóa bằng PAC, ví dụ 1.</string>
+    <string name="anchor_error_delete_fee">Khoản đặt cọc đang khóa không đủ trả phí, nên không thể xóa anchor này.</string>
 </resources>

@@ -88,4 +88,22 @@ object AnchorRules {
      */
     fun deposit(requested: Amount?, hasAnchor: Boolean): Amount =
         requested ?: if (hasAnchor) Amount.ZERO else Amount.fromNanoPac(MIN_DEPOSIT_NANO_PAC)
+
+    /**
+     * PIP-57: the wallet's deposit field is the total the anchor should hold, at
+     * least 1 PAC. The transaction adds only what is missing; a lower total never
+     * releases PAC (only Delete does). Mirrors depositToAdd in the extension.
+     */
+    fun depositToAdd(targetLocked: Long, currentLocked: Long): Long =
+        (maxOf(targetLocked, MIN_DEPOSIT_NANO_PAC) - currentLocked).coerceAtLeast(0)
+
+    /** A delete pays its fee from the refund, so the locked deposit must cover it. */
+    fun canDelete(currentLocked: Long, fee: Long): Boolean = currentLocked > 0 && currentLocked >= fee
+
+    /** "1", "2.5" or "0.000000001" PAC to nano PAC; null for anything else. */
+    fun parsePac(text: String): Long? {
+        val t = text.trim().replace(',', '.')
+        if (!Regex("^(0|[1-9][0-9]{0,7})(\\.[0-9]{1,9})?$").matches(t)) return null
+        return java.math.BigDecimal(t).movePointRight(9).longValueExact()
+    }
 }

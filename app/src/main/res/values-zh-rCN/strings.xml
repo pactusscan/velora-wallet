@@ -605,4 +605,12 @@
     <string name="bond_expiry">委托结束</string>
     <string name="bond_expiry_value">区块 %1$s，约 %2$s</string>
     <string name="bond_lock_hint">在该区块之前无法解除质押。之后验证者会继续运行，直到您解除质押。</string>
+    <!-- PIP-57 anchor total to lock -->
+    <string name="anchor_target_label">锁定总额 (PAC)</string>
+    <string name="anchor_locked_now">当前锁定</string>
+    <string name="anchor_adds">本交易增加</string>
+    <string name="anchor_target_hint">anchor 应持有的总额，至少 1 PAC。只补足差额；更低的总额不会释放 PAC（只有 Delete 会）。</string>
+    <string name="anchor_replace_other_type">该账户持有一个 %1$s anchor。每个账户只有一个 anchor，发布会将其从链上移除。</string>
+    <string name="anchor_error_target">请输入以 PAC 计的锁定总额，例如 1。</string>
+    <string name="anchor_error_delete_fee">锁定的押金不足以支付手续费，因此无法删除此 anchor。</string>
 </resources>

@@ -130,6 +130,7 @@ fun AnchorScreen(
         onManifestUriChange = viewModel::onManifestUriChange,
         onAnchorTypeChange = viewModel::onAnchorTypeChange,
         onMemoChange = viewModel::onMemoChange,
+        onTargetChange = viewModel::onTargetChange,
         onReviewPublish = viewModel::onReviewPublish,
         onReviewDelete = viewModel::onReviewDelete,
     )
@@ -158,6 +159,7 @@ private fun AnchorScreenContent(
     onManifestUriChange: (String) -> Unit,
     onAnchorTypeChange: (Int) -> Unit,
     onMemoChange: (String) -> Unit,
+    onTargetChange: (String) -> Unit = {},
     onReviewPublish: () -> Unit,
     onReviewDelete: () -> Unit,
 ) {
@@ -204,6 +206,7 @@ private fun AnchorScreenContent(
                     onManifestUriChange = onManifestUriChange,
                     onAnchorTypeChange = onAnchorTypeChange,
                     onMemoChange = onMemoChange,
+                    onTargetChange = onTargetChange,
                     onReview = onReviewPublish,
                 )
                 state.isLoading -> Column(
@@ -343,6 +346,7 @@ private fun PublishForm(
     onManifestUriChange: (String) -> Unit,
     onAnchorTypeChange: (Int) -> Unit,
     onMemoChange: (String) -> Unit,
+    onTargetChange: (String) -> Unit,
     onReview: () -> Unit,
 ) {
     val clipboard = LocalClipboardManager.current
@@ -405,13 +409,51 @@ private fun PublishForm(
         supportingText = state.memoError?.let { { Text(it.asString()) } },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
     )
+    OutlinedTextField(
+        value = state.targetText,
+        onValueChange = onTargetChange,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(stringResource(R.string.anchor_target_label)) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+    )
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(
-            text = stringResource(R.string.anchor_deposit),
-            style = MaterialTheme.typography.bodyMedium,
+            text = stringResource(R.string.anchor_locked_now),
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Text(text = formatPac(state.deposit), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+        Text(text = formatPac(state.lockedNow), style = MaterialTheme.typography.bodySmall)
+    }
+    // Anything above the 1 PAC minimum is highlighted, as in the extension
+    val deposit = state.deposit
+    val aboveMinimum = deposit != null && deposit.nanoPac > AnchorRules.MIN_DEPOSIT_NANO_PAC
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(
+            text = stringResource(R.string.anchor_adds),
+            style = MaterialTheme.typography.bodyMedium,
+            color = if (aboveMinimum) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = if (aboveMinimum) FontWeight.Bold else FontWeight.Normal,
+        )
+        Text(
+            text = deposit?.let(::formatPac) ?: "-",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            color = if (aboveMinimum) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurface,
+        )
+    }
+    Text(
+        text = stringResource(R.string.anchor_target_hint),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    state.anchor?.takeIf { it.anchorType != state.anchorType }?.let { current ->
+        Text(
+            text = stringResource(R.string.anchor_replace_other_type, anchorTypeName(current.anchorType)),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.error,
+        )
     }
     if (state.anchor != null) {
         Text(
@@ -424,7 +466,7 @@ private fun PublishForm(
     Button(
         onClick = onReview,
         modifier = Modifier.fillMaxWidth(),
-        enabled = state.rootHash.isNotBlank() && !state.isPreparing,
+        enabled = state.rootHash.isNotBlank() && state.deposit != null && !state.isPreparing,
     ) {
         if (state.isPreparing) {
             CircularProgressIndicator(

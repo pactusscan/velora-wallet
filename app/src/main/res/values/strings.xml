@@ -608,4 +608,12 @@
     <string name="bond_expiry">Delegation ends</string>
     <string name="bond_expiry_value">block %1$s, around %2$s</string>
     <string name="bond_lock_hint">You cannot unbond before that block. After it the validator keeps running until you unbond.</string>
+    <!-- PIP-57 anchor total to lock -->
+    <string name="anchor_target_label">Total to lock (PAC)</string>
+    <string name="anchor_locked_now">Locked now</string>
+    <string name="anchor_adds">This transaction adds</string>
+    <string name="anchor_target_hint">The total the anchor should hold, at least 1 PAC. Only what is missing is added; a lower total never releases PAC (only Delete does).</string>
+    <string name="anchor_replace_other_type">This account holds a %1$s anchor. An account has one anchor, so publishing removes it from the chain.</string>
+    <string name="anchor_error_target">Enter the total to lock in PAC, for example 1.</string>
+    <string name="anchor_error_delete_fee">The locked deposit does not cover the fee, so this anchor cannot be deleted.</string>
 </resources>

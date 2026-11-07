@@ -606,4 +606,12 @@
     <string name="bond_expiry">Fin de la délégation</string>
     <string name="bond_expiry_value">bloc %1$s, vers le %2$s</string>
     <string name="bond_lock_hint">Vous ne pouvez pas faire l\'unbond avant ce bloc. Ensuite, le validateur continue jusqu\'à votre unbond.</string>
+    <!-- PIP-57 anchor total to lock -->
+    <string name="anchor_target_label">Total à verrouiller (PAC)</string>
+    <string name="anchor_locked_now">Verrouillé actuellement</string>
+    <string name="anchor_adds">Cette transaction ajoute</string>
+    <string name="anchor_target_hint">Le total que l\'anchor doit détenir, au moins 1 PAC. Seul le manque est ajouté ; un total plus bas ne libère jamais de PAC (seul Delete le fait).</string>
+    <string name="anchor_replace_other_type">Ce compte détient un anchor %1$s. Un compte n\'a qu\'un anchor, donc publier le retire de la chaîne.</string>
+    <string name="anchor_error_target">Saisissez le total à verrouiller en PAC, par exemple 1.</string>
+    <string name="anchor_error_delete_fee">Le dépôt verrouillé ne couvre pas les frais, cet anchor ne peut donc pas être supprimé.</string>
 </resources>

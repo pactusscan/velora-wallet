@@ -606,4 +606,12 @@
     <string name="bond_expiry">Delegation endet</string>
     <string name="bond_expiry_value">Block %1$s, etwa am %2$s</string>
     <string name="bond_lock_hint">Vor diesem Block kannst du nicht unbonden. Danach läuft der Validator weiter, bis du unbondest.</string>
+    <!-- PIP-57 anchor total to lock -->
+    <string name="anchor_target_label">Zu sperrender Gesamtbetrag (PAC)</string>
+    <string name="anchor_locked_now">Aktuell gesperrt</string>
+    <string name="anchor_adds">Diese Transaktion fügt hinzu</string>
+    <string name="anchor_target_hint">Der Gesamtbetrag, den der Anchor halten soll, mindestens 1 PAC. Nur der fehlende Teil wird hinzugefügt; ein niedrigerer Betrag gibt nie PAC frei (nur Delete).</string>
+    <string name="anchor_replace_other_type">Dieses Konto hat einen %1$s-Anchor. Ein Konto hat nur einen Anchor, daher entfernt das Veröffentlichen ihn aus der Chain.</string>
+    <string name="anchor_error_target">Gib den zu sperrenden Gesamtbetrag in PAC ein, zum Beispiel 1.</string>
+    <string name="anchor_error_delete_fee">Die gesperrte Einlage deckt die Gebühr nicht, daher kann dieser Anchor nicht gelöscht werden.</string>
 </resources>

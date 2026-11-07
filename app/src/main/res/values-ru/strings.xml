@@ -608,4 +608,12 @@
     <string name="bond_expiry">Окончание делегирования</string>
     <string name="bond_expiry_value">блок %1$s, примерно %2$s</string>
     <string name="bond_lock_hint">До этого блока сделать unbond нельзя. После него валидатор продолжает работать, пока вы не сделаете unbond.</string>
+    <!-- PIP-57 anchor total to lock -->
+    <string name="anchor_target_label">Сумма к блокировке (PAC)</string>
+    <string name="anchor_locked_now">Заблокировано сейчас</string>
+    <string name="anchor_adds">Эта транзакция добавляет</string>
+    <string name="anchor_target_hint">Сумма, которую должен держать anchor, не менее 1 PAC. Добавляется только недостающее; меньшая сумма никогда не освобождает PAC (только Delete).</string>
+    <string name="anchor_replace_other_type">На этом аккаунте есть anchor типа %1$s. У аккаунта может быть только один anchor, поэтому публикация удалит его из сети.</string>
+    <string name="anchor_error_target">Введите сумму к блокировке в PAC, например 1.</string>
+    <string name="anchor_error_delete_fee">Заблокированный депозит не покрывает комиссию, поэтому этот anchor нельзя удалить.</string>
 </resources>
