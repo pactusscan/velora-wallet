@@ -432,14 +432,14 @@ private fun PublishForm(
         Text(
             text = stringResource(R.string.anchor_adds),
             style = MaterialTheme.typography.bodyMedium,
-            color = if (aboveMinimum) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant,
+            color = if (aboveMinimum) com.andrutstudio.velora.presentation.theme.BrandPurple else MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = if (aboveMinimum) FontWeight.Bold else FontWeight.Normal,
         )
         Text(
             text = deposit?.let(::formatPac) ?: "-",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            color = if (aboveMinimum) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurface,
+            color = if (aboveMinimum) com.andrutstudio.velora.presentation.theme.BrandPurple else MaterialTheme.colorScheme.onSurface,
         )
     }
     Text(

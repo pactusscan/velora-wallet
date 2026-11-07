@@ -1105,7 +1105,7 @@ private fun BondRequestSheet(
             Text(
                 stringResource(R.string.bond_lock_hint),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.tertiary,
+                color = com.andrutstudio.velora.presentation.theme.BrandPurple,
             )
             HorizontalDivider()
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
