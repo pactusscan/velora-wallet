@@ -31,6 +31,9 @@ import com.andrutstudio.velora.domain.model.AnchorRequest
 import com.andrutstudio.velora.domain.model.AnchorRules
 import com.andrutstudio.velora.domain.repository.BlockchainRepository
 import com.andrutstudio.velora.domain.usecase.SendAnchorUseCase
+import com.andrutstudio.velora.domain.usecase.SendBondUseCase
+import com.andrutstudio.velora.domain.model.DappBond
+import com.andrutstudio.velora.domain.model.DelegationRules
 import com.andrutstudio.velora.domain.usecase.SignerPick
 import javax.inject.Inject
 
@@ -39,6 +42,7 @@ class BrowserViewModel @Inject constructor(
     private val walletRepository: WalletRepository,
     private val sendTransaction: SendTransactionUseCase,
     private val sendAnchor: SendAnchorUseCase,
+    private val sendBond: SendBondUseCase,
     private val blockchainRepository: BlockchainRepository,
     private val browserDao: BrowserDao,
     savedStateHandle: SavedStateHandle,
@@ -62,6 +66,7 @@ class BrowserViewModel @Inject constructor(
         val pendingSignRequest: PendingSignRequest? = null,
         val pendingSignMessageRequest: PendingSignMessageRequest? = null,
         val pendingAnchorRequest: PendingAnchorRequest? = null,
+        val pendingBondRequest: PendingBondRequest? = null,
         val isSigning: Boolean = false,
         // Signing needs the unlocked wallet. When it is still locked, confirming a
         // sign sheet opens the unlock dialog and resumes the signing afterwards.
@@ -126,6 +131,20 @@ class BrowserViewModel @Inject constructor(
         val deposit: Amount
             get() = if (request.isDelete) Amount.ZERO else AnchorRules.deposit(requestedDeposit, hasAnchor)
     }
+
+    // PIP-49 delegated bond from window.pactus.bond. publicKey is what gets sent
+    // (empty for a validator the node knows), height the block when it was checked.
+    data class PendingBondRequest(
+        val requestId: String,
+        val host: String,
+        val needsConnect: Boolean,
+        val fromAddress: String,
+        val bond: DappBond,
+        val publicKey: String,
+        val height: Long,
+        val fee: Amount?,
+        val signerOptions: List<Account> = emptyList(),
+    )
 
     sealed interface Effect {
         data class LoadUrl(val url: String) : Effect
@@ -473,6 +492,100 @@ class BrowserViewModel @Inject constructor(
         }
     }
 
+    fun onBondRequest(
+        requestId: String,
+        validator: String,
+        publicKey: String,
+        delegateShareNanoPac: String,
+        delegateExpiry: String,
+        feeNanoPac: String,
+        memo: String,
+    ) {
+        val candidates = SignerPick.candidates(_state.value.accounts)
+        if (candidates.isEmpty()) {
+            viewModelScope.launch { _effect.send(Effect.RejectSign(requestId, "No account available")) }
+            return
+        }
+        val host = currentHost()
+        viewModelScope.launch {
+            // Invalid parameters or a bond the node would refuse fail before the
+            // sheet opens, with the generic error, as in the extension
+            val checked = runCatching {
+                val bond = DelegationRules.parseDappBond(
+                    validator, publicKey, delegateShareNanoPac, delegateExpiry, memo, _state.value.network,
+                )
+                bond to sendBond.check(bond)
+            }.getOrElse {
+                _effect.send(Effect.RejectSign(requestId, "Transaction failed"))
+                return@launch
+            }
+            if (hasPendingSignRequest()) {
+                _effect.send(Effect.RejectSign(requestId, ERR_REQUEST_PENDING))
+                return@launch
+            }
+            val requestedFee = feeNanoPac.toLongOrNull()?.takeIf { it > 0 }?.let { Amount.fromNanoPac(it) }
+            val fee = requestedFee ?: runCatching { sendBond.estimateFee() }.getOrElse {
+                _effect.send(Effect.RejectSign(requestId, "Transaction failed"))
+                return@launch
+            }
+            val connected = host.isNotBlank() && browserDao.isSiteConnected(host)
+            _state.update {
+                it.copy(
+                    pendingBondRequest = PendingBondRequest(
+                        requestId = requestId,
+                        host = host,
+                        needsConnect = !connected,
+                        fromAddress = candidates.first().address,
+                        bond = checked.first,
+                        publicKey = checked.second.publicKey,
+                        height = checked.second.height,
+                        fee = fee,
+                        signerOptions = candidates,
+                    ),
+                )
+            }
+        }
+    }
+
+    fun onSelectBondSigner(address: String) {
+        _state.update { state ->
+            val req = state.pendingBondRequest
+            if (req == null || req.signerOptions.none { it.address == address }) state
+            else state.copy(pendingBondRequest = req.copy(fromAddress = address))
+        }
+    }
+
+    fun onConfirmBond() {
+        val req = _state.value.pendingBondRequest ?: return
+        val fee = req.fee ?: return
+        if (!walletRepository.isUnlocked()) {
+            requestUnlock(req)
+            return
+        }
+        _state.update { it.copy(isSigning = true) }
+        viewModelScope.launch {
+            if (req.needsConnect && req.host.isNotBlank()) {
+                browserDao.insertConnectedSite(ConnectedSiteEntity(host = req.host))
+            }
+            // The chosen account pays the 1,000 PAC and becomes the Stake Owner
+            val owner = _state.value.accounts.firstOrNull { it.address == req.fromAddress } ?: run {
+                _state.update { it.copy(isSigning = false, pendingBondRequest = null) }
+                _effect.send(Effect.RejectSign(req.requestId, "No account available"))
+                return@launch
+            }
+            runCatching {
+                sendBond(req.bond, req.publicKey, owner.address, fee)
+            }.onSuccess { txId ->
+                _state.update { it.copy(isSigning = false, pendingBondRequest = null) }
+                _effect.send(Effect.ResolveSign(req.requestId, txId))
+            }.onFailure { e ->
+                _state.update { it.copy(isSigning = false, pendingBondRequest = null) }
+                _effect.send(Effect.RejectSign(req.requestId, e.message ?: "Transaction failed"))
+                _effect.send(Effect.ShowSnackbar(e.toUiText(R.string.error_transaction_failed)))
+            }
+        }
+    }
+
     // A fee named by the dApp is shown on the sheet, so the user approves it.
     private suspend fun settleFee(req: PendingAnchorRequest): Amount =
         req.requestedFee.takeIf { it.nanoPac > 0 } ?: sendAnchor.estimateFee(req.deposit)
@@ -617,6 +730,7 @@ class BrowserViewModel @Inject constructor(
         val req = _state.value.pendingSignRequest
         val msgReq = _state.value.pendingSignMessageRequest
         val anchorReq = _state.value.pendingAnchorRequest
+        val bondReq = _state.value.pendingBondRequest
         approvedBeforeUnlock = null
         
         _state.update {
@@ -624,12 +738,13 @@ class BrowserViewModel @Inject constructor(
                 pendingSignRequest = null,
                 pendingSignMessageRequest = null,
                 pendingAnchorRequest = null,
+                pendingBondRequest = null,
                 showUnlockDialog = false,
                 unlockError = null,
             )
         }
         
-        val id = req?.requestId ?: msgReq?.requestId ?: anchorReq?.requestId ?: return
+        val id = req?.requestId ?: msgReq?.requestId ?: anchorReq?.requestId ?: bondReq?.requestId ?: return
         viewModelScope.launch { _effect.send(Effect.RejectSign(id, "User rejected")) }
     }
 
@@ -638,7 +753,8 @@ class BrowserViewModel @Inject constructor(
     private fun hasPendingSignRequest(): Boolean =
         _state.value.pendingSignRequest != null ||
             _state.value.pendingSignMessageRequest != null ||
-            _state.value.pendingAnchorRequest != null
+            _state.value.pendingAnchorRequest != null ||
+            _state.value.pendingBondRequest != null
 
     private fun requestUnlock(approved: Any) {
         approvedBeforeUnlock = approved
@@ -679,6 +795,7 @@ class BrowserViewModel @Inject constructor(
                     approved == current.pendingSignRequest -> onConfirmSign()
                     approved == current.pendingSignMessageRequest -> onConfirmSignMessage()
                     approved == current.pendingAnchorRequest -> onConfirmSignAnchor()
+                    approved == current.pendingBondRequest -> onConfirmBond()
                 }
             } catch (e: CancellationException) {
                 throw e

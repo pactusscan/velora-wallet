@@ -90,6 +90,7 @@ import com.andrutstudio.velora.presentation.home.BiometricEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import com.andrutstudio.velora.domain.model.AccountType
 import com.andrutstudio.velora.domain.model.Amount
+import com.andrutstudio.velora.domain.model.DelegationRules
 import com.andrutstudio.velora.presentation.components.MainBottomNavigation
 import com.andrutstudio.velora.presentation.navigation.Screen
 import com.andrutstudio.velora.presentation.theme.BrandPurple
@@ -178,6 +179,7 @@ fun BrowserScreen(
             viewModel.onSignMessageRequest(id, message, address)
         },
         onSignAnchorRequest = viewModel::onSignAnchorRequest,
+        onBondRequest = viewModel::onBondRequest,
     )
 }
 
@@ -319,6 +321,16 @@ fun BrowserScreen(
             isSigning = state.isSigning,
             onSelectSigner = viewModel::onSelectAnchorSigner,
             onConfirm = viewModel::onConfirmSignAnchor,
+            onCancel = viewModel::onCancelSign,
+        )
+    }
+
+    if (state.pendingBondRequest != null) {
+        BondRequestSheet(
+            request = state.pendingBondRequest!!,
+            isSigning = state.isSigning,
+            onSelectSigner = viewModel::onSelectBondSigner,
+            onConfirm = viewModel::onConfirmBond,
             onCancel = viewModel::onCancelSign,
         )
     }
@@ -1025,6 +1037,91 @@ private fun SignAnchorSheetContent(
                     )
                 } else {
                     Text(stringResource(R.string.action_confirm))
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BondRequestSheet(
+    request: BrowserViewModel.PendingBondRequest,
+    isSigning: Boolean,
+    onSelectSigner: (String) -> Unit,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit,
+) {
+    ModalBottomSheet(onDismissRequest = onCancel, sheetState = rememberModalBottomSheetState()) {
+        val bond = request.bond
+        val ownerPercent = DelegationRules.shareToPercent(bond.shareNanoPac)
+        val fmt = { p: Double -> "${"%.2f".format(p).trimEnd('0').trimEnd('.', ',')}%" }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Text(stringResource(R.string.bond_title), style = MaterialTheme.typography.titleLarge)
+            if (request.needsConnect) {
+                Text(
+                    stringResource(R.string.browser_not_connected_note),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            SignRow(stringResource(R.string.browser_site), request.host)
+            if (request.signerOptions.size > 1) {
+                SignerPicker(request.signerOptions, request.fromAddress, !isSigning, onSelectSigner)
+            } else {
+                SignRow(stringResource(R.string.browser_sign_from), request.fromAddress)
+            }
+            Text(
+                stringResource(R.string.bond_owner_hint),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            SignRow(stringResource(R.string.bond_validator), bond.validator)
+            if (request.publicKey.isNotEmpty()) SignRow(stringResource(R.string.bond_public_key), request.publicKey)
+            SignRow(stringResource(R.string.bond_stake), formatPac(Amount.fromNanoPac(DelegationRules.MAX_STAKE_NANO_PAC)))
+            SignRow(stringResource(R.string.bond_share), fmt(ownerPercent))
+            Text(
+                stringResource(R.string.bond_split, fmt(DelegationRules.MAX_SHARE_PERCENT - ownerPercent)),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            SignRow(
+                stringResource(R.string.bond_expiry),
+                stringResource(
+                    R.string.bond_expiry_value,
+                    "%,d".format(bond.expiry),
+                    com.andrutstudio.velora.presentation.stake.approxDate(bond.expiry, request.height),
+                ),
+            )
+            SignRow(stringResource(R.string.stake_fee_label), request.fee?.let(::formatPac).orEmpty())
+            if (bond.memo.isNotEmpty()) SignRow(stringResource(R.string.browser_sign_memo), bond.memo)
+            Text(
+                stringResource(R.string.bond_lock_hint),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.tertiary,
+            )
+            HorizontalDivider()
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                OutlinedButton(onClick = onCancel, modifier = Modifier.weight(1f), enabled = !isSigning) {
+                    Text(stringResource(R.string.action_reject))
+                }
+                Button(onClick = onConfirm, modifier = Modifier.weight(1f), enabled = !isSigning && request.fee != null) {
+                    if (isSigning) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp),
+                            strokeWidth = 2.dp,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                        )
+                    } else {
+                        Text(stringResource(R.string.action_confirm))
+                    }
                 }
             }
         }

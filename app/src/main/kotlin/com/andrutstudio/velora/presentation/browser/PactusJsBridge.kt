@@ -19,6 +19,15 @@ class PactusJsBridge(
         memo: String,
         address: String,
     ) -> Unit,
+    private val onBondRequest: (
+        requestId: String,
+        validator: String,
+        publicKey: String,
+        delegateShareNanoPac: String,
+        delegateExpiry: String,
+        feeNanoPac: String,
+        memo: String,
+    ) -> Unit = { _, _, _, _, _, _, _ -> },
 ) {
     @JavascriptInterface
     fun getAccounts(): String = onGetAccounts()
@@ -59,6 +68,20 @@ class PactusJsBridge(
         onSignAnchorRequest(requestId, action, rootHash, manifestUri, anchorType, depositNanoPac, feeNanoPac, memo, address)
     }
 
+    // PIP-49 delegated bond: the signing account stays the Stake Owner
+    @JavascriptInterface
+    fun requestBond(
+        requestId: String,
+        validator: String,
+        publicKey: String,
+        delegateShareNanoPac: String,
+        delegateExpiry: String,
+        feeNanoPac: String,
+        memo: String,
+    ) {
+        onBondRequest(requestId, validator, publicKey, delegateShareNanoPac, delegateExpiry, feeNanoPac, memo)
+    }
+
     companion object {
         /**
          * Official Velora logo shown in dApp wallet pickers. Minified from
@@ -72,7 +95,7 @@ class PactusJsBridge(
          * Injected into every page, ideally at document-start so dApps that
          * check for the provider during startup (e.g. play.pactusscan) find it.
          * Creates window.pactus (same shape as the Velora browser extension:
-         * getAccounts / getNetwork / connect / signTransaction / signMessage / signAnchor,
+         * getAccounts / getNetwork / connect / signTransaction / signMessage / signAnchor / bond,
          * where signMessage(message, { address }) may name the signing account
          * and declares two parameters so dApps can detect that support),
          * fires `pactus#initialized`, and speaks the multi-wallet announce
@@ -133,6 +156,22 @@ class PactusJsBridge(
                       String(p.feeNanoPac||0),
                       String(p.memo||''),
                       String(p.address||'')
+                    );
+                  });
+                },
+                bond:function(p){
+                  p=p||{};
+                  return new Promise(function(res,rej){
+                    var id='b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+                    _cb[id]={resolve:res,reject:rej};
+                    PactusAndroid.requestBond(
+                      id,
+                      String(p.validator||''),
+                      String(p.publicKey||''),
+                      String(p.delegateShareNanoPac==null?'':p.delegateShareNanoPac),
+                      String(p.delegateExpiry==null?'':p.delegateExpiry),
+                      String(p.feeNanoPac||0),
+                      String(p.memo||'')
                     );
                   });
                 },
