@@ -145,9 +145,11 @@ class RpcCaller @Inject constructor(
         validator: String,
         memo: String?,
     ): RawTransferRpcData {
+        // The node's field is validator_address (GetRawUnbondTransactionRequest);
+        // it refuses "validator" as an unknown field
         val params = mutableMapOf<String, Any>(
             "lock_time" to lockTime,
-            "validator" to validator
+            "validator_address" to validator
         )
         if (!memo.isNullOrBlank()) params["memo"] = memo
 

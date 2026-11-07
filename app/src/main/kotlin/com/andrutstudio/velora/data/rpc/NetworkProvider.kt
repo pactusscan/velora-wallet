@@ -37,6 +37,13 @@ class NetworkProvider @Inject constructor(
             "https://testnet3.pactus.org/jsonrpc",
             "https://testnet4.pactus.org/jsonrpc",
         )
+
+        // PactusScan API and live feed per network (testnet: api-testnet, the
+        // old api.phoenix host does not resolve)
+        fun scanApiHost(network: Network): String =
+            if (network == Network.MAINNET) "api.pactusscan.com" else "api-testnet.pactusscan.com"
+
+        fun scanWsUrl(network: Network): String = "wss://${scanApiHost(network)}/ws"
     }
 
     val networkFlow: Flow<Network> = dataStore.data.map { prefs ->
