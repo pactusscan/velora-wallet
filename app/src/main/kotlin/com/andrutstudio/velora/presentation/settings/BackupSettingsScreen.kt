@@ -132,6 +132,8 @@ private fun BackupSettingsContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .consumeWindowInsets(padding)
+                .imePadding()
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
                 .padding(16.dp),

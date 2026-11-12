@@ -53,6 +53,8 @@ fun CreateWalletScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .consumeWindowInsets(padding)
+                .imePadding()
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -92,7 +94,8 @@ fun CreateWalletScreen(
                     .focusRequester(focusRequester),
             )
 
-            Spacer(Modifier.weight(1f))
+            // Keeps a gap above the button when the keyboard pushes it up
+            Spacer(Modifier.weight(1f).heightIn(min = 24.dp))
 
             Button(
                 onClick = onContinue,

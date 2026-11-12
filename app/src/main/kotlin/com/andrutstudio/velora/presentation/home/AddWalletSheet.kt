@@ -1,5 +1,7 @@
 package com.andrutstudio.velora.presentation.home
 
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -22,7 +24,7 @@ fun AddWalletSheet(
     onDismiss: () -> Unit,
     onCreate: (name: String, password: String) -> Unit,
 ) {
-    ModalBottomSheet(onDismissRequest = onDismiss) {
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
         AddWalletSheetContent(
             isCreating = isCreating,
             error = error,
@@ -47,6 +49,7 @@ fun AddWalletSheetContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp)
             .padding(bottom = 32.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),

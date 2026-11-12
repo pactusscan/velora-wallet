@@ -703,7 +703,7 @@ private fun ConnectRequestSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onCancel,
-        sheetState = rememberModalBottomSheetState(),
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     ) {
         Column(
             modifier = Modifier
@@ -753,7 +753,7 @@ private fun SignRequestSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onCancel,
-        sheetState = rememberModalBottomSheetState(),
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     ) {
         SignRequestSheetContent(request, isSigning, onConfirm, onCancel)
     }
@@ -834,7 +834,7 @@ private fun SignMessageRequestSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onCancel,
-        sheetState = rememberModalBottomSheetState(),
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     ) {
         SignMessageSheetContent(request, isSigning, onSelectSigner, onConfirm, onCancel)
     }
@@ -942,7 +942,7 @@ private fun SignAnchorRequestSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onCancel,
-        sheetState = rememberModalBottomSheetState(),
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     ) {
         SignAnchorSheetContent(request, isSigning, onSelectSigner, onConfirm, onCancel)
     }
@@ -1052,7 +1052,7 @@ private fun BondRequestSheet(
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
 ) {
-    ModalBottomSheet(onDismissRequest = onCancel, sheetState = rememberModalBottomSheetState()) {
+    ModalBottomSheet(onDismissRequest = onCancel, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
         val bond = request.bond
         val ownerPercent = DelegationRules.shareToPercent(bond.shareNanoPac)
         val fmt = { p: Double -> "${"%.2f".format(p).trimEnd('0').trimEnd('.', ',')}%" }
