@@ -81,6 +81,7 @@ import com.andrutstudio.velora.R
 import com.andrutstudio.velora.presentation.components.formatPac
 import com.andrutstudio.velora.presentation.anchor.anchorTypeName
 import com.andrutstudio.velora.domain.model.AnchorRequest
+import com.andrutstudio.velora.data.local.FaviconRef
 import com.andrutstudio.velora.data.local.db.BookmarkEntity
 import com.andrutstudio.velora.data.local.db.BrowserHistoryEntity
 import androidx.fragment.app.FragmentActivity
@@ -198,11 +199,17 @@ fun BrowserScreen(
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 viewModel.onProgressChanged(newProgress)
             }
+
+            override fun onReceivedIcon(view: WebView?, icon: Bitmap?) {
+                viewModel.onReceivedIcon(view?.url, icon)
+            }
         }
 
         webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 url?.let { viewModel.onPageStarted(it) }
+                // WebView passes the cached icon of a page it has seen before
+                viewModel.onReceivedIcon(url, favicon)
                 // Early-injection fallback; the script bails if window.pactus exists.
                 view?.evaluateJavascript(PactusJsBridge.JS_BRIDGE, null)
             }
@@ -340,6 +347,7 @@ fun BrowserScreen(
             tab = tab,
             bookmarks = state.bookmarks,
             history = state.history,
+            favicons = state.favicons,
             onTabChange = viewModel::onOpenLibrary,
             onOpen = viewModel::onOpenSaved,
             onDeleteBookmark = viewModel::onDeleteBookmark,
@@ -403,6 +411,7 @@ fun BrowserScreen(
                 BrowserHome(
                     bookmarks = state.bookmarks,
                     history = state.history,
+                    favicons = state.favicons,
                     onUrlSubmit = viewModel::onUrlSubmitted,
                     onOpenSaved = viewModel::onOpenSaved,
                     onSeeAll = viewModel::onOpenLibrary,
@@ -428,6 +437,7 @@ fun BrowserScreen(
 private fun BrowserHome(
     bookmarks: List<BookmarkEntity>,
     history: List<BrowserHistoryEntity>,
+    favicons: Map<String, FaviconRef>,
     onUrlSubmit: (String) -> Unit,
     onOpenSaved: (String) -> Unit,
     onSeeAll: (LibraryTab) -> Unit,
@@ -482,7 +492,7 @@ private fun BrowserHome(
         Spacer(Modifier.height(32.dp))
 
         if (bookmarks.isNotEmpty() || history.isNotEmpty()) {
-            HomeSavedSections(bookmarks, history, onOpen = onOpenSaved, onSeeAll = onSeeAll)
+            HomeSavedSections(bookmarks, history, favicons, onOpen = onOpenSaved, onSeeAll = onSeeAll)
             Spacer(Modifier.height(24.dp))
         }
 
@@ -1302,6 +1312,7 @@ private fun BrowserHomePreview() {
         BrowserHome(
             bookmarks = listOf(BookmarkEntity(1, "https://pactus.org", "Pactus", isPreset = true)),
             history = listOf(BrowserHistoryEntity(1, "https://pactusscan.com/", "PactusScan")),
+            favicons = emptyMap(),
             onUrlSubmit = {},
             onOpenSaved = {},
             onSeeAll = {},
