@@ -49,6 +49,7 @@ import com.andrutstudio.velora.domain.model.Wallet
 import com.andrutstudio.velora.presentation.components.AccountCard
 import com.andrutstudio.velora.presentation.components.BalanceCard
 import com.andrutstudio.velora.presentation.components.MainBottomNavigation
+import com.andrutstudio.velora.presentation.components.dockClearance
 import com.andrutstudio.velora.presentation.components.ShimmerBox
 import com.andrutstudio.velora.presentation.components.ShimmerLine
 import com.andrutstudio.velora.presentation.components.SendReceiveActionBar
@@ -291,7 +292,7 @@ private fun WalletTab(
                 start = 16.dp,
                 end = 16.dp,
                 top = 8.dp,
-                bottom = 100.dp, // Increased for floating dock
+                bottom = dockClearance(),
             ),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
