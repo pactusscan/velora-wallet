@@ -42,7 +42,7 @@ fun WalletPickerSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = Surface,
+        containerColor = MaterialTheme.colorScheme.surface,
         dragHandle = null,
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
     ) {
@@ -82,16 +82,16 @@ fun WalletPickerSheetContent(
             Text(
                 text = stringResource(R.string.home_my_wallets),
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                color = OnBackground,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.weight(1f),
             )
             IconButton(onClick = onDismiss) {
-                Icon(Icons.Rounded.Close, contentDescription = stringResource(R.string.browser_close), tint = OnSurfaceVariant)
+                Icon(Icons.Rounded.Close, contentDescription = stringResource(R.string.browser_close), tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
 
         HorizontalDivider(
-            color = Outline.copy(alpha = 0.4f),
+            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 
@@ -116,7 +116,7 @@ fun WalletPickerSheetContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(12.dp))
                         .background(gradient)
                         .clickable(onClick = onAddWallet)
                         .padding(vertical = 16.dp),
@@ -164,7 +164,7 @@ private fun WalletPickerItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(12.dp))
             .then(
                 if (isActive) Modifier.background(gradient)
                 else Modifier.background(Color.Transparent)
@@ -175,7 +175,7 @@ private fun WalletPickerItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(if (isActive) 15.dp else 16.dp))
-                .background(if (isActive) SurfaceVariant else SurfaceContainer)
+                .background(if (isActive) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surfaceContainer)
                 .clickable(onClick = onSelect)
                 .padding(horizontal = 14.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -183,7 +183,7 @@ private fun WalletPickerItem(
             Box(
                 modifier = Modifier
                     .size(46.dp)
-                    .clip(RoundedCornerShape(13.dp))
+                    .clip(RoundedCornerShape(12.dp))
                     .background(gradient),
                 contentAlignment = Alignment.Center,
             ) {
@@ -200,7 +200,7 @@ private fun WalletPickerItem(
                 Text(
                     text = wallet.name,
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = OnBackground,
+                    color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -214,12 +214,12 @@ private fun WalletPickerItem(
                         text = if (accountCount == 1) stringResource(R.string.home_accounts_count, accountCount)
                                else stringResource(R.string.home_accounts_count_plural, accountCount),
                         style = MaterialTheme.typography.labelSmall,
-                        color = OnSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Box(
                         modifier = Modifier
                             .size(3.dp)
-                            .background(OnSurfaceVariant.copy(alpha = 0.5f), CircleShape),
+                            .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f), CircleShape),
                     )
                     NetworkChip(network = wallet.network)
                 }

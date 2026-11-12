@@ -54,7 +54,7 @@ fun AddWalletOptionsScreen(
             Text(
                 text = stringResource(R.string.welcome_add_options_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
-                color = OnSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
@@ -103,8 +103,8 @@ private fun OptionItem(
 ) {
     Surface(
         onClick = onClick,
-        color = SurfaceContainer,
-        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        shape = RoundedCornerShape(12.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -132,19 +132,19 @@ private fun OptionItem(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = OnBackground
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = OnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             Icon(
                 imageVector = Icons.Rounded.ChevronRight,
                 contentDescription = null,
-                tint = Outline,
+                tint = MaterialTheme.colorScheme.outline,
                 modifier = Modifier.size(20.dp)
             )
         }

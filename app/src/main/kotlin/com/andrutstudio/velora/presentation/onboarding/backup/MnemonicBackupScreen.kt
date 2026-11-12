@@ -188,7 +188,7 @@ private fun MnemonicGrid(words: List<String>, modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.large)
-            .background(SurfaceContainer)
+            .background(MaterialTheme.colorScheme.surfaceContainer)
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -264,7 +264,7 @@ private fun RevealOverlay(onReveal: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.large)
-            .background(Background.copy(alpha = 0.88f))
+            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.88f))
             .clickable(onClick = onReveal)
             .padding(vertical = 48.dp),
         contentAlignment = Alignment.Center,
