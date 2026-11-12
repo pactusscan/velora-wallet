@@ -234,6 +234,16 @@
     <string name="browser_bookmarks_empty">Закладок пока нет</string>
     <string name="browser_history_header">История</string>
     <string name="browser_history_empty">Истории пока нет</string>
+    <string name="browser_recent">Недавно открытые</string>
+    <string name="browser_see_all">Показать все</string>
+    <string name="browser_library">Закладки и история</string>
+    <string name="browser_history_today">Сегодня</string>
+    <string name="browser_history_yesterday">Вчера</string>
+    <string name="browser_clear_history">Очистить историю</string>
+    <string name="browser_bookmarks_empty_hint">Нажмите значок закладки в адресной строке, чтобы сохранить страницу.</string>
+    <string name="browser_history_empty_hint">Здесь появятся открытые вами страницы.</string>
+    <string name="browser_delete_bookmark">Удалить закладку %1$s</string>
+    <string name="browser_delete_history">Удалить %1$s из истории</string>
 
     <!-- Settings -->
     <string name="settings_title">Настройки</string>

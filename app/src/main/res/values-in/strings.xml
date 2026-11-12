@@ -525,6 +525,16 @@
     <string name="browser_bookmarks_empty">Belum ada bookmark</string>
     <string name="browser_history_header">Riwayat</string>
     <string name="browser_history_empty">Belum ada riwayat</string>
+    <string name="browser_recent">Terakhir dibuka</string>
+    <string name="browser_see_all">Lihat semua</string>
+    <string name="browser_library">Bookmark dan riwayat</string>
+    <string name="browser_history_today">Hari ini</string>
+    <string name="browser_history_yesterday">Kemarin</string>
+    <string name="browser_clear_history">Hapus riwayat</string>
+    <string name="browser_bookmarks_empty_hint">Ketuk ikon bookmark di bilah alamat untuk menyimpan halaman.</string>
+    <string name="browser_history_empty_hint">Halaman yang Anda buka muncul di sini.</string>
+    <string name="browser_delete_bookmark">Hapus bookmark %1$s</string>
+    <string name="browser_delete_history">Hapus %1$s dari riwayat</string>
     <string name="settings_title">Pengaturan</string>
     <string name="settings_section_security">Keamanan</string>
     <string name="settings_change_password">Ubah Kata Sandi</string>

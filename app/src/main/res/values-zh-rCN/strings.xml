@@ -234,6 +234,16 @@
     <string name="browser_bookmarks_empty">尚无书签</string>
     <string name="browser_history_header">历史记录</string>
     <string name="browser_history_empty">尚无历史记录</string>
+    <string name="browser_recent">最近打开</string>
+    <string name="browser_see_all">查看全部</string>
+    <string name="browser_library">书签和历史记录</string>
+    <string name="browser_history_today">今天</string>
+    <string name="browser_history_yesterday">昨天</string>
+    <string name="browser_clear_history">清除历史记录</string>
+    <string name="browser_bookmarks_empty_hint">点按地址栏中的书签图标即可保存页面。</string>
+    <string name="browser_history_empty_hint">您打开的页面会显示在这里。</string>
+    <string name="browser_delete_bookmark">删除书签 %1$s</string>
+    <string name="browser_delete_history">从历史记录中移除 %1$s</string>
 
     <!-- Settings -->
     <string name="settings_title">设置</string>

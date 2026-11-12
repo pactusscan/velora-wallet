@@ -335,6 +335,20 @@ fun BrowserScreen(
         )
     }
 
+    state.libraryTab?.let { tab ->
+        LibrarySheet(
+            tab = tab,
+            bookmarks = state.bookmarks,
+            history = state.history,
+            onTabChange = viewModel::onOpenLibrary,
+            onOpen = viewModel::onOpenSaved,
+            onDeleteBookmark = viewModel::onDeleteBookmark,
+            onDeleteHistory = viewModel::onDeleteHistory,
+            onClearHistory = viewModel::onClearHistory,
+            onDismiss = viewModel::onCloseLibrary,
+        )
+    }
+
     // Shown over a sign sheet when the wallet is still locked
     if (state.showUnlockDialog) {
         UnlockWalletDialog(
@@ -358,6 +372,7 @@ fun BrowserScreen(
                 canGoBack = state.canGoBack,
                 canGoForward = state.canGoForward,
                 isBookmarked = state.isBookmarked,
+                canBookmark = state.url != BrowserViewModel.HOME_URL,
                 onNavigateBack = onNavigateBack,
                 onUrlChange = viewModel::onUrlBarChanged,
                 onUrlSubmit = viewModel::onUrlSubmitted,
@@ -365,6 +380,7 @@ fun BrowserScreen(
                 onForward = viewModel::onForwardClicked,
                 onReload = viewModel::onReloadClicked,
                 onToggleBookmark = viewModel::onToggleBookmark,
+                onOpenLibrary = { viewModel.onOpenLibrary(LibraryTab.BOOKMARKS) },
                 onFocusChange = { /* No-op */ }
             )
         }
@@ -384,7 +400,13 @@ fun BrowserScreen(
 
             // LAYER 2: Browser home overlay (displays when no URL is loaded)
             if (state.url == "about:blank") {
-                BrowserHome(onUrlSubmit = viewModel::onUrlSubmitted)
+                BrowserHome(
+                    bookmarks = state.bookmarks,
+                    history = state.history,
+                    onUrlSubmit = viewModel::onUrlSubmitted,
+                    onOpenSaved = viewModel::onOpenSaved,
+                    onSeeAll = viewModel::onOpenLibrary,
+                )
             }
 
             // LAYER 3: The custom Navigation Dock floating at the bottom
@@ -403,7 +425,13 @@ fun BrowserScreen(
 }
 
 @Composable
-private fun BrowserHome(onUrlSubmit: (String) -> Unit) {
+private fun BrowserHome(
+    bookmarks: List<BookmarkEntity>,
+    history: List<BrowserHistoryEntity>,
+    onUrlSubmit: (String) -> Unit,
+    onOpenSaved: (String) -> Unit,
+    onSeeAll: (LibraryTab) -> Unit,
+) {
     val ecosystemLinks = listOf(
         EcosystemLink(stringResource(R.string.browser_eco_website_title), "https://pactus.org", stringResource(R.string.browser_eco_website_desc)),
         EcosystemLink("Pactus Scan", "https://pactusscan.com", stringResource(R.string.browser_eco_scan_desc)),
@@ -453,12 +481,18 @@ private fun BrowserHome(onUrlSubmit: (String) -> Unit) {
         
         Spacer(Modifier.height(32.dp))
 
+        if (bookmarks.isNotEmpty() || history.isNotEmpty()) {
+            HomeSavedSections(bookmarks, history, onOpen = onOpenSaved, onSeeAll = onSeeAll)
+            Spacer(Modifier.height(24.dp))
+        }
+
         ecosystemLinks.forEach { link ->
             EcosystemCard(link) { onUrlSubmit(link.url) }
             Spacer(Modifier.height(12.dp))
         }
-        
-        Spacer(Modifier.height(32.dp))
+
+        // Room for the floating navigation dock, so the last card can scroll above it
+        Spacer(Modifier.height(120.dp))
     }
 }
 
@@ -548,6 +582,7 @@ private fun BrowserTopBar(
     canGoBack: Boolean,
     canGoForward: Boolean,
     isBookmarked: Boolean,
+    canBookmark: Boolean,
     onNavigateBack: () -> Unit,
     onUrlChange: (String) -> Unit,
     onUrlSubmit: (String) -> Unit,
@@ -555,6 +590,7 @@ private fun BrowserTopBar(
     onForward: () -> Unit,
     onReload: () -> Unit,
     onToggleBookmark: () -> Unit,
+    onOpenLibrary: () -> Unit,
     onFocusChange: (Boolean) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
@@ -647,7 +683,9 @@ private fun BrowserTopBar(
                             if (urlBarText.isEmpty()) {
                                 Text(
                                     stringResource(R.string.browser_search_placeholder),
-                                    style = urlBarTextStyle.copy(color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+                                    style = urlBarTextStyle.copy(color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
                                 )
                             }
                             innerTextField()
@@ -670,14 +708,29 @@ private fun BrowserTopBar(
 
                 IconButton(
                     onClick = onToggleBookmark,
+                    enabled = canBookmark,
                     modifier = Modifier.size(36.dp),
                 ) {
                     Icon(
                         imageVector = if (isBookmarked) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
                         contentDescription = stringResource(R.string.browser_bookmark),
                         modifier = Modifier.size(18.dp),
-                        tint = if (isBookmarked) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.onSurface,
+                        tint = when {
+                            !canBookmark -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                            isBookmarked -> MaterialTheme.colorScheme.primary
+                            else -> MaterialTheme.colorScheme.onSurface
+                        },
+                    )
+                }
+
+                IconButton(
+                    onClick = onOpenLibrary,
+                    modifier = Modifier.size(36.dp),
+                ) {
+                    Icon(
+                        Icons.Rounded.CollectionsBookmark,
+                        contentDescription = stringResource(R.string.browser_library),
+                        modifier = Modifier.size(18.dp),
                     )
                 }
             }
@@ -1216,6 +1269,7 @@ private fun BrowserTopBarPreview() {
             canGoBack = true,
             canGoForward = false,
             isBookmarked = true,
+            canBookmark = true,
             onNavigateBack = {},
             onUrlChange = {},
             onUrlSubmit = {},
@@ -1223,6 +1277,7 @@ private fun BrowserTopBarPreview() {
             onForward = {},
             onReload = {},
             onToggleBookmark = {},
+            onOpenLibrary = {},
             onFocusChange = {}
         )
     }
@@ -1244,7 +1299,13 @@ private fun SignRowPreview() {
 @Composable
 private fun BrowserHomePreview() {
     VeloraTheme {
-        BrowserHome(onUrlSubmit = {})
+        BrowserHome(
+            bookmarks = listOf(BookmarkEntity(1, "https://pactus.org", "Pactus", isPreset = true)),
+            history = listOf(BrowserHistoryEntity(1, "https://pactusscan.com/", "PactusScan")),
+            onUrlSubmit = {},
+            onOpenSaved = {},
+            onSeeAll = {},
+        )
     }
 }
 

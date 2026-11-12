@@ -234,6 +234,16 @@
     <string name="browser_bookmarks_empty">Tiada penanda buku lagi</string>
     <string name="browser_history_header">Sejarah</string>
     <string name="browser_history_empty">Tiada sejarah lagi</string>
+    <string name="browser_recent">Dibuka baru-baru ini</string>
+    <string name="browser_see_all">Lihat semua</string>
+    <string name="browser_library">Penanda halaman dan sejarah</string>
+    <string name="browser_history_today">Hari ini</string>
+    <string name="browser_history_yesterday">Semalam</string>
+    <string name="browser_clear_history">Kosongkan sejarah</string>
+    <string name="browser_bookmarks_empty_hint">Ketik ikon penanda halaman di bar alamat untuk menyimpan halaman.</string>
+    <string name="browser_history_empty_hint">Halaman yang anda buka akan muncul di sini.</string>
+    <string name="browser_delete_bookmark">Padam penanda halaman %1$s</string>
+    <string name="browser_delete_history">Buang %1$s daripada sejarah</string>
 
     <!-- Settings -->
     <string name="settings_title">Tetapan</string>

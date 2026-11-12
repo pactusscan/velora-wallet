@@ -234,6 +234,16 @@
     <string name="browser_bookmarks_empty">Aún no hay marcadores</string>
     <string name="browser_history_header">Historial</string>
     <string name="browser_history_empty">Aún no hay historial</string>
+    <string name="browser_recent">Abiertos recientemente</string>
+    <string name="browser_see_all">Ver todo</string>
+    <string name="browser_library">Marcadores e historial</string>
+    <string name="browser_history_today">Hoy</string>
+    <string name="browser_history_yesterday">Ayer</string>
+    <string name="browser_clear_history">Borrar historial</string>
+    <string name="browser_bookmarks_empty_hint">Toque el icono de marcador en la barra de direcciones para guardar una página.</string>
+    <string name="browser_history_empty_hint">Las páginas que abra aparecerán aquí.</string>
+    <string name="browser_delete_bookmark">Eliminar marcador %1$s</string>
+    <string name="browser_delete_history">Quitar %1$s del historial</string>
 
     <!-- Settings -->
     <string name="settings_title">Ajustes</string>

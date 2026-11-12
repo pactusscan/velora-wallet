@@ -234,6 +234,16 @@
     <string name="browser_bookmarks_empty">Chưa có dấu trang</string>
     <string name="browser_history_header">Lịch sử</string>
     <string name="browser_history_empty">Chưa có lịch sử</string>
+    <string name="browser_recent">Mở gần đây</string>
+    <string name="browser_see_all">Xem tất cả</string>
+    <string name="browser_library">Dấu trang và lịch sử</string>
+    <string name="browser_history_today">Hôm nay</string>
+    <string name="browser_history_yesterday">Hôm qua</string>
+    <string name="browser_clear_history">Xóa lịch sử</string>
+    <string name="browser_bookmarks_empty_hint">Nhấn biểu tượng dấu trang trên thanh địa chỉ để lưu trang.</string>
+    <string name="browser_history_empty_hint">Các trang bạn mở sẽ xuất hiện ở đây.</string>
+    <string name="browser_delete_bookmark">Xóa dấu trang %1$s</string>
+    <string name="browser_delete_history">Xóa %1$s khỏi lịch sử</string>
 
     <!-- Settings -->
     <string name="settings_title">Cài đặt</string>
