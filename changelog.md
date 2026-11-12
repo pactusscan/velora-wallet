@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.1.9] - 2026-11-13
+
+This release adds the node list from the browser extension 0.1.5, bookmarks and history in the dApp browser, and fixes screens that were hard to use: half open sheets, fields hidden by the keyboard, content under the navigation bar and dark cards in light mode.
+
+### Added
+- **Choose Your RPC Node**: Network settings now list the nodes of your network with their speed, latest block and the node in use. Velora picks the fastest node automatically, or you can pin one node and keep the others as backup. Test all measures them again.
+- **Custom Nodes**: Add your own HTTPS node with an optional name after a connection test, and delete it again. A node of the other network cannot be saved. A custom RPC address from an earlier version becomes a pinned node, so it keeps working and now has backup nodes.
+- **Bookmarks and History in the dApp Browser**: The start page shows your bookmarks and the pages you opened last. The new button in the address bar opens Bookmarks and History: open a page, delete one entry or clear the history. History is grouped by day.
+- **Site Icons**: Bookmarks and history show each site's own icon after you visit it.
+
+### Fixed & Improved
+- **Sheets Open Fully**: Every bottom sheet opens at full height, so its buttons are visible without swiping up.
+- **Fields Stay Above the Keyboard**: When the keyboard opens (creating or restoring a wallet, Send, Stake, settings and the sheets), the field you type in and its button move up instead of being covered.
+- **Nothing Hidden Under the Navigation Bar**: The last items on Wallet, Activity, Node and Settings can be scrolled fully above the navigation bar.
+- **Light Mode**: Add Wallet, the wallet switcher and the recovery phrase backup now follow the light theme instead of staying dark.
+- **Browser Details**: A site saved with and without a final slash counts as one bookmark, the start page is no longer recorded in history, and deleted preset bookmarks do not come back.
+- **Translations**: All new texts are available in the ten languages of the app.
+
 ## [0.1.8] - 2026-11-08
 
 This release brings PIP-49 delegated staking to Velora, in the wallet and in the dApp browser, the same way as the browser extension 0.1.4. If you use Testnet, updating is recommended: your history and validator data were empty.
