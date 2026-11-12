@@ -59,9 +59,6 @@ class SettingsViewModel @Inject constructor(
         val isUnlocking: Boolean = false,
         val unlockError: UiText? = null,
         // Custom RPC URLs
-        val customRpcMainnet: String = "",
-        val customRpcTestnet: String = "",
-        val isCustomRpcSaving: Boolean = false,
         // Rename wallet
         val isRenamingWallet: Boolean = false,
         val renameName: String = "",
@@ -109,18 +106,6 @@ class SettingsViewModel @Inject constructor(
             // Keep wallet state updated
             walletRepository.observeWallet().collect { wallet ->
                 _state.update { it.copy(wallet = wallet) }
-            }
-        }
-
-        viewModelScope.launch {
-            networkProvider.customRpcFlow(Network.MAINNET).collect { url ->
-                _state.update { it.copy(customRpcMainnet = url ?: "") }
-            }
-        }
-
-        viewModelScope.launch {
-            networkProvider.customRpcFlow(Network.TESTNET).collect { url ->
-                _state.update { it.copy(customRpcTestnet = url ?: "") }
             }
         }
 
@@ -316,27 +301,6 @@ class SettingsViewModel @Inject constructor(
                     _state.update { it.copy(isNetworkLoading = false) }
                     _effect.send(Effect.ShowSnackbar(e.toUiText(R.string.settings_error_network_switch)))
                 }
-        }
-    }
-
-    fun onCustomRpcChange(network: Network, url: String) {
-        if (network == Network.MAINNET) {
-            _state.update { it.copy(customRpcMainnet = url) }
-        } else {
-            _state.update { it.copy(customRpcTestnet = url) }
-        }
-    }
-
-    fun onSaveCustomRpc(network: Network) {
-        val url = if (network == Network.MAINNET) _state.value.customRpcMainnet
-        else _state.value.customRpcTestnet
-        _state.update { it.copy(isCustomRpcSaving = true) }
-        viewModelScope.launch {
-            networkProvider.setCustomRpcUrl(network, url.takeIf { it.isNotBlank() })
-            _state.update { it.copy(isCustomRpcSaving = false) }
-            val msg = if (url.isBlank()) UiText.Res(R.string.settings_rpc_reverted)
-            else UiText.Res(R.string.settings_rpc_saved)
-            _effect.send(Effect.ShowSnackbar(msg))
         }
     }
 
