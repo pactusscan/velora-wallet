@@ -30,6 +30,7 @@ import com.andrutstudio.velora.data.local.ThemePreference
 import com.andrutstudio.velora.domain.model.Network
 import com.andrutstudio.velora.domain.model.Wallet
 import com.andrutstudio.velora.presentation.components.MainBottomNavigation
+import com.andrutstudio.velora.presentation.components.dockClearance
 import com.andrutstudio.velora.presentation.components.UnlockWalletDialog
 import com.andrutstudio.velora.presentation.navigation.Screen
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
@@ -347,7 +348,7 @@ fun SettingsScreen(
                     }
                 }
 
-                Spacer(Modifier.height(100.dp)) // Extra space for floating dock
+                Spacer(Modifier.height(dockClearance()))
             }
 
             // Floating Navigation Dock
@@ -749,7 +750,7 @@ private fun SettingsScreenPreview() {
                         onClick = {},
                     )
 
-                    Spacer(Modifier.height(100.dp))
+                    Spacer(Modifier.height(dockClearance()))
                 }
 
                 // Floating Navigation Dock

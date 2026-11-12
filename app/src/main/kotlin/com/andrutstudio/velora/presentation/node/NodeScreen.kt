@@ -97,6 +97,7 @@ import com.andrutstudio.velora.data.rpc.PeerDetailResponse
 import com.andrutstudio.velora.data.rpc.PeerInfo
 import com.andrutstudio.velora.data.rpc.ValidatorPeerInfo
 import com.andrutstudio.velora.presentation.components.MainBottomNavigation
+import com.andrutstudio.velora.presentation.components.dockClearance
 import com.andrutstudio.velora.presentation.navigation.Screen
 import com.andrutstudio.velora.presentation.theme.BrandTeal
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
@@ -173,7 +174,7 @@ fun NodeScreen(navController: NavController) {
                 LazyColumn(
                     state = lazyListState,
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 100.dp),
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = dockClearance()),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     itemsIndexed(state.nodes, key = { _, address -> address }) { _, address ->
