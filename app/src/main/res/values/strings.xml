@@ -234,6 +234,16 @@
     <string name="browser_bookmarks_empty">No bookmarks yet</string>
     <string name="browser_history_header">History</string>
     <string name="browser_history_empty">No history yet</string>
+    <string name="browser_recent">Recently opened</string>
+    <string name="browser_see_all">See all</string>
+    <string name="browser_library">Bookmarks and history</string>
+    <string name="browser_history_today">Today</string>
+    <string name="browser_history_yesterday">Yesterday</string>
+    <string name="browser_clear_history">Clear history</string>
+    <string name="browser_bookmarks_empty_hint">Tap the bookmark icon in the address bar to save a page.</string>
+    <string name="browser_history_empty_hint">Pages you open appear here.</string>
+    <string name="browser_delete_bookmark">Delete bookmark %1$s</string>
+    <string name="browser_delete_history">Remove %1$s from history</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>

@@ -234,6 +234,16 @@
     <string name="browser_bookmarks_empty">Nenhum favorito ainda</string>
     <string name="browser_history_header">Histórico</string>
     <string name="browser_history_empty">Nenhum histórico ainda</string>
+    <string name="browser_recent">Abertos recentemente</string>
+    <string name="browser_see_all">Ver tudo</string>
+    <string name="browser_library">Favoritos e histórico</string>
+    <string name="browser_history_today">Hoje</string>
+    <string name="browser_history_yesterday">Ontem</string>
+    <string name="browser_clear_history">Limpar histórico</string>
+    <string name="browser_bookmarks_empty_hint">Toque no ícone de favorito na barra de endereço para salvar uma página.</string>
+    <string name="browser_history_empty_hint">As páginas que você abrir aparecem aqui.</string>
+    <string name="browser_delete_bookmark">Excluir favorito %1$s</string>
+    <string name="browser_delete_history">Remover %1$s do histórico</string>
 
     <!-- Settings -->
     <string name="settings_title">Configurações</string>

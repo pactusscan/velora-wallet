@@ -17,9 +17,27 @@ interface BrowserDao {
     @Query("DELETE FROM browser_history")
     suspend fun clearHistory()
 
+    @Query("DELETE FROM browser_history WHERE url NOT LIKE 'http%'")
+    suspend fun deleteNonWebHistory()
+
+    @Query("DELETE FROM browser_history WHERE url = :url")
+    suspend fun deleteHistoryUrl(url: String)
+
+    // One row per URL with its latest visit, and a bounded table
+    @Transaction
+    suspend fun recordVisit(entry: BrowserHistoryEntity) {
+        deleteHistoryUrl(entry.url)
+        insertHistory(entry)
+        pruneHistory()
+    }
+
+    @Query("DELETE FROM browser_history WHERE id NOT IN (SELECT id FROM browser_history ORDER BY visitedAt DESC LIMIT 200)")
+    suspend fun pruneHistory()
+
     // Bookmarks
 
-    @Query("SELECT * FROM bookmarks ORDER BY isPreset DESC, createdAt DESC")
+    // The user's own bookmarks first, newest first, then the presets
+    @Query("SELECT * FROM bookmarks ORDER BY isPreset ASC, createdAt DESC")
     fun observeBookmarks(): Flow<List<BookmarkEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -28,8 +46,8 @@ interface BrowserDao {
     @Delete
     suspend fun deleteBookmark(bookmark: BookmarkEntity)
 
-    @Query("SELECT EXISTS(SELECT 1 FROM bookmarks WHERE url = :url)")
-    suspend fun isBookmarked(url: String): Boolean
+    @Query("SELECT EXISTS(SELECT 1 FROM bookmarks WHERE url IN (:urls))")
+    suspend fun isBookmarked(urls: List<String>): Boolean
 
     @Query("SELECT COUNT(*) FROM bookmarks")
     suspend fun bookmarkCount(): Int

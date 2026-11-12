@@ -234,6 +234,16 @@
     <string name="browser_bookmarks_empty">Noch keine Lesezeichen</string>
     <string name="browser_history_header">Verlauf</string>
     <string name="browser_history_empty">Noch kein Verlauf</string>
+    <string name="browser_recent">Zuletzt geöffnet</string>
+    <string name="browser_see_all">Alle anzeigen</string>
+    <string name="browser_library">Lesezeichen und Verlauf</string>
+    <string name="browser_history_today">Heute</string>
+    <string name="browser_history_yesterday">Gestern</string>
+    <string name="browser_clear_history">Verlauf löschen</string>
+    <string name="browser_bookmarks_empty_hint">Tippen Sie auf das Lesezeichensymbol in der Adressleiste, um eine Seite zu speichern.</string>
+    <string name="browser_history_empty_hint">Seiten, die Sie öffnen, erscheinen hier.</string>
+    <string name="browser_delete_bookmark">Lesezeichen %1$s löschen</string>
+    <string name="browser_delete_history">%1$s aus dem Verlauf entfernen</string>
 
     <!-- Settings -->
     <string name="settings_title">Einstellungen</string>
