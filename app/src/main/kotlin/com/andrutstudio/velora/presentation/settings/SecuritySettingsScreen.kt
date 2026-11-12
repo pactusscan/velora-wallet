@@ -82,6 +82,8 @@ private fun SecuritySettingsContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .consumeWindowInsets(padding)
+                .imePadding()
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
                 .padding(24.dp),

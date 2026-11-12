@@ -77,6 +77,7 @@ import com.andrutstudio.velora.domain.model.TransactionStatus
 import com.andrutstudio.velora.domain.model.TransactionType
 import com.andrutstudio.velora.R
 import com.andrutstudio.velora.presentation.components.MainBottomNavigation
+import com.andrutstudio.velora.presentation.components.dockClearance
 import com.andrutstudio.velora.presentation.components.ShimmerBox
 import com.andrutstudio.velora.presentation.components.formatPac
 import com.andrutstudio.velora.presentation.navigation.Screen
@@ -164,7 +165,7 @@ private fun AccountSelectionSheet(
     onSelect: (String?) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -306,7 +307,7 @@ private fun TransactionList(
     onItemClick: (String) -> Unit,
 ) {
     LazyColumn(
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 100.dp),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = dockClearance()),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(transactions, key = { it.id }) { tx ->

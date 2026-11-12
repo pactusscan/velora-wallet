@@ -84,8 +84,7 @@ fun NetworkSettingsScreen(
         snackbarHostState = snackbarHostState,
         onNavigateBack = onNavigateBack,
         onNetworkSelected = viewModel::onSwitchNetwork,
-        onCustomRpcChanged = { network, url -> viewModel.onCustomRpcChange(network, url) },
-        onSaveCustomRpc = { network -> viewModel.onSaveCustomRpc(network) }
+        nodeList = { NodeListSection() },
     )
 }
 
@@ -96,8 +95,7 @@ private fun NetworkSettingsContent(
     snackbarHostState: SnackbarHostState,
     onNavigateBack: () -> Unit,
     onNetworkSelected: (Network) -> Unit,
-    onCustomRpcChanged: (Network, String) -> Unit,
-    onSaveCustomRpc: (Network) -> Unit
+    nodeList: @Composable () -> Unit,
 ) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -138,16 +136,6 @@ private fun NetworkSettingsContent(
                 onClick = { onNetworkSelected(Network.MAINNET) }
             )
 
-            CustomRpcField(
-                value = state.customRpcMainnet,
-                placeholder = stringResource(R.string.network_mainnet_rpc),
-                isLoading = state.isCustomRpcSaving,
-                onValueChange = { onCustomRpcChanged(Network.MAINNET, it) },
-                onSave = { onSaveCustomRpc(Network.MAINNET) }
-            )
-
-            Spacer(Modifier.height(8.dp))
-
             NetworkCard(
                 network = Network.TESTNET,
                 isSelected = currentNetwork == Network.TESTNET,
@@ -155,15 +143,7 @@ private fun NetworkSettingsContent(
                 onClick = { onNetworkSelected(Network.TESTNET) }
             )
 
-            CustomRpcField(
-                value = state.customRpcTestnet,
-                placeholder = stringResource(R.string.network_testnet_rpc),
-                isLoading = state.isCustomRpcSaving,
-                onValueChange = { onCustomRpcChanged(Network.TESTNET, it) },
-                onSave = { onSaveCustomRpc(Network.TESTNET) }
-            )
-
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(4.dp))
 
             Card(
                 colors = CardDefaults.cardColors(
@@ -189,6 +169,9 @@ private fun NetworkSettingsContent(
                     )
                 }
             }
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(vertical = 8.dp))
+            nodeList()
         }
     }
 }
@@ -198,43 +181,11 @@ private fun NetworkSettingsContent(
 private fun NetworkSettingsScreenPreview() {
     VeloraTheme {
         NetworkSettingsContent(
-            state = SettingsViewModel.State(
-                customRpcMainnet = "https://rpc.pactus.org"
-            ),
+            state = SettingsViewModel.State(),
             snackbarHostState = remember { SnackbarHostState() },
             onNavigateBack = {},
             onNetworkSelected = {},
-            onCustomRpcChanged = { _, _ -> },
-            onSaveCustomRpc = {}
-        )
-    }
-}
-
-@Composable
-private fun CustomRpcField(
-    value: String,
-    placeholder: String,
-    isLoading: Boolean,
-    onValueChange: (String) -> Unit,
-    onSave: () -> Unit
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            placeholder = { Text(placeholder) },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
-            trailingIcon = {
-                if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
-                } else if (value.isNotBlank()) {
-                    IconButton(onClick = onSave) {
-                        Icon(Icons.Rounded.Check, contentDescription = stringResource(R.string.action_save), tint = BrandTeal)
-                    }
-                }
-            },
-            singleLine = true
+            nodeList = {},
         )
     }
 }
@@ -318,22 +269,6 @@ private fun NetworkCardPreview() {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             NetworkCard(Network.MAINNET, isSelected = true, isSyncing = false, onClick = {})
             NetworkCard(Network.TESTNET, isSelected = false, isSyncing = false, onClick = {})
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun CustomRpcFieldPreview() {
-    VeloraTheme {
-        Column(modifier = Modifier.padding(16.dp)) {
-            CustomRpcField(
-                value = "https://rpc.pactus.org",
-                placeholder = "https://your-node.com",
-                isLoading = false,
-                onValueChange = {},
-                onSave = {}
-            )
         }
     }
 }

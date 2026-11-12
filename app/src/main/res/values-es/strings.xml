@@ -234,6 +234,16 @@
     <string name="browser_bookmarks_empty">Aún no hay marcadores</string>
     <string name="browser_history_header">Historial</string>
     <string name="browser_history_empty">Aún no hay historial</string>
+    <string name="browser_recent">Abiertos recientemente</string>
+    <string name="browser_see_all">Ver todo</string>
+    <string name="browser_library">Marcadores e historial</string>
+    <string name="browser_history_today">Hoy</string>
+    <string name="browser_history_yesterday">Ayer</string>
+    <string name="browser_clear_history">Borrar historial</string>
+    <string name="browser_bookmarks_empty_hint">Toque el icono de marcador en la barra de direcciones para guardar una página.</string>
+    <string name="browser_history_empty_hint">Las páginas que abra aparecerán aquí.</string>
+    <string name="browser_delete_bookmark">Eliminar marcador %1$s</string>
+    <string name="browser_delete_history">Quitar %1$s del historial</string>
 
     <!-- Settings -->
     <string name="settings_title">Ajustes</string>
@@ -287,11 +297,44 @@
     <string name="network_testnet">Testnet</string>
     <string name="network_testnet_desc">Red experimental para pruebas</string>
     <string name="network_select">Seleccionar red</string>
-    <string name="network_mainnet_rpc">RPC de Mainnet</string>
-    <string name="network_testnet_rpc">RPC de Testnet</string>
     <string name="network_coin_type">Tipo de moneda: %1$d</string>
     <string name="network_selected">Seleccionado</string>
     <string name="network_switch_warning">Cambiar de red actualizará automáticamente las direcciones de su cuenta para que coincidan con la red seleccionada.</string>
+    <string name="node_list_title">Nodos RPC</string>
+    <string name="node_list_count">%1$s, %2$d nodos</string>
+    <string name="node_test_all">Probar todos</string>
+    <string name="node_checking">Comprobando…</string>
+    <string name="node_mode_auto">Automático (el más rápido)</string>
+    <string name="node_mode_pinned">Nodo fijado</string>
+    <string name="node_auto_hint">Velora usa el nodo más rápido y cambia de nodo cuando deja de responder.</string>
+    <string name="node_pinned_hint">Velora prueba primero el nodo fijado. Si deja de responder, los demás nodos toman el relevo hasta que vuelva.</string>
+    <string name="node_in_use">En uso</string>
+    <string name="node_default_status">Predeterminado. %1$s</string>
+    <string name="node_custom">Personalizado</string>
+    <string name="node_block">Bloque %1$s</string>
+    <string name="node_behind">%1$s bloques de retraso</string>
+    <string name="node_unreachable">No disponible</string>
+    <string name="node_login">No disponible (pide iniciar sesión)</string>
+    <string name="node_refused">Rechaza las solicitudes</string>
+    <string name="node_delete">Eliminar %1$s</string>
+    <string name="node_add">Añadir nodo personalizado</string>
+    <string name="node_trust">Un nodo personalizado puede mostrar saldos incorrectos, pero no puede cambiar lo que usted firma. Velora comprueba cada transacción antes de firmarla.</string>
+    <string name="node_add_hint">Añada un nodo JSON-RPC para %1$s. Se une a la lista junto a los nodos predeterminados.</string>
+    <string name="node_url">URL del nodo</string>
+    <string name="node_url_hint">Solo HTTPS.</string>
+    <string name="node_name">Nombre (opcional)</string>
+    <string name="node_test_connection">Probar conexión</string>
+    <string name="node_answered">El nodo respondió</string>
+    <string name="node_wrong_network">Red incorrecta</string>
+    <string name="node_wrong_network_hint">Este nodo sirve otra red (%1$s). Cambie la billetera a esa red para añadirlo allí.</string>
+    <string name="node_network">Red</string>
+    <string name="node_network_unknown">No informado</string>
+    <string name="node_last_block">Último bloque</string>
+    <string name="node_latency">Latencia</string>
+    <string name="node_latency_ms">%1$d ms</string>
+    <string name="node_save">Guardar nodo</string>
+    <string name="node_error_https">Use una dirección HTTPS, por ejemplo https://node.example.com/jsonrpc</string>
+    <string name="node_error_duplicate">Este nodo ya está en la lista</string>
 
     <!-- Backup settings -->
     <string name="backup_title">Frase de respaldo</string>
@@ -460,8 +503,6 @@
     <string name="settings_biometric_enabled">Desbloqueo biométrico activado</string>
     <string name="settings_network_switched">Cambiado a %1$s</string>
     <string name="settings_error_network_switch">No se pudo cambiar de red</string>
-    <string name="settings_rpc_reverted">Se restauraron los endpoints predeterminados</string>
-    <string name="settings_rpc_saved">URL de RPC personalizada guardada</string>
     <string name="settings_error_enter_password">Introduzca su contraseña</string>
     <string name="settings_error_decrypt_phrase">No se pudo descifrar la frase</string>
     <string name="settings_no_new_accounts">No se encontraron cuentas nuevas</string>

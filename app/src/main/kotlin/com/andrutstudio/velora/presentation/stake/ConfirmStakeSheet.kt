@@ -1,5 +1,7 @@
 package com.andrutstudio.velora.presentation.stake
 
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import com.andrutstudio.velora.presentation.components.UiText
 import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.foundation.background
@@ -43,11 +45,13 @@ fun ConfirmStakeSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = MaterialTheme.colorScheme.surface,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp)
                 .padding(bottom = 32.dp),
         ) {

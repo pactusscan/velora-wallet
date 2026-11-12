@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.anchor
 
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -490,7 +491,11 @@ private fun ConfirmAnchorSheet(
     onConfirm: () -> Unit,
 ) {
     val useBiometric = state.isBiometricEnabled && state.password.isEmpty()
-    ModalBottomSheet(onDismissRequest = onDismiss, containerColor = MaterialTheme.colorScheme.surface) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = MaterialTheme.colorScheme.surface,
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

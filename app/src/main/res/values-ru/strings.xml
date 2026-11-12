@@ -234,6 +234,16 @@
     <string name="browser_bookmarks_empty">Закладок пока нет</string>
     <string name="browser_history_header">История</string>
     <string name="browser_history_empty">Истории пока нет</string>
+    <string name="browser_recent">Недавно открытые</string>
+    <string name="browser_see_all">Показать все</string>
+    <string name="browser_library">Закладки и история</string>
+    <string name="browser_history_today">Сегодня</string>
+    <string name="browser_history_yesterday">Вчера</string>
+    <string name="browser_clear_history">Очистить историю</string>
+    <string name="browser_bookmarks_empty_hint">Нажмите значок закладки в адресной строке, чтобы сохранить страницу.</string>
+    <string name="browser_history_empty_hint">Здесь появятся открытые вами страницы.</string>
+    <string name="browser_delete_bookmark">Удалить закладку %1$s</string>
+    <string name="browser_delete_history">Удалить %1$s из истории</string>
 
     <!-- Settings -->
     <string name="settings_title">Настройки</string>
@@ -287,11 +297,44 @@
     <string name="network_testnet">Testnet</string>
     <string name="network_testnet_desc">Экспериментальная сеть</string>
     <string name="network_select">Выберите сеть</string>
-    <string name="network_mainnet_rpc">Mainnet RPC</string>
-    <string name="network_testnet_rpc">Testnet RPC</string>
     <string name="network_coin_type">Тип монеты: %1$d</string>
     <string name="network_selected">Выбрано</string>
     <string name="network_switch_warning">Смена сети автоматически обновит адреса ваших счетов.</string>
+    <string name="node_list_title">RPC-узлы</string>
+    <string name="node_list_count">%1$s, узлов: %2$d</string>
+    <string name="node_test_all">Проверить все</string>
+    <string name="node_checking">Проверка…</string>
+    <string name="node_mode_auto">Авто (самый быстрый)</string>
+    <string name="node_mode_pinned">Закреплённый узел</string>
+    <string name="node_auto_hint">Velora использует самый быстрый узел и переключается, если он перестаёт отвечать.</string>
+    <string name="node_pinned_hint">Velora сначала обращается к закреплённому узлу. Если он не отвечает, его заменяют другие узлы, пока он не вернётся.</string>
+    <string name="node_in_use">Используется</string>
+    <string name="node_default_status">По умолчанию. %1$s</string>
+    <string name="node_custom">Свой</string>
+    <string name="node_block">Блок %1$s</string>
+    <string name="node_behind">Отстаёт на %1$s блоков</string>
+    <string name="node_unreachable">Недоступен</string>
+    <string name="node_login">Недоступен (требует входа)</string>
+    <string name="node_refused">Отклоняет запросы</string>
+    <string name="node_delete">Удалить %1$s</string>
+    <string name="node_add">Добавить свой узел</string>
+    <string name="node_trust">Свой узел может показывать неверные балансы, но не может изменить то, что вы подписываете. Velora проверяет каждую транзакцию перед подписью.</string>
+    <string name="node_add_hint">Добавьте узел JSON-RPC для %1$s. Он появится в списке рядом с узлами по умолчанию.</string>
+    <string name="node_url">URL узла</string>
+    <string name="node_url_hint">Только HTTPS.</string>
+    <string name="node_name">Название (необязательно)</string>
+    <string name="node_test_connection">Проверить соединение</string>
+    <string name="node_answered">Узел ответил</string>
+    <string name="node_wrong_network">Не та сеть</string>
+    <string name="node_wrong_network_hint">Этот узел обслуживает другую сеть (%1$s). Переключите кошелёк на эту сеть, чтобы добавить его там.</string>
+    <string name="node_network">Сеть</string>
+    <string name="node_network_unknown">Не сообщается</string>
+    <string name="node_last_block">Последний блок</string>
+    <string name="node_latency">Задержка</string>
+    <string name="node_latency_ms">%1$d мс</string>
+    <string name="node_save">Сохранить узел</string>
+    <string name="node_error_https">Используйте адрес HTTPS, например https://node.example.com/jsonrpc</string>
+    <string name="node_error_duplicate">Этот узел уже есть в списке</string>
 
     <!-- Backup settings -->
     <string name="backup_title">Резервная копия</string>
@@ -528,8 +571,6 @@
     <string name="settings_biometric_enabled">Биометрическая разблокировка включена</string>
     <string name="settings_network_switched">Переключено на %1$s</string>
     <string name="settings_error_network_switch">Не удалось переключить сеть</string>
-    <string name="settings_rpc_reverted">Восстановлены адреса по умолчанию</string>
-    <string name="settings_rpc_saved">Пользовательский RPC URL сохранен</string>
     <string name="settings_error_enter_password">Введите пароль</string>
     <string name="settings_error_decrypt_phrase">Не удалось расшифровать фразу</string>
     <string name="settings_no_new_accounts">Новые аккаунты не найдены</string>

@@ -17,6 +17,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.andrutstudio.velora.data.local.AppPreferences
+import com.andrutstudio.velora.data.local.FaviconRef
+import com.andrutstudio.velora.data.local.FaviconStore
 import com.andrutstudio.velora.data.local.db.BookmarkEntity
 import com.andrutstudio.velora.data.local.db.BrowserDao
 import com.andrutstudio.velora.data.local.db.BrowserHistoryEntity
@@ -45,6 +48,8 @@ class BrowserViewModel @Inject constructor(
     private val sendBond: SendBondUseCase,
     private val blockchainRepository: BlockchainRepository,
     private val browserDao: BrowserDao,
+    private val appPreferences: AppPreferences,
+    private val faviconStore: FaviconStore,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -61,7 +66,10 @@ class BrowserViewModel @Inject constructor(
         val network: Network = Network.MAINNET,
         val history: List<BrowserHistoryEntity> = emptyList(),
         val bookmarks: List<BookmarkEntity> = emptyList(),
-        val isDrawerOpen: Boolean = false,
+        // Site icons by host (FaviconStore.hostKey), filled as pages are visited
+        val favicons: Map<String, FaviconRef> = emptyMap(),
+        // Bookmarks and history sheet; null when closed
+        val libraryTab: LibraryTab? = null,
         val pendingConnectRequest: PendingConnectRequest? = null,
         val pendingSignRequest: PendingSignRequest? = null,
         val pendingSignMessageRequest: PendingSignMessageRequest? = null,
@@ -188,16 +196,25 @@ class BrowserViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            // Rows from older versions can hold the start page and repeat a URL
+            browserDao.deleteNonWebHistory()
             browserDao.observeHistory().collect { history ->
-                _state.update { it.copy(history = history) }
+                _state.update { it.copy(history = history.filter { e -> isWebUrl(e.url) }.distinctBy { e -> e.url }) }
             }
         }
 
         viewModelScope.launch {
             browserDao.observeBookmarks().collect { bookmarks ->
-                if (bookmarks.isEmpty()) seedPresetBookmarks()
+                if (!appPreferences.bookmarksSeeded()) {
+                    if (bookmarks.isEmpty()) seedPresetBookmarks()
+                    appPreferences.setBookmarksSeeded()
+                }
                 _state.update { it.copy(bookmarks = bookmarks) }
             }
+        }
+
+        viewModelScope.launch {
+            faviconStore.icons.collect { icons -> _state.update { it.copy(favicons = icons) } }
         }
 
         viewModelScope.launch { _effect.send(Effect.LoadUrl(startUrl)) }
@@ -230,8 +247,11 @@ class BrowserViewModel @Inject constructor(
     fun onPageFinished(url: String, title: String) {
         _state.update { it.copy(url = url, isLoading = false, pageTitle = title, loadingProgress = 100) }
         viewModelScope.launch {
-            browserDao.insertHistory(BrowserHistoryEntity(url = url, title = title.ifBlank { url }))
-            _state.update { it.copy(isBookmarked = browserDao.isBookmarked(url)) }
+            // The start page (about:blank) is not a visit
+            if (isWebUrl(url)) {
+                browserDao.recordVisit(BrowserHistoryEntity(url = url, title = title.ifBlank { url }))
+            }
+            _state.update { it.copy(isBookmarked = browserDao.isBookmarked(sameSite(url))) }
         }
     }
 
@@ -249,40 +269,76 @@ class BrowserViewModel @Inject constructor(
 
     fun onToggleBookmark() {
         val url = _state.value.url
+        if (!isWebUrl(url)) return
         val title = _state.value.pageTitle.ifBlank { url }
         viewModelScope.launch {
             if (_state.value.isBookmarked) {
-                val bookmark = _state.value.bookmarks.find { it.url == url } ?: return@launch
+                val bookmark = _state.value.bookmarks.find { it.url in sameSite(url) } ?: return@launch
                 browserDao.deleteBookmark(bookmark)
+            faviconStore.keepOnly(savedUrls() - bookmark.url)
                 _state.update { it.copy(isBookmarked = false) }
             } else {
-                browserDao.insertBookmark(BookmarkEntity(url = url, title = title))
+                browserDao.insertBookmark(BookmarkEntity(url = sameSite(url).first(), title = title))
                 _state.update { it.copy(isBookmarked = true) }
                 _effect.send(Effect.ShowSnackbar(UiText.Res(R.string.browser_bookmarked)))
             }
         }
     }
 
-    fun onToggleDrawer() {
-        _state.update { it.copy(isDrawerOpen = !it.isDrawerOpen) }
+    fun onOpenLibrary(tab: LibraryTab) {
+        _state.update { it.copy(libraryTab = tab) }
     }
 
-    fun onCloseDrawer() {
-        _state.update { it.copy(isDrawerOpen = false) }
+    fun onCloseLibrary() {
+        _state.update { it.copy(libraryTab = null) }
     }
 
-    fun onBookmarkClicked(url: String) {
-        _state.update { it.copy(isDrawerOpen = false, urlBarText = url) }
+    /** Opens a bookmark or a history entry and closes the sheet. */
+    fun onOpenSaved(url: String) {
+        _state.update { it.copy(libraryTab = null, urlBarText = url) }
         viewModelScope.launch { _effect.send(Effect.LoadUrl(url)) }
     }
 
-    fun onHistoryItemClicked(url: String) {
-        _state.update { it.copy(isDrawerOpen = false, urlBarText = url) }
-        viewModelScope.launch { _effect.send(Effect.LoadUrl(url)) }
+    fun onDeleteBookmark(bookmark: BookmarkEntity) {
+        viewModelScope.launch {
+            browserDao.deleteBookmark(bookmark)
+            faviconStore.keepOnly(savedUrls() - bookmark.url)
+            if (bookmark.url in sameSite(_state.value.url)) _state.update { it.copy(isBookmarked = false) }
+        }
+    }
+
+    fun onDeleteHistory(url: String) {
+        viewModelScope.launch {
+            browserDao.deleteHistoryUrl(url)
+            faviconStore.keepOnly(savedUrls() - url)
+        }
     }
 
     fun onClearHistory() {
-        viewModelScope.launch { browserDao.clearHistory() }
+        viewModelScope.launch {
+            browserDao.clearHistory()
+            // Bookmarked sites keep their icon
+            faviconStore.keepOnly(_state.value.bookmarks.map { it.url })
+        }
+    }
+
+    fun onReceivedIcon(url: String?, icon: android.graphics.Bitmap?) {
+        if (url == null || icon == null || !isWebUrl(url)) return
+        viewModelScope.launch { faviconStore.save(url, icon) }
+    }
+
+    private fun savedUrls(): List<String> = _state.value.let { s -> s.bookmarks.map { it.url } + s.history.map { it.url } }
+
+    private fun isWebUrl(url: String) = url.startsWith("https://") || url.startsWith("http://")
+
+    // "https://site.app" loads as "https://site.app/"; both mean the same bookmark (bare form first)
+    private fun sameSite(url: String): List<String> {
+        val bare = Regex("^(https?://[^/?#]+)/$").find(url)?.groupValues?.get(1)
+        return when {
+            bare != null -> listOf(bare, url)
+            Regex("^https?://[^/?#]+$").matches(url) -> listOf(url, "$url/")
+            else -> listOf(url)
+        }
     }
 
     fun onExternalLinkRequested(url: String) {
@@ -819,3 +875,5 @@ class BrowserViewModel @Inject constructor(
         const val ERR_REQUEST_PENDING = "Another request is pending"
     }
 }
+
+enum class LibraryTab { BOOKMARKS, HISTORY }

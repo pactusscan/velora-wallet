@@ -41,6 +41,7 @@ fun WalletPickerSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = MaterialTheme.colorScheme.surface,
         dragHandle = null,
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),

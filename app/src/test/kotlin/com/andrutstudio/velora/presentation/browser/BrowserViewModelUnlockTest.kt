@@ -3,6 +3,8 @@ package com.andrutstudio.velora.presentation.browser
 import androidx.lifecycle.SavedStateHandle
 import com.andrutstudio.velora.R
 import com.andrutstudio.velora.presentation.components.UiText
+import com.andrutstudio.velora.data.local.AppPreferences
+import com.andrutstudio.velora.data.local.FaviconStore
 import com.andrutstudio.velora.data.local.db.BrowserDao
 import com.andrutstudio.velora.domain.model.Account
 import com.andrutstudio.velora.domain.model.AccountType
@@ -75,6 +77,14 @@ class BrowserViewModelUnlockTest {
     private val sendAnchor by lazy { SendAnchorUseCase(chain, walletRepository) }
     private val sendBond by lazy { com.andrutstudio.velora.domain.usecase.SendBondUseCase(chain, walletRepository) }
 
+    private val appPreferences = mockk<AppPreferences>(relaxed = true) {
+        coEvery { bookmarksSeeded() } returns true
+    }
+
+    private val faviconStore = mockk<FaviconStore>(relaxed = true) {
+        every { icons } returns kotlinx.coroutines.flow.MutableStateFlow(emptyMap())
+    }
+
     @Before
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
@@ -86,7 +96,7 @@ class BrowserViewModelUnlockTest {
     }
 
     private fun viewModel() =
-        BrowserViewModel(walletRepository, sendTransaction, sendAnchor, sendBond, chain, browserDao, SavedStateHandle())
+        BrowserViewModel(walletRepository, sendTransaction, sendAnchor, sendBond, chain, browserDao, appPreferences, faviconStore, SavedStateHandle())
 
     private fun signAnchorRequest(vm: BrowserViewModel, fee: String) =
         vm.onSignAnchorRequest("a1", "set", "ab".repeat(32), "", "0", "", fee, "", "")

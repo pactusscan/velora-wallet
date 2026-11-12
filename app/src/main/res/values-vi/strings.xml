@@ -234,6 +234,16 @@
     <string name="browser_bookmarks_empty">Chưa có dấu trang</string>
     <string name="browser_history_header">Lịch sử</string>
     <string name="browser_history_empty">Chưa có lịch sử</string>
+    <string name="browser_recent">Mở gần đây</string>
+    <string name="browser_see_all">Xem tất cả</string>
+    <string name="browser_library">Dấu trang và lịch sử</string>
+    <string name="browser_history_today">Hôm nay</string>
+    <string name="browser_history_yesterday">Hôm qua</string>
+    <string name="browser_clear_history">Xóa lịch sử</string>
+    <string name="browser_bookmarks_empty_hint">Nhấn biểu tượng dấu trang trên thanh địa chỉ để lưu trang.</string>
+    <string name="browser_history_empty_hint">Các trang bạn mở sẽ xuất hiện ở đây.</string>
+    <string name="browser_delete_bookmark">Xóa dấu trang %1$s</string>
+    <string name="browser_delete_history">Xóa %1$s khỏi lịch sử</string>
 
     <!-- Settings -->
     <string name="settings_title">Cài đặt</string>
@@ -287,11 +297,44 @@
     <string name="network_testnet">Testnet</string>
     <string name="network_testnet_desc">Mạng thử nghiệm</string>
     <string name="network_select">Chọn Mạng</string>
-    <string name="network_mainnet_rpc">RPC Mainnet</string>
-    <string name="network_testnet_rpc">RPC Testnet</string>
     <string name="network_coin_type">Loại coin: %1$d</string>
     <string name="network_selected">Đã chọn</string>
     <string name="network_switch_warning">Chuyển đổi mạng sẽ tự động cập nhật địa chỉ tài khoản của bạn để phù hợp với mạng đã chọn.</string>
+    <string name="node_list_title">Node RPC</string>
+    <string name="node_list_count">%1$s, %2$d node</string>
+    <string name="node_test_all">Kiểm tra tất cả</string>
+    <string name="node_checking">Đang kiểm tra…</string>
+    <string name="node_mode_auto">Tự động (nhanh nhất)</string>
+    <string name="node_mode_pinned">Node đã ghim</string>
+    <string name="node_auto_hint">Velora dùng node nhanh nhất và chuyển sang node khác khi node đó không phản hồi.</string>
+    <string name="node_pinned_hint">Velora thử node đã ghim trước. Nếu node đó không phản hồi, các node khác sẽ thay thế cho đến khi node đó hoạt động lại.</string>
+    <string name="node_in_use">Đang dùng</string>
+    <string name="node_default_status">Mặc định. %1$s</string>
+    <string name="node_custom">Tùy chỉnh</string>
+    <string name="node_block">Khối %1$s</string>
+    <string name="node_behind">Chậm %1$s khối</string>
+    <string name="node_unreachable">Không thể kết nối</string>
+    <string name="node_login">Không thể kết nối (yêu cầu đăng nhập)</string>
+    <string name="node_refused">Từ chối yêu cầu</string>
+    <string name="node_delete">Xóa %1$s</string>
+    <string name="node_add">Thêm node tùy chỉnh</string>
+    <string name="node_trust">Node tùy chỉnh có thể hiển thị số dư sai, nhưng không thể thay đổi nội dung bạn ký. Velora kiểm tra mọi giao dịch trước khi ký.</string>
+    <string name="node_add_hint">Thêm một node JSON-RPC cho %1$s. Node sẽ nằm trong danh sách cạnh các node mặc định.</string>
+    <string name="node_url">URL node</string>
+    <string name="node_url_hint">Chỉ HTTPS.</string>
+    <string name="node_name">Tên (không bắt buộc)</string>
+    <string name="node_test_connection">Kiểm tra kết nối</string>
+    <string name="node_answered">Node đã phản hồi</string>
+    <string name="node_wrong_network">Sai mạng</string>
+    <string name="node_wrong_network_hint">Node này phục vụ một mạng khác (%1$s). Hãy chuyển ví sang mạng đó để thêm node tại đó.</string>
+    <string name="node_network">Mạng</string>
+    <string name="node_network_unknown">Không được báo cáo</string>
+    <string name="node_last_block">Khối gần nhất</string>
+    <string name="node_latency">Độ trễ</string>
+    <string name="node_latency_ms">%1$d ms</string>
+    <string name="node_save">Lưu node</string>
+    <string name="node_error_https">Hãy dùng địa chỉ HTTPS, ví dụ https://node.example.com/jsonrpc</string>
+    <string name="node_error_duplicate">Node này đã có trong danh sách</string>
 
     <!-- Backup settings -->
     <string name="backup_title">Cụm từ sao lưu</string>
@@ -508,8 +551,6 @@
     <string name="settings_biometric_enabled">Đã bật mở khóa sinh trắc học</string>
     <string name="settings_network_switched">Đã chuyển sang %1$s</string>
     <string name="settings_error_network_switch">Chuyển mạng thất bại</string>
-    <string name="settings_rpc_reverted">Đã khôi phục endpoint mặc định</string>
-    <string name="settings_rpc_saved">Đã lưu URL RPC tùy chỉnh</string>
     <string name="settings_error_enter_password">Nhập mật khẩu của bạn</string>
     <string name="settings_error_decrypt_phrase">Không thể giải mã cụm từ</string>
     <string name="settings_no_new_accounts">Không tìm thấy tài khoản mới</string>

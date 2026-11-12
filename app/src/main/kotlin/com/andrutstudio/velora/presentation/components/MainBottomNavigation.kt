@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -36,6 +37,14 @@ import com.andrutstudio.velora.R
 import com.andrutstudio.velora.presentation.navigation.Screen
 import com.andrutstudio.velora.presentation.theme.BrandTeal
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
+
+/**
+ * Bottom space a scrolling screen behind the floating dock needs, so its last item can scroll
+ * fully above it: dock margin (20) + bar (72) + the raised Wallet button (11) + a gap (17),
+ * plus the system navigation bar, which the screens' Scaffold padding does not include.
+ */
+@Composable
+fun dockClearance(): Dp = 120.dp + WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
 @Composable
 fun MainBottomNavigation(
