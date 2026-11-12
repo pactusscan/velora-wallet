@@ -15,8 +15,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Close
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +33,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.andrutstudio.velora.R
+import com.andrutstudio.velora.data.local.FaviconRef
+import com.andrutstudio.velora.data.local.FaviconStore
 import com.andrutstudio.velora.data.local.db.BookmarkEntity
 import com.andrutstudio.velora.data.local.db.BrowserHistoryEntity
 import com.andrutstudio.velora.presentation.theme.BrandPurple
@@ -47,6 +54,7 @@ private const val RECENT_ON_HOME = 3
 fun HomeSavedSections(
     bookmarks: List<BookmarkEntity>,
     history: List<BrowserHistoryEntity>,
+    favicons: Map<String, FaviconRef>,
     onOpen: (String) -> Unit,
     onSeeAll: (LibraryTab) -> Unit,
 ) {
@@ -60,7 +68,7 @@ fun HomeSavedSections(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 bookmarks.forEach { bookmark ->
-                    BookmarkCard(bookmark) { onOpen(bookmark.url) }
+                    BookmarkCard(bookmark, favicons.iconFor(bookmark.url)) { onOpen(bookmark.url) }
                 }
             }
         }
@@ -76,7 +84,7 @@ fun HomeSavedSections(
             ) {
                 history.take(RECENT_ON_HOME).forEachIndexed { i, entry ->
                     if (i > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
-                    SavedRow(title = entry.title, url = entry.url, onClick = { onOpen(entry.url) })
+                    SavedRow(title = entry.title, url = entry.url, icon = favicons.iconFor(entry.url), onClick = { onOpen(entry.url) })
                 }
             }
         }
@@ -100,7 +108,7 @@ private fun SectionHeader(title: String, action: String, onAction: () -> Unit) {
 }
 
 @Composable
-private fun BookmarkCard(bookmark: BookmarkEntity, onClick: () -> Unit) {
+private fun BookmarkCard(bookmark: BookmarkEntity, icon: FaviconRef?, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .width(92.dp)
@@ -111,7 +119,7 @@ private fun BookmarkCard(bookmark: BookmarkEntity, onClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        SiteInitial(bookmark.title, bookmark.url, size = 40)
+        SiteIcon(bookmark.title, bookmark.url, icon, size = 40)
         Text(
             bookmark.title.ifBlank { hostOf(bookmark.url) },
             style = MaterialTheme.typography.labelMedium,
@@ -130,6 +138,7 @@ fun LibrarySheet(
     tab: LibraryTab,
     bookmarks: List<BookmarkEntity>,
     history: List<BrowserHistoryEntity>,
+    favicons: Map<String, FaviconRef>,
     onTabChange: (LibraryTab) -> Unit,
     onOpen: (String) -> Unit,
     onDeleteBookmark: (BookmarkEntity) -> Unit,
@@ -142,7 +151,7 @@ fun LibrarySheet(
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = MaterialTheme.colorScheme.surface,
     ) {
-        LibraryContent(tab, bookmarks, history, onTabChange, onOpen, onDeleteBookmark, onDeleteHistory, onClearHistory)
+        LibraryContent(tab, bookmarks, history, favicons, onTabChange, onOpen, onDeleteBookmark, onDeleteHistory, onClearHistory)
     }
 }
 
@@ -151,6 +160,7 @@ private fun LibraryContent(
     tab: LibraryTab,
     bookmarks: List<BookmarkEntity>,
     history: List<BrowserHistoryEntity>,
+    favicons: Map<String, FaviconRef>,
     onTabChange: (LibraryTab) -> Unit,
     onOpen: (String) -> Unit,
     onDeleteBookmark: (BookmarkEntity) -> Unit,
@@ -176,6 +186,7 @@ private fun LibraryContent(
                         SavedRow(
                             title = bookmark.title,
                             url = bookmark.url,
+                            icon = favicons.iconFor(bookmark.url),
                             onClick = { onOpen(bookmark.url) },
                             deleteLabel = stringResource(R.string.browser_delete_bookmark, bookmark.title.ifBlank { hostOf(bookmark.url) }),
                             onDelete = { onDeleteBookmark(bookmark) },
@@ -201,6 +212,7 @@ private fun LibraryContent(
                             SavedRow(
                                 title = entry.title,
                                 url = entry.url,
+                                icon = favicons.iconFor(entry.url),
                                 time = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(entry.visitedAt)),
                                 onClick = { onOpen(entry.url) },
                                 deleteLabel = stringResource(R.string.browser_delete_history, hostOf(entry.url)),
@@ -264,6 +276,7 @@ private fun SavedRow(
     title: String,
     url: String,
     onClick: () -> Unit,
+    icon: FaviconRef? = null,
     time: String? = null,
     deleteLabel: String? = null,
     onDelete: (() -> Unit)? = null,
@@ -276,7 +289,7 @@ private fun SavedRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        SiteInitial(title, url, size = 36)
+        SiteIcon(title, url, icon, size = 36)
         Column(Modifier.weight(1f)) {
             Text(title.ifBlank { hostOf(url) }, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(
@@ -303,9 +316,25 @@ private fun SavedRow(
     }
 }
 
-/** First letter of the site in a rounded square, so rows read without loading favicons. */
+private fun Map<String, FaviconRef>.iconFor(url: String): FaviconRef? = FaviconStore.hostKey(url)?.let(::get)
+
+/** The site's favicon once it was visited, else its first letter in a rounded square. */
 @Composable
-private fun SiteInitial(title: String, url: String, size: Int) {
+private fun SiteIcon(title: String, url: String, icon: FaviconRef?, size: Int) {
+    val bitmap = remember(icon) { icon?.let { BitmapFactory.decodeFile(it.path)?.asImageBitmap() } }
+    if (bitmap != null) {
+        Box(
+            modifier = Modifier
+                .size(size.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.surface)
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), RoundedCornerShape(8.dp)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Image(bitmap, contentDescription = null, modifier = Modifier.size((size * 0.6f).dp))
+        }
+        return
+    }
     val letter = (hostOf(url).removePrefix("www.").firstOrNull() ?: title.firstOrNull() ?: '?').uppercaseChar()
     Box(
         modifier = Modifier
@@ -368,7 +397,7 @@ private val previewHistory = System.currentTimeMillis().let { now ->
 private fun HomeSavedSectionsPreview() {
     VeloraTheme {
         Box(Modifier.padding(16.dp)) {
-            HomeSavedSections(previewBookmarks, previewHistory, onOpen = {}, onSeeAll = {})
+            HomeSavedSections(previewBookmarks, previewHistory, emptyMap(), onOpen = {}, onSeeAll = {})
         }
     }
 }
@@ -377,7 +406,7 @@ private fun HomeSavedSectionsPreview() {
 @Composable
 private fun LibraryHistoryPreview() {
     VeloraTheme {
-        LibraryContent(LibraryTab.HISTORY, previewBookmarks, previewHistory, {}, {}, {}, {}, {})
+        LibraryContent(LibraryTab.HISTORY, previewBookmarks, previewHistory, emptyMap(), {}, {}, {}, {}, {})
     }
 }
 
@@ -385,6 +414,6 @@ private fun LibraryHistoryPreview() {
 @Composable
 private fun LibraryBookmarksEmptyPreview() {
     VeloraTheme {
-        LibraryContent(LibraryTab.BOOKMARKS, emptyList(), previewHistory, {}, {}, {}, {}, {})
+        LibraryContent(LibraryTab.BOOKMARKS, emptyList(), previewHistory, emptyMap(), {}, {}, {}, {}, {})
     }
 }
