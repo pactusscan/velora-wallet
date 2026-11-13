@@ -161,7 +161,7 @@ fun MnemonicBackupScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                shape = MaterialTheme.shapes.large,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (state.isLoading) {
                     CircularProgressIndicator(

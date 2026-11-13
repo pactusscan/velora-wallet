@@ -1,6 +1,7 @@
 package com.andrutstudio.velora.presentation.settings
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -139,6 +140,7 @@ private fun ConnectedSiteCard(site: ConnectedSiteEntity, onRevoke: () -> Unit) {
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = MaterialTheme.colorScheme.error,
                 ),
+                shape = RoundedCornerShape(8.dp),
             ) { Text(stringResource(R.string.action_revoke)) }
         }
     }

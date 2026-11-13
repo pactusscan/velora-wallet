@@ -1,6 +1,7 @@
 package com.andrutstudio.velora.presentation.settings
 
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -132,6 +133,7 @@ private fun SecuritySettingsContent(
                 onClick = onChangePassword,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.isPasswordLoading,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (state.isPasswordLoading) {
                     CircularProgressIndicator(

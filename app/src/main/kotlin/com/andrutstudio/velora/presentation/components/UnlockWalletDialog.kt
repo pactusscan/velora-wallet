@@ -1,6 +1,7 @@
 package com.andrutstudio.velora.presentation.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Fingerprint
 import androidx.compose.material.icons.rounded.Lock
@@ -68,6 +69,7 @@ fun UnlockWalletDialog(
             Button(
                 onClick = { onUnlock(password) },
                 enabled = password.isNotBlank() && !isLoading,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(

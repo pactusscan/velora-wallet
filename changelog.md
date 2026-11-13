@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed & Improved
+- **Square Buttons**: Buttons across the app use the 8 dp corners of the Velora design instead of round pill shapes.
+- **Browser Start Page Above the Dock**: The last card of the browser start page can be scrolled fully above the navigation dock.
+- **Cleaner Browser History**: Pages that fail to load ("Webpage not available") are no longer recorded in history.
+
 ## [0.1.9] - 2026-11-13
 
 This release adds the node list from the browser extension 0.1.5, bookmarks and history in the dApp browser, and fixes screens that were hard to use: half open sheets, fields hidden by the keyboard, content under the navigation bar and dark cards in light mode.

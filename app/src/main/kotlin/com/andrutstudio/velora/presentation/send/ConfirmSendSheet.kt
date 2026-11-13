@@ -169,6 +169,7 @@ fun ConfirmSendSheet(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                 ),
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (state.isSending) {
                     CircularProgressIndicator(
@@ -197,6 +198,7 @@ fun ConfirmSendSheet(
                 onClick = onDismiss,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.isSending,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Text(stringResource(R.string.action_reject))
             }

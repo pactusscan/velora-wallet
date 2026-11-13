@@ -78,6 +78,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
 import com.andrutstudio.velora.R
+import com.andrutstudio.velora.presentation.components.dockClearance
 import com.andrutstudio.velora.presentation.components.formatPac
 import com.andrutstudio.velora.presentation.anchor.anchorTypeName
 import com.andrutstudio.velora.domain.model.AnchorRequest
@@ -212,6 +213,11 @@ fun BrowserScreen(
                 viewModel.onReceivedIcon(url, favicon)
                 // Early-injection fallback; the script bails if window.pactus exists.
                 view?.evaluateJavascript(PactusJsBridge.JS_BRIDGE, null)
+            }
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                // Only a failed page counts; a failed image or script inside a working page does not
+                if (request?.isForMainFrame == true) viewModel.onMainFrameError(request.url.toString())
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
@@ -502,7 +508,7 @@ private fun BrowserHome(
         }
 
         // Room for the floating navigation dock, so the last card can scroll above it
-        Spacer(Modifier.height(120.dp))
+        Spacer(Modifier.height(dockClearance()))
     }
 }
 
@@ -795,11 +801,13 @@ private fun ConnectRequestSheet(
                 OutlinedButton(
                     onClick = onCancel,
                     modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(8.dp),
                 ) { Text(stringResource(R.string.action_reject)) }
 
                 Button(
                     onClick = onConfirm,
                     modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(8.dp),
                 ) { Text(stringResource(R.string.browser_connect_button)) }
             }
         }
@@ -865,12 +873,14 @@ private fun SignRequestSheetContent(
                 onClick = onCancel,
                 modifier = Modifier.weight(1f),
                 enabled = !isSigning,
+                shape = RoundedCornerShape(8.dp),
             ) { Text(stringResource(R.string.action_reject)) }
 
             Button(
                 onClick = onConfirm,
                 modifier = Modifier.weight(1f),
                 enabled = !isSigning,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (isSigning) {
                     CircularProgressIndicator(
@@ -973,12 +983,14 @@ private fun SignMessageSheetContent(
                 onClick = onCancel,
                 modifier = Modifier.weight(1f),
                 enabled = !isSigning,
+                shape = RoundedCornerShape(8.dp),
             ) { Text(stringResource(R.string.action_reject)) }
 
             Button(
                 onClick = onConfirm,
                 modifier = Modifier.weight(1f),
                 enabled = !isSigning,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (isSigning) {
                     CircularProgressIndicator(
@@ -1085,12 +1097,14 @@ private fun SignAnchorSheetContent(
                 onClick = onCancel,
                 modifier = Modifier.weight(1f),
                 enabled = !isSigning,
+                shape = RoundedCornerShape(8.dp),
             ) { Text(stringResource(R.string.action_reject)) }
 
             Button(
                 onClick = onConfirm,
                 modifier = Modifier.weight(1f),
                 enabled = !isSigning && request.fee != null,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (isSigning) {
                     CircularProgressIndicator(
@@ -1172,10 +1186,10 @@ private fun BondRequestSheet(
             )
             HorizontalDivider()
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedButton(onClick = onCancel, modifier = Modifier.weight(1f), enabled = !isSigning) {
+                OutlinedButton(onClick = onCancel, modifier = Modifier.weight(1f), enabled = !isSigning, shape = RoundedCornerShape(8.dp)) {
                     Text(stringResource(R.string.action_reject))
                 }
-                Button(onClick = onConfirm, modifier = Modifier.weight(1f), enabled = !isSigning && request.fee != null) {
+                Button(onClick = onConfirm, modifier = Modifier.weight(1f), enabled = !isSigning && request.fee != null, shape = RoundedCornerShape(8.dp)) {
                     if (isSigning) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(18.dp),

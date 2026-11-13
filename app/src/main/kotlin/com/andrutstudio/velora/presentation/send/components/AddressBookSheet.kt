@@ -164,7 +164,8 @@ private fun AddAddressDialog(
         confirmButton = {
             Button(
                 onClick = { onConfirm(label, address) },
-                enabled = label.isNotBlank() && address.isNotBlank()
+                enabled = label.isNotBlank() && address.isNotBlank(),
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Text(stringResource(R.string.action_save))
             }

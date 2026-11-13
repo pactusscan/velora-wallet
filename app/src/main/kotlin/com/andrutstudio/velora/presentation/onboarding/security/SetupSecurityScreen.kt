@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.onboarding.security
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.andrutstudio.velora.presentation.components.asString
 import androidx.biometric.BiometricManager
 import androidx.compose.foundation.layout.*
@@ -155,7 +156,7 @@ fun SetupSecurityContent(
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     ),
-                    shape = MaterialTheme.shapes.large,
+                    shape = RoundedCornerShape(12.dp),
                 ) {
                     Row(
                         modifier = Modifier
@@ -215,7 +216,7 @@ fun SetupSecurityContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                shape = MaterialTheme.shapes.large,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (state.isLoading) {
                     CircularProgressIndicator(

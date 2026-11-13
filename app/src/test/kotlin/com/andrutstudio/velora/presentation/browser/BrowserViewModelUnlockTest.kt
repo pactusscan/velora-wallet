@@ -242,6 +242,19 @@ class BrowserViewModelUnlockTest {
         coVerify(exactly = 0) { walletRepository.signMessage(any(), any()) }
     }
 
+    @Test
+    fun `a page that failed to load is not recorded in history`() {
+        val vm = viewModel()
+        vm.onPageStarted("https://down.example/")
+        vm.onMainFrameError("https://down.example/")
+        vm.onPageFinished("https://down.example/", "Webpage not available")
+        coVerify(exactly = 0) { browserDao.recordVisit(any()) }
+
+        vm.onPageStarted("https://pactus.org/")
+        vm.onPageFinished("https://pactus.org/", "Pactus")
+        coVerify(exactly = 1) { browserDao.recordVisit(any()) }
+    }
+
     private companion object {
         const val PASSWORD = "correct horse"
         const val SIGNATURE = "sig"

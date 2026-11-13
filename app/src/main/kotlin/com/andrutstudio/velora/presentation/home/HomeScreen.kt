@@ -579,7 +579,7 @@ private fun RenameAccountDialog(
             )
         },
         confirmButton = {
-            Button(onClick = onConfirm, enabled = currentLabel.isNotBlank()) {
+            Button(onClick = onConfirm, enabled = currentLabel.isNotBlank(), shape = RoundedCornerShape(8.dp)) {
                 Text(stringResource(R.string.action_save))
             }
         },
