@@ -1,6 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.10] - 2026-11-13
+
+This release shows the end date you pick for a delegation, adds a Home button to the dApp browser and gives every button the square corners of the Velora design.
 
 ### Added
 - **Home Button in the Browser**: The new Home button next to Back and Forward returns to the start page in one tap. Tapping the Browser tab in the dock while you are in the browser does the same.
