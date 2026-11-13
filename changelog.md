@@ -9,6 +9,7 @@
 - **Square Buttons**: Buttons across the app use the 8 dp corners of the Velora design instead of round pill shapes.
 - **Browser Start Page Above the Dock**: The last card of the browser start page can be scrolled fully above the navigation dock.
 - **Cleaner Browser History**: Pages that fail to load ("Webpage not available") are no longer recorded in history.
+- **Delegation End Date Is Visible**: When you set the delegation term by date, the chosen day now shows in a Date field under the term options. Tap it to change the day. Today and past days can no longer be picked.
 
 ## [0.1.9] - 2026-11-13
 
