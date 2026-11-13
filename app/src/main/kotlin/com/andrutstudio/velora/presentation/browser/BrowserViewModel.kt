@@ -239,7 +239,15 @@ class BrowserViewModel @Inject constructor(
         viewModelScope.launch { _effect.send(Effect.LoadUrl(url)) }
     }
 
+    /** URL whose page failed to load (WebView then shows "Webpage not available"). */
+    private var failedUrl: String? = null
+
+    fun onMainFrameError(url: String) {
+        failedUrl = url
+    }
+
     fun onPageStarted(url: String) {
+        failedUrl = null
         val displayUrl = if (url == HOME_URL) "" else url
         _state.update { it.copy(url = url, urlBarText = displayUrl, isLoading = true, loadingProgress = 0) }
     }
@@ -247,8 +255,8 @@ class BrowserViewModel @Inject constructor(
     fun onPageFinished(url: String, title: String) {
         _state.update { it.copy(url = url, isLoading = false, pageTitle = title, loadingProgress = 100) }
         viewModelScope.launch {
-            // The start page (about:blank) is not a visit
-            if (isWebUrl(url)) {
+            // The start page (about:blank) and error pages are not visits
+            if (isWebUrl(url) && url != failedUrl) {
                 browserDao.recordVisit(BrowserHistoryEntity(url = url, title = title.ifBlank { url }))
             }
             _state.update { it.copy(isBookmarked = browserDao.isBookmarked(sameSite(url))) }

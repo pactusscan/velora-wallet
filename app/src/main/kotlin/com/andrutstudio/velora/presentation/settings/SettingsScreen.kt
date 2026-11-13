@@ -2,6 +2,7 @@
 package com.andrutstudio.velora.presentation.settings
 
 import com.andrutstudio.velora.presentation.components.asString
+import androidx.compose.foundation.shape.RoundedCornerShape
 import android.content.Context
 import androidx.biometric.BiometricManager
 import androidx.compose.foundation.clickable
@@ -107,6 +108,7 @@ fun SettingsScreen(
                 Button(
                     onClick = { showResetConfirm = false; viewModel.onResetWallet() },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                    shape = RoundedCornerShape(8.dp),
                 ) { Text(stringResource(R.string.home_reset_wallet_title).split("?")[0]) }
             },
             dismissButton = {
@@ -606,7 +608,7 @@ private fun RenameWalletDialog(
             )
         },
         confirmButton = {
-            Button(onClick = onConfirm, enabled = currentName.isNotBlank()) {
+            Button(onClick = onConfirm, enabled = currentName.isNotBlank(), shape = RoundedCornerShape(8.dp)) {
                 Text(stringResource(R.string.action_save))
             }
         },

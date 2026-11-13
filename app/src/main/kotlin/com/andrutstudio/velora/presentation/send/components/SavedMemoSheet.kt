@@ -145,7 +145,8 @@ private fun AddMemoDialog(
         confirmButton = {
             Button(
                 onClick = { onConfirm(text) },
-                enabled = text.isNotBlank()
+                enabled = text.isNotBlank(),
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Text(stringResource(R.string.action_save))
             }

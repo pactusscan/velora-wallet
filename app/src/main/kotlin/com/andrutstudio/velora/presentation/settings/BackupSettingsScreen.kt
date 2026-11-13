@@ -200,6 +200,7 @@ private fun BackupSettingsContent(
                     onClick = onRevealMnemonic,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !state.isBackupLoading,
+                    shape = RoundedCornerShape(8.dp),
                 ) {
                     if (state.isBackupLoading) {
                         CircularProgressIndicator(
@@ -280,6 +281,7 @@ private fun BackupSettingsContent(
                             scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.backup_copied_toast)) }
                         },
                         modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Icon(Icons.Rounded.ContentCopy, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(6.dp))
@@ -288,6 +290,7 @@ private fun BackupSettingsContent(
                     OutlinedButton(
                         onClick = onHideMnemonic,
                         modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Icon(Icons.Rounded.VisibilityOff, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(6.dp))

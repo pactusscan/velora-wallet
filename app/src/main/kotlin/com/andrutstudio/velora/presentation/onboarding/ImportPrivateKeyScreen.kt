@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.onboarding
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -108,7 +109,7 @@ fun ImportPrivateKeyScreen(
                 onClick = onSubmit,
                 modifier = Modifier.fillMaxWidth().height(56.dp),
                 enabled = state.privateKeyInput.isNotBlank() && !state.isLoading,
-                shape = MaterialTheme.shapes.large,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (state.isLoading) {
                     CircularProgressIndicator(

@@ -390,6 +390,7 @@ private fun TxDetailContent(
         OutlinedButton(
             onClick = { onViewExplorer(tx.id) },
             modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
         ) {
             Icon(
                 Icons.Rounded.OpenInNew,

@@ -1,5 +1,6 @@
 package com.andrutstudio.velora.presentation.onboarding.create
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.andrutstudio.velora.presentation.components.asString
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -103,7 +104,7 @@ fun CreateWalletScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                shape = MaterialTheme.shapes.large,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (state.isLoading) {
                     CircularProgressIndicator(

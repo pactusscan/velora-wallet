@@ -1,6 +1,7 @@
 package com.andrutstudio.velora.presentation.home
 
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -67,6 +68,7 @@ fun AddAccountSheetContent(
             onClick = { onAdd(AccountType.ED25519, label.trim()) },
             modifier = Modifier.fillMaxWidth(),
             enabled = !isAdding,
+            shape = RoundedCornerShape(8.dp),
         ) {
             if (isAdding) {
                 CircularProgressIndicator(

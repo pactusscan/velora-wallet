@@ -327,11 +327,11 @@ private fun Actions(
     onPublish: () -> Unit,
     onDelete: () -> Unit,
 ) {
-    Button(onClick = onPublish, modifier = Modifier.fillMaxWidth(), enabled = !isPreparing) {
+    Button(onClick = onPublish, modifier = Modifier.fillMaxWidth(), enabled = !isPreparing, shape = RoundedCornerShape(8.dp)) {
         Text(stringResource(if (hasAnchor) R.string.anchor_replace_action else R.string.anchor_publish_action))
     }
     if (hasAnchor) {
-        OutlinedButton(onClick = onDelete, modifier = Modifier.fillMaxWidth(), enabled = !isPreparing) {
+        OutlinedButton(onClick = onDelete, modifier = Modifier.fillMaxWidth(), enabled = !isPreparing, shape = RoundedCornerShape(8.dp)) {
             Icon(Icons.Rounded.DeleteOutline, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.anchor_delete_title))
@@ -468,6 +468,7 @@ private fun PublishForm(
         onClick = onReview,
         modifier = Modifier.fillMaxWidth(),
         enabled = state.rootHash.isNotBlank() && state.deposit != null && !state.isPreparing,
+        shape = RoundedCornerShape(8.dp),
     ) {
         if (state.isPreparing) {
             CircularProgressIndicator(
@@ -549,6 +550,7 @@ private fun ConfirmAnchorSheet(
                 onClick = onConfirm,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.isSending && (state.password.isNotEmpty() || state.isBiometricEnabled),
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (state.isSending) {
                     CircularProgressIndicator(
@@ -574,7 +576,7 @@ private fun ConfirmAnchorSheet(
                     )
                 }
             }
-            OutlinedButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth(), enabled = !state.isSending) {
+            OutlinedButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth(), enabled = !state.isSending, shape = RoundedCornerShape(8.dp)) {
                 Text(stringResource(R.string.action_cancel))
             }
         }

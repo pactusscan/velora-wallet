@@ -183,6 +183,7 @@ fun ConfirmStakeSheet(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                 ),
+                shape = RoundedCornerShape(8.dp),
             ) {
                 if (state.isStaking) {
                     CircularProgressIndicator(
@@ -213,6 +214,7 @@ fun ConfirmStakeSheet(
                 onClick = onDismiss,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.isStaking,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Text(stringResource(R.string.action_reject))
             }

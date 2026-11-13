@@ -1,6 +1,7 @@
 package com.andrutstudio.velora.presentation.home
 
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -122,7 +123,8 @@ fun BalanceAlertSheet(
                     onSave((threshold * 1_000_000_000).toLong(), enabledState, selectedType)
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = thresholdInput.toDoubleOrNull() != null
+                enabled = thresholdInput.toDoubleOrNull() != null,
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Text(stringResource(R.string.alert_save))
             }
