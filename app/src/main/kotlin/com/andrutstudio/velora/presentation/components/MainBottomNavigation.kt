@@ -49,7 +49,8 @@ fun dockClearance(): Dp = 120.dp + WindowInsets.navigationBars.asPaddingValues()
 @Composable
 fun MainBottomNavigation(
     navController: NavController,
-    currentRoute: String?
+    currentRoute: String?,
+    onReselectBrowser: () -> Unit = {},
 ) {
     val isHomeSelected = currentRoute == Screen.Home.route
     
@@ -165,6 +166,8 @@ fun MainBottomNavigation(
                             navController.navigate(Screen.Browser.withUrl()) {
                                 launchSingleTop = true
                             }
+                        } else {
+                            onReselectBrowser()
                         }
                     },
                     icon = NavIcons.Discover,

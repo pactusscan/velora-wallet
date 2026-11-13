@@ -255,6 +255,22 @@ class BrowserViewModelUnlockTest {
         coVerify(exactly = 1) { browserDao.recordVisit(any()) }
     }
 
+    @Test
+    fun `home opens the start page and does nothing when already there`() = runTest {
+        val vm = viewModel()
+        val effects = mutableListOf<BrowserViewModel.Effect>()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { vm.effect.collect { effects += it } }
+
+        effects.clear() // the start page load sent by init
+        vm.onHomeClicked()
+        assertTrue(effects.isEmpty())
+
+        vm.onPageStarted("https://pactus.org/")
+        vm.onHomeClicked()
+        assertEquals(listOf(BrowserViewModel.Effect.LoadUrl(BrowserViewModel.HOME_URL)), effects)
+        assertEquals("", vm.state.value.urlBarText)
+    }
+
     private companion object {
         const val PASSWORD = "correct horse"
         const val SIGNATURE = "sig"

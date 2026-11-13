@@ -271,6 +271,13 @@ class BrowserViewModel @Inject constructor(
         _state.update { it.copy(canGoBack = canGoBack, canGoForward = canGoForward) }
     }
 
+    /** Back to the start page in one tap; Back still returns to the last page. */
+    fun onHomeClicked() {
+        if (_state.value.url == HOME_URL) return
+        _state.update { it.copy(urlBarText = "") }
+        viewModelScope.launch { _effect.send(Effect.LoadUrl(HOME_URL)) }
+    }
+
     fun onBackClicked() { viewModelScope.launch { _effect.send(Effect.GoBack) } }
     fun onForwardClicked() { viewModelScope.launch { _effect.send(Effect.GoForward) } }
     fun onReloadClicked() { viewModelScope.launch { _effect.send(Effect.Reload) } }
