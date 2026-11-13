@@ -1,6 +1,8 @@
 package com.andrutstudio.velora.presentation.stake
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -16,8 +18,12 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,6 +37,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.andrutstudio.velora.presentation.theme.VeloraTheme
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -39,13 +47,28 @@ import com.andrutstudio.velora.domain.model.DelegationRules
 import com.andrutstudio.velora.presentation.components.asString
 import com.andrutstudio.velora.presentation.components.formatPac
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 /** Approximate calendar date of a future block, at 10 s per block. */
 internal fun approxDate(block: Long, height: Long): String =
     Instant.now().plusSeconds(DelegationRules.secondsUntil(block, height))
         .atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE)
+
+/** DatePicker millis are midnight UTC of the picked day, so format them in UTC. */
+internal fun pickerDate(epochMillis: Long): String =
+    Instant.ofEpochMilli(epochMillis).atZone(ZoneOffset.UTC).toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE)
+
+/** Only days after today can end a delegation (the term must be at least one day). */
+@OptIn(ExperimentalMaterial3Api::class)
+private object FutureDates : SelectableDates {
+    override fun isSelectableDate(utcTimeMillis: Long): Boolean =
+        Instant.ofEpochMilli(utcTimeMillis).atZone(ZoneOffset.UTC).toLocalDate().isAfter(LocalDate.now())
+
+    override fun isSelectableYear(year: Int): Boolean = year >= LocalDate.now().year
+}
 
 internal fun shortAddr(address: String): String =
     if (address.length > 18) "${address.take(10)}…${address.takeLast(6)}" else address
@@ -171,6 +194,23 @@ internal fun DelegationSection(
                 singleLine = true,
             )
         }
+        val term = state.term
+        if (term is StakeViewModel.Term.Date) {
+            // Shows the picked day so the user can see what the term is based on; tap to change it.
+            Box {
+                OutlinedTextField(
+                    value = term.epochMillis?.let(::pickerDate).orEmpty(),
+                    onValueChange = {},
+                    readOnly = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(stringResource(R.string.stake_term_date)) },
+                    trailingIcon = { Icon(Icons.Default.DateRange, contentDescription = null) },
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true,
+                )
+                Box(Modifier.matchParentSize().clickable { showDatePicker = true })
+            }
+        }
         val expiry = state.expiry
         Text(
             when {
@@ -187,14 +227,20 @@ internal fun DelegationSection(
     }
 
     if (showDatePicker) {
-        val picker = rememberDatePickerState()
+        val picker = rememberDatePickerState(
+            initialSelectedDateMillis = (state.term as? StakeViewModel.Term.Date)?.epochMillis,
+            selectableDates = FutureDates,
+        )
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
             confirmButton = {
-                TextButton(onClick = {
-                    showDatePicker = false
-                    onTermChange(StakeViewModel.Term.Date(picker.selectedDateMillis))
-                }) { Text(stringResource(android.R.string.ok)) }
+                TextButton(
+                    onClick = {
+                        showDatePicker = false
+                        onTermChange(StakeViewModel.Term.Date(picker.selectedDateMillis))
+                    },
+                    enabled = picker.selectedDateMillis != null,
+                ) { Text(stringResource(android.R.string.ok)) }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) { Text(stringResource(android.R.string.cancel)) }
@@ -239,5 +285,27 @@ internal fun LabelValue(label: String, value: String) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Text(value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DelegationSectionDatePreview() {
+    val day = LocalDate.now().plusDays(90).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+    VeloraTheme {
+        Column(Modifier.padding(16.dp)) {
+            DelegationSection(
+                state = StakeViewModel.State(
+                    height = 4_000_000,
+                    delegate = true,
+                    sharePercentText = "70",
+                    term = StakeViewModel.Term.Date(day),
+                ),
+                onDelegateChange = {},
+                onSharePercentChange = {},
+                onTermChange = {},
+                onCustomBlockChange = {},
+            )
+        }
     }
 }
