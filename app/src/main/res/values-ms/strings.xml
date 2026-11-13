@@ -202,6 +202,7 @@
     <string name="browser_menu">Menu</string>
     <string name="browser_go_back">Kembali</string>
     <string name="browser_go_forward">Maju</string>
+    <string name="browser_home">Laman utama</string>
     <string name="browser_stop">Berhenti</string>
     <string name="browser_reload">Muat semula</string>
     <string name="browser_search_placeholder">Cari atau masukkan URL</string>

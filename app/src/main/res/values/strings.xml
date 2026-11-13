@@ -202,6 +202,7 @@
     <string name="browser_menu">Menu</string>
     <string name="browser_go_back">Back</string>
     <string name="browser_go_forward">Forward</string>
+    <string name="browser_home">Home</string>
     <string name="browser_stop">Stop</string>
     <string name="browser_reload">Reload</string>
     <string name="browser_search_placeholder">Search or enter URL</string>

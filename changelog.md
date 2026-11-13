@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- **Home Button in the Browser**: The new Home button next to Back and Forward returns to the start page in one tap. Tapping the Browser tab in the dock while you are in the browser does the same.
+
 ### Fixed & Improved
 - **Square Buttons**: Buttons across the app use the 8 dp corners of the Velora design instead of round pill shapes.
 - **Browser Start Page Above the Dock**: The last card of the browser start page can be scrolled fully above the navigation dock.

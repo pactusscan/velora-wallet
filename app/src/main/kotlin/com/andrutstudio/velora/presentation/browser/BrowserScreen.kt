@@ -392,6 +392,8 @@ fun BrowserScreen(
                 onUrlSubmit = viewModel::onUrlSubmitted,
                 onBack = viewModel::onBackClicked,
                 onForward = viewModel::onForwardClicked,
+                onHome = viewModel::onHomeClicked,
+                isHome = state.url == BrowserViewModel.HOME_URL,
                 onReload = viewModel::onReloadClicked,
                 onToggleBookmark = viewModel::onToggleBookmark,
                 onOpenLibrary = { viewModel.onOpenLibrary(LibraryTab.BOOKMARKS) },
@@ -432,7 +434,8 @@ fun BrowserScreen(
             ) {
                 MainBottomNavigation(
                     navController = navController,
-                    currentRoute = Screen.Browser.route
+                    currentRoute = Screen.Browser.route,
+                    onReselectBrowser = viewModel::onHomeClicked,
                 )
             }
         }
@@ -604,6 +607,8 @@ private fun BrowserTopBar(
     onUrlSubmit: (String) -> Unit,
     onBack: () -> Unit,
     onForward: () -> Unit,
+    onHome: () -> Unit,
+    isHome: Boolean,
     onReload: () -> Unit,
     onToggleBookmark: () -> Unit,
     onOpenLibrary: () -> Unit,
@@ -663,6 +668,20 @@ private fun BrowserTopBar(
                     )
                 }
 
+                IconButton(
+                    onClick = onHome,
+                    enabled = !isHome,
+                    modifier = Modifier.size(36.dp),
+                ) {
+                    Icon(
+                        Icons.Rounded.Home,
+                        contentDescription = stringResource(R.string.browser_home),
+                        modifier = Modifier.size(18.dp),
+                        tint = if (!isHome) MaterialTheme.colorScheme.onSurface
+                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                    )
+                }
+
                 Spacer(Modifier.width(4.dp))
 
                 val urlBarBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)
@@ -677,7 +696,7 @@ private fun BrowserTopBar(
                         .height(42.dp)
                         .focusRequester(focusRequester)
                         .onFocusChanged { onFocusChange(it.isFocused) }
-                        .border(1.dp, urlBarBorderColor, MaterialTheme.shapes.extraLarge),
+                        .border(1.dp, urlBarBorderColor, RoundedCornerShape(8.dp)),
                     singleLine = true,
                     textStyle = urlBarTextStyle,
                     keyboardOptions = KeyboardOptions(
@@ -1299,6 +1318,8 @@ private fun BrowserTopBarPreview() {
             onUrlSubmit = {},
             onBack = {},
             onForward = {},
+            onHome = {},
+            isHome = false,
             onReload = {},
             onToggleBookmark = {},
             onOpenLibrary = {},

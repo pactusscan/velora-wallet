@@ -202,6 +202,7 @@
     <string name="browser_menu">Menu</string>
     <string name="browser_go_back">Quay lại</string>
     <string name="browser_go_forward">Tiếp theo</string>
+    <string name="browser_home">Trang chủ</string>
     <string name="browser_stop">Dừng</string>
     <string name="browser_reload">Tải lại</string>
     <string name="browser_search_placeholder">Tìm kiếm hoặc nhập URL</string>
