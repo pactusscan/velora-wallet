@@ -5,6 +5,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
+import com.andrutstudio.velora.data.crypto.Bip39
+import com.andrutstudio.velora.data.crypto.DerivedKey
 import com.andrutstudio.velora.data.crypto.PactusKeyManager
 import com.andrutstudio.velora.data.crypto.SignGuard
 import com.andrutstudio.velora.data.local.BiometricHelper
@@ -119,37 +121,42 @@ class WalletRepositoryImpl @Inject constructor(
         if (vault.isPrivateKeyImport || vault.isWatchOnly) return@withContext 0
         val mnemonic = requireUnlocked()
         val network = Network.valueOf(vault.network)
-        val type = AccountType.ED25519
 
-        val knownAddresses = vault.accounts
-            .filter { it.type == type.name }
-            .associate { it.derivationIndex to it.address }
-        val derivedAddresses = mutableMapOf<Int, String>()
+        // BLS first, then Ed25519, like Vault.RecoverAddresses in the Go wallet;
+        // Secp256k1 last (the Go wallet does not scan it). Each type has its own
+        // index sequence.
+        val recoveredAccounts = listOf(AccountType.BLS, AccountType.ED25519, AccountType.SECP256K1).flatMap { type ->
+            val knownAddresses = vault.accounts
+                .filter { it.type == type.name }
+                .associate { it.derivationIndex to it.address }
+            val derived = mutableMapOf<Int, DerivedKey>()
+            val keyAt = { index: Int -> derived.getOrPut(index) { keyManager.deriveAccount(mnemonic, network, type, index) } }
 
-        val recoveredCount = AddressRecovery.discoverRecoveredCount { index ->
-            val address = knownAddresses[index] ?: derivedAddresses.getOrPut(index) {
-                keyManager.deriveAccount(mnemonic, network, type, index).address
+            val recoveredCount = AddressRecovery.discoverRecoveredCount { index ->
+                isAccountIndexed(knownAddresses[index] ?: keyAt(index).address)
             }
-            isAccountIndexed(address)
+            (0 until recoveredCount).filterNot { it in knownAddresses }.map { index ->
+                val key = keyAt(index)
+                VaultAccount(
+                    address = key.address,
+                    label = defaultLabel(type, index),
+                    type = type.name,
+                    derivationPath = key.derivationPath,
+                    derivationIndex = index,
+                )
+            }
         }
+        if (recoveredAccounts.isEmpty()) return@withContext 0
 
-        val usedIndexes = vault.accounts.filter { it.type == type.name }.map { it.derivationIndex }.toSet()
-        val missingIndexes = (0 until recoveredCount).filterNot { it in usedIndexes }
-        if (missingIndexes.isEmpty()) return@withContext 0
-
-        val recoveredAccounts = missingIndexes.map { index ->
-            val derived = keyManager.deriveAccount(mnemonic, network, type, index)
-            VaultAccount(
-                address = derived.address,
-                label = "Account ${index + 1}",
-                type = type.name,
-                derivationPath = derived.derivationPath,
-                derivationIndex = index,
-            )
-        }
         vaultStorage.saveVault(vault.copy(accounts = vault.accounts + recoveredAccounts))
         publishState()
         recoveredAccounts.size
+    }
+
+    private fun defaultLabel(type: AccountType, index: Int): String = when (type) {
+        AccountType.ED25519 -> "Account ${index + 1}"
+        AccountType.BLS -> "BLS Account ${index + 1}"
+        AccountType.SECP256K1 -> "Secp256k1 Account ${index + 1}"
     }
 
     // The node answers get_account with a JSON-RPC error for addresses never
@@ -322,13 +329,12 @@ class WalletRepositoryImpl @Inject constructor(
 
     override suspend fun generateMnemonic(wordCount: Int): String =
         withContext(Dispatchers.IO) {
-            val strength = if (wordCount == 12) 128 else 256
-            wallet.core.jni.HDWallet(strength, "").mnemonic()
+            Bip39.generate(if (wordCount == 12) 12 else 24)
         }
 
     override suspend fun validateMnemonic(mnemonic: String): Boolean =
         withContext(Dispatchers.IO) {
-            runCatching { wallet.core.jni.Mnemonic.isValid(mnemonic) }.getOrDefault(false)
+            runCatching { Bip39.isValid(mnemonic) }.getOrDefault(false)
         }
 
     override suspend fun exportEncrypted(password: String): String =
@@ -391,18 +397,14 @@ class WalletRepositoryImpl @Inject constructor(
         val network = Network.valueOf(vault.network)
         val type = AccountType.valueOf(vaultAccount.type)
 
-        val (signatureBytes, publicKeyBytes) = if (vault.isPrivateKeyImport) {
-            val privateKeyBytes = secret.hexDecode()
-            val sig = keyManager.sign(bytesToSign, privateKeyBytes, AccountType.ED25519)
-            val pub = keyManager.publicKeyBytesFromPrivateKey(privateKeyBytes)
+        val privateKeyBytes = privateKeyFor(vault, secret, network, type, vaultAccount.derivationIndex)
+        val signatureBytes: ByteArray
+        val publicKeyBytes: ByteArray
+        try {
+            signatureBytes = keyManager.sign(bytesToSign, privateKeyBytes, type)
+            publicKeyBytes = keyManager.publicKeyBytesFromPrivateKey(privateKeyBytes, type)
+        } finally {
             privateKeyBytes.fill(0)
-            sig to pub
-        } else {
-            val privateKeyBytes = keyManager.derivePrivateKeyBytes(secret, network, type, vaultAccount.derivationIndex)
-            val sig = keyManager.sign(bytesToSign, privateKeyBytes, type)
-            val pub = keyManager.deriveAccount(secret, network, type, vaultAccount.derivationIndex).publicKeyBytes
-            privateKeyBytes.fill(0)
-            sig to pub
         }
 
         val finalHex = com.andrutstudio.velora.data.crypto.SignedTx
@@ -471,22 +473,15 @@ class WalletRepositoryImpl @Inject constructor(
         val network = Network.valueOf(vault.network)
         val type = AccountType.valueOf(vaultAccount.type)
 
-        val privateKeyBytes = if (vault.isPrivateKeyImport) {
-            secret.hexDecode()
-        } else {
-            keyManager.derivePrivateKeyBytes(secret, network, type, vaultAccount.derivationIndex)
-        }
+        // dApps read the result as sig(64) + pub(32); other key types would break that
+        require(type == AccountType.ED25519) { "Only Ed25519 accounts can sign messages" }
 
+        val privateKeyBytes = privateKeyFor(vault, secret, network, type, vaultAccount.derivationIndex)
         val messageBytes = message.toByteArray(Charsets.UTF_8)
         val signature = keyManager.sign(messageBytes, privateKeyBytes, type)
-        val publicKey = if (vault.isPrivateKeyImport) {
-            keyManager.publicKeyBytesFromPrivateKey(privateKeyBytes)
-        } else {
-            keyManager.deriveAccount(secret, network, type, vaultAccount.derivationIndex).publicKeyBytes
-        }
-        
+        val publicKey = keyManager.publicKeyBytesFromPrivateKey(privateKeyBytes, type)
         privateKeyBytes.fill(0)
-        
+
         // Return format: signature_hex + public_key_hex (common in simple signMessage implementations)
         signature.hexEncode() + publicKey.hexEncode()
     }
@@ -499,13 +494,14 @@ class WalletRepositoryImpl @Inject constructor(
      */
     private fun accountsFor(vault: WalletVault, secret: String, network: Network): List<VaultAccount> {
         if (vault.isPrivateKeyImport) {
-            val keyBytes = secret.hexDecode()
-            try {
-                return vault.accounts.map { acc ->
-                    acc.copy(address = keyManager.addressFromPrivateKey(keyBytes, network, AccountType.valueOf(acc.type)))
+            return vault.accounts.map { acc ->
+                val type = AccountType.valueOf(acc.type)
+                val keyBytes = PactusKeyManager.parsePrivateKey(secret, type).second
+                try {
+                    acc.copy(address = keyManager.addressFromPrivateKey(keyBytes, network, type))
+                } finally {
+                    keyBytes.fill(0)
                 }
-            } finally {
-                keyBytes.fill(0)
             }
         }
         return vault.accounts.map { acc ->
@@ -513,6 +509,17 @@ class WalletRepositoryImpl @Inject constructor(
             acc.copy(address = derived.address, derivationPath = derived.derivationPath)
         }
     }
+
+    /**
+     * Private key of one account. An imported wallet stores the key itself:
+     * hex from this app, or a bech32m secret key from an extension backup.
+     */
+    private fun privateKeyFor(vault: WalletVault, secret: String, network: Network, type: AccountType, index: Int): ByteArray =
+        if (vault.isPrivateKeyImport) {
+            PactusKeyManager.parsePrivateKey(secret, type).second
+        } else {
+            keyManager.derivePrivateKeyBytes(secret, network, type, index)
+        }
 
     private fun requireUnlocked(): String =
         unlockedMnemonic ?: error("Wallet is locked. Call unlockWallet() first.")

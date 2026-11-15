@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- **BLS Accounts (pc1z)**: Add Account offers BLS next to Ed25519. With the same recovery phrase the addresses match the Pactus GUI and CLI wallets.
+- **Secp256k1 Accounts (pc1y)**: Add Account also offers Secp256k1, and pc1y accounts can send, stake and anchor.
+- **Import Any Private Key**: SECRET1P (BLS) and SECRET1Y (Secp256k1) keys can be imported next to SECRET1R (Ed25519). A raw hex key asks which address type it belongs to.
+- **Restore Finds Every Account Type**: Restoring from a recovery phrase also finds active BLS and Secp256k1 accounts (PIP-41).
+
+### Fixed & Improved
+- **Much Smaller App**: The app no longer ships Trust Wallet Core. Keys and signatures now come from Velora's own code, checked against the official Pactus test vectors, and the APK shrinks from about 61 MB to about 13 MB.
+- **Backups from the Browser Extension**: A wallet imported from a private key in the Velora extension opens and signs correctly on Android.
+
 ## [0.1.10] - 2026-11-13
 
 This release shows the end date you pick for a delegation, adds a Home button to the dApp browser and gives every button the square corners of the Velora design.

@@ -548,7 +548,8 @@
     <string name="home_error_refresh">Não foi possível atualizar os saldos</string>
     <string name="node_error_invalid_input">Entrada inválida (deve ser um endereço de validador ou PeerID)</string>
     <string name="node_error_already_added">Nó já adicionado</string>
-    <string name="import_error_bls_soon">A importação de contas BLS chegará em breve</string>
+    <string name="home_add_account_type_hint">Ed25519 é o padrão. Escolha BLS ou Secp256k1 para usar os endereços pc1z ou pc1y da carteira GUI ou CLI da Pactus com a mesma frase de recuperação.</string>
+    <string name="import_hex_key_type">Uma chave hexadecimal não informa seu tipo. Escolha o tipo de endereço ao qual ela pertence.</string>
     <string name="import_error_key_unsupported">Este tipo de chave ainda não é suportado</string>
     <string name="import_error_testnet_key">Esta é uma chave da Testnet. Mude para a Testnet nas configurações.</string>
     <string name="import_error_mainnet_key">Esta é uma chave da Mainnet. Mude para a Mainnet nas configurações.</string>

@@ -18,6 +18,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.andrutstudio.velora.R
+import com.andrutstudio.velora.domain.model.AccountType
+import com.andrutstudio.velora.presentation.components.KeyTypeSelector
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,6 +28,7 @@ fun ImportPrivateKeyScreen(
     state: OnboardingViewModel.State,
     onNameChange: (String) -> Unit,
     onPrivateKeyChange: (String) -> Unit,
+    onHexKeyTypeChange: (AccountType) -> Unit,
     onSubmit: () -> Unit,
     onBack: () -> Unit,
 ) {
@@ -97,6 +100,20 @@ fun ImportPrivateKeyScreen(
                 maxLines = 4,
             )
 
+            // A raw hex key carries no type, so the user says which one it is
+            if (RAW_HEX_KEY.matches(state.privateKeyInput.trim())) {
+                Text(
+                    text = stringResource(R.string.import_hex_key_type),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                KeyTypeSelector(
+                    selected = state.hexKeyType,
+                    onSelect = onHexKeyTypeChange,
+                    enabled = !state.isLoading,
+                )
+            }
+
             Text(
                 text = stringResource(R.string.import_security_warning),
                 style = MaterialTheme.typography.labelSmall,
@@ -125,14 +142,18 @@ fun ImportPrivateKeyScreen(
     }
 }
 
+private val RAW_HEX_KEY = Regex("(0x)?[0-9a-fA-F]{64}")
+
 @Preview(showSystemUi = true)
 @Composable
 private fun ImportPrivateKeyScreenPreview() {
     VeloraTheme {
         ImportPrivateKeyScreen(
-            state = OnboardingViewModel.State(),
+            // A raw hex key, so the preview shows the key type choice
+            state = OnboardingViewModel.State(privateKeyInput = "00".repeat(32)),
             onNameChange = {},
             onPrivateKeyChange = {},
+            onHexKeyTypeChange = {},
             onSubmit = {},
             onBack = {},
         )

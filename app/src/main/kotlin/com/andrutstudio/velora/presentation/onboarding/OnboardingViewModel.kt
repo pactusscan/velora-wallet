@@ -44,6 +44,8 @@ class OnboardingViewModel @Inject constructor(
         val privateKeyHex: String = "",
         val watchAddress: String = "",
         val privateKeyError: UiText? = null,
+        /** Key type for a raw hex private key, which carries no type of its own. */
+        val hexKeyType: com.andrutstudio.velora.domain.model.AccountType = com.andrutstudio.velora.domain.model.AccountType.ED25519,
         val watchAddressError: UiText? = null,
         val restoreWords: List<String> = List(12) { "" },
         val mnemonicText: String = "",
@@ -103,6 +105,10 @@ class OnboardingViewModel @Inject constructor(
         _state.update { it.copy(privateKeyInput = input, privateKeyError = null) }
     }
 
+    fun setHexKeyType(type: com.andrutstudio.velora.domain.model.AccountType) {
+        _state.update { it.copy(hexKeyType = type) }
+    }
+
     fun submitPrivateKey() {
         val input = _state.value.privateKeyInput.trim()
         val currentNetwork = _state.value.activeNetwork
@@ -111,17 +117,11 @@ class OnboardingViewModel @Inject constructor(
             try {
                 val (hrp, type, bytes) = com.andrutstudio.velora.data.crypto.Bech32m.decode(input)
                 
-                // Pactus Private Key Types: 1 = BLS, 3 = Ed25519
-                val accountType = when(type.toInt()) {
-                    1 -> {
-                        _state.update { it.copy(privateKeyError = UiText.Res(R.string.import_error_bls_soon)) }
-                        return
-                    }
-                    3 -> com.andrutstudio.velora.domain.model.AccountType.ED25519
-                    else -> {
-                        _state.update { it.copy(privateKeyError = UiText.Res(R.string.import_error_key_unsupported)) }
-                        return
-                    }
+                // Secret key types: 1 = BLS, 3 = Ed25519, 4 = Secp256k1
+                val accountType = com.andrutstudio.velora.domain.model.AccountType.fromSignatureType(type.toInt())
+                if (accountType == null || bytes.size != 32) {
+                    _state.update { it.copy(privateKeyError = UiText.Res(R.string.import_error_key_unsupported)) }
+                    return
                 }
 
                 // Validate that the key matches the current network
@@ -146,7 +146,7 @@ class OnboardingViewModel @Inject constructor(
                 _state.update { it.copy(privateKeyError = UiText.Res(R.string.import_error_key_empty)) }
                 return
             }
-            _state.update { it.copy(importedAccountType = com.andrutstudio.velora.domain.model.AccountType.ED25519) }
+            _state.update { it.copy(importedAccountType = it.hexKeyType) }
             h
         }
 

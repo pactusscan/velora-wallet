@@ -256,6 +256,7 @@ fun AppNavGraph(
                     state = state,
                     onNameChange = vm::setWalletName,
                     onPrivateKeyChange = vm::setPrivateKeyHex,
+                    onHexKeyTypeChange = vm::setHexKeyType,
                     onSubmit = { vm.submitPrivateKey() },
                     onBack = { navController.popBackStack() },
                 )

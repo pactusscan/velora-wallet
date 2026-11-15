@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.andrutstudio.velora.R
 import com.andrutstudio.velora.domain.model.AccountType
+import com.andrutstudio.velora.presentation.components.KeyTypeSelector
 import com.andrutstudio.velora.presentation.theme.VeloraTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,6 +38,7 @@ fun AddAccountSheetContent(
     onAdd: (type: AccountType, label: String) -> Unit,
 ) {
     var label by remember { mutableStateOf("") }
+    var type by remember { mutableStateOf(AccountType.ED25519) }
 
     Column(
         modifier = Modifier
@@ -64,8 +66,16 @@ fun AddAccountSheetContent(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         )
 
+        KeyTypeSelector(selected = type, onSelect = { type = it }, enabled = !isAdding)
+
+        Text(
+            text = stringResource(R.string.home_add_account_type_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
         Button(
-            onClick = { onAdd(AccountType.ED25519, label.trim()) },
+            onClick = { onAdd(type, label.trim()) },
             modifier = Modifier.fillMaxWidth(),
             enabled = !isAdding,
             shape = RoundedCornerShape(8.dp),

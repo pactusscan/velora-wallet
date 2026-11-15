@@ -24,7 +24,6 @@ class VeloraApp : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        System.loadLibrary("TrustWalletCore")
         createNotificationChannel()
         schedulePeriodicSync()
     }

@@ -550,7 +550,11 @@
     <string name="home_error_refresh">Could not refresh balances</string>
     <string name="node_error_invalid_input">Invalid input (must be a validator address or PeerID)</string>
     <string name="node_error_already_added">Node already added</string>
-    <string name="import_error_bls_soon">BLS account import is coming soon</string>
+    <string name="home_add_account_type_hint">Ed25519 is the default. Choose BLS or Secp256k1 to use the pc1z or pc1y addresses of the Pactus GUI or CLI wallet with the same recovery phrase.</string>
+    <string name="import_hex_key_type">A hex key does not say its type. Choose the address type it belongs to.</string>
+    <string name="key_type_ed25519" translatable="false">Ed25519 (pc1r)</string>
+    <string name="key_type_bls" translatable="false">BLS (pc1z)</string>
+    <string name="key_type_secp256k1" translatable="false">Secp256k1 (pc1y)</string>
     <string name="import_error_key_unsupported">This key type is not supported yet</string>
     <string name="import_error_testnet_key">This is a Testnet key. Please switch to Testnet in settings.</string>
     <string name="import_error_mainnet_key">This is a Mainnet key. Please switch to Mainnet in settings.</string>
