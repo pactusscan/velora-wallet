@@ -1,6 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.11] - 2026-11-15
+
+This release supports every Pactus account type: BLS (pc1z) and Secp256k1 (pc1y) accounts join Ed25519 (pc1r), and the app is about five times smaller.
 
 ### Added
 - **BLS Accounts (pc1z)**: Add Account offers BLS next to Ed25519. With the same recovery phrase the addresses match the Pactus GUI and CLI wallets.
