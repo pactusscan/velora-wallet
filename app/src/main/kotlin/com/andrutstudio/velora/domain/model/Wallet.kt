@@ -20,11 +20,21 @@ data class Account(
     val balanceNanoPac: Long = 0L,
 )
 
-enum class AccountType {
-    /** Ed25519 — m/44'/coinType'/3'/index' — Ed25519 account (pc1r…). */
-    ED25519,
-    /** BLS — m/12381'/coinType'/2'/index' — BLS account (pc1z…). */
-    BLS,
+/**
+ * Account key types. [addressType] is the bech32m type byte of the address,
+ * [signatureType] the one of secret1…/public1… key strings (they differ for BLS).
+ */
+enum class AccountType(val addressType: Byte, val signatureType: Int) {
+    /** Ed25519, m/44'/coinType'/3'/index', address pc1r…, secret key SECRET1R…. */
+    ED25519(3, 3),
+    /** BLS12-381, m/12381'/coinType'/2'/index (index not hardened), address pc1z…, secret key SECRET1P…. */
+    BLS(2, 1),
+    /** Secp256k1, m/44'/coinType'/4'/index', address pc1y…, secret key SECRET1Y…. */
+    SECP256K1(4, 4);
+
+    companion object {
+        fun fromSignatureType(type: Int): AccountType? = entries.firstOrNull { it.signatureType == type }
+    }
 }
 
 enum class Network(

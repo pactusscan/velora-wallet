@@ -548,7 +548,8 @@
     <string name="home_error_refresh">无法刷新余额</string>
     <string name="node_error_invalid_input">输入无效（必须是验证者地址或 PeerID）</string>
     <string name="node_error_already_added">节点已添加</string>
-    <string name="import_error_bls_soon">BLS 账户导入即将推出</string>
+    <string name="home_add_account_type_hint">Ed25519 为默认类型。选择 BLS 或 Secp256k1，即可使用同一助记词在 Pactus GUI 或 CLI 钱包中的 pc1z 或 pc1y 地址。</string>
+    <string name="import_hex_key_type">十六进制密钥不包含类型信息。请选择该密钥所属的地址类型。</string>
     <string name="import_error_key_unsupported">暂不支持此类型的密钥</string>
     <string name="import_error_testnet_key">这是测试网密钥。请在设置中切换到测试网。</string>
     <string name="import_error_mainnet_key">这是主网密钥。请在设置中切换到主网。</string>

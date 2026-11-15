@@ -528,7 +528,8 @@
     <string name="home_error_refresh">Impossible d\'actualiser les soldes</string>
     <string name="node_error_invalid_input">Saisie invalide (adresse de validateur ou PeerID requis)</string>
     <string name="node_error_already_added">Nœud déjà ajouté</string>
-    <string name="import_error_bls_soon">L\'import de comptes BLS arrive bientôt</string>
+    <string name="home_add_account_type_hint">Ed25519 est le type par défaut. Choisissez BLS ou Secp256k1 pour utiliser les adresses pc1z ou pc1y du portefeuille GUI ou CLI de Pactus avec la même phrase de récupération.</string>
+    <string name="import_hex_key_type">Une clé hexadécimale n\'indique pas son type. Choisissez le type d\'adresse auquel elle appartient.</string>
     <string name="import_error_key_unsupported">Ce type de clé n\'est pas encore pris en charge</string>
     <string name="import_error_testnet_key">Ceci est une clé Testnet. Passez au Testnet dans les paramètres.</string>
     <string name="import_error_mainnet_key">Ceci est une clé Mainnet. Passez au Mainnet dans les paramètres.</string>

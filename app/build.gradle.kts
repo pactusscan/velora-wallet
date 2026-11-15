@@ -229,7 +229,7 @@ dependencies {
     // Cryptography & Blockchain
     implementation(libs.security.crypto)
     implementation(libs.biometric)
-    implementation(libs.trustwallet.core)
+    implementation(libs.bouncycastle)
 
     // Utilities
     implementation(libs.coroutines.android)

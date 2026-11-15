@@ -548,7 +548,8 @@
     <string name="home_error_refresh">Не удалось обновить балансы</string>
     <string name="node_error_invalid_input">Неверный ввод (нужен адрес валидатора или PeerID)</string>
     <string name="node_error_already_added">Узел уже добавлен</string>
-    <string name="import_error_bls_soon">Импорт BLS-аккаунтов скоро появится</string>
+    <string name="home_add_account_type_hint">Ed25519 используется по умолчанию. Выберите BLS или Secp256k1, чтобы использовать адреса pc1z или pc1y из GUI- или CLI-кошелька Pactus с той же фразой восстановления.</string>
+    <string name="import_hex_key_type">Шестнадцатеричный ключ не указывает свой тип. Выберите тип адреса, к которому он относится.</string>
     <string name="import_error_key_unsupported">Этот тип ключа пока не поддерживается</string>
     <string name="import_error_testnet_key">Это ключ Testnet. Переключитесь на Testnet в настройках.</string>
     <string name="import_error_mainnet_key">Это ключ Mainnet. Переключитесь на Mainnet в настройках.</string>

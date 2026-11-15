@@ -548,7 +548,8 @@
     <string name="home_error_refresh">Kontostände konnten nicht aktualisiert werden</string>
     <string name="node_error_invalid_input">Ungültige Eingabe (Validator-Adresse oder PeerID erforderlich)</string>
     <string name="node_error_already_added">Knoten bereits hinzugefügt</string>
-    <string name="import_error_bls_soon">Import von BLS-Konten folgt in Kürze</string>
+    <string name="home_add_account_type_hint">Ed25519 ist der Standard. Wählen Sie BLS oder Secp256k1, um die pc1z- oder pc1y-Adressen der Pactus-GUI- oder CLI-Wallet mit derselben Wiederherstellungsphrase zu nutzen.</string>
+    <string name="import_hex_key_type">Ein Hex-Schlüssel nennt seinen Typ nicht. Wählen Sie den Adresstyp, zu dem er gehört.</string>
     <string name="import_error_key_unsupported">Dieser Schlüsseltyp wird noch nicht unterstützt</string>
     <string name="import_error_testnet_key">Dies ist ein Testnet-Schlüssel. Bitte wechseln Sie in den Einstellungen zum Testnet.</string>
     <string name="import_error_mainnet_key">Dies ist ein Mainnet-Schlüssel. Bitte wechseln Sie in den Einstellungen zum Mainnet.</string>

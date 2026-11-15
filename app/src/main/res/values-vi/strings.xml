@@ -528,7 +528,8 @@
     <string name="home_error_refresh">Không thể làm mới số dư</string>
     <string name="node_error_invalid_input">Dữ liệu không hợp lệ (phải là địa chỉ validator hoặc PeerID)</string>
     <string name="node_error_already_added">Node đã được thêm</string>
-    <string name="import_error_bls_soon">Sắp hỗ trợ nhập tài khoản BLS</string>
+    <string name="home_add_account_type_hint">Ed25519 là mặc định. Chọn BLS hoặc Secp256k1 để dùng địa chỉ pc1z hoặc pc1y của ví GUI hoặc CLI Pactus với cùng cụm từ khôi phục.</string>
+    <string name="import_hex_key_type">Khóa hex không cho biết loại của nó. Vui lòng chọn loại địa chỉ của khóa này.</string>
     <string name="import_error_key_unsupported">Loại khóa này chưa được hỗ trợ</string>
     <string name="import_error_testnet_key">Đây là khóa Testnet. Vui lòng chuyển sang Testnet trong cài đặt.</string>
     <string name="import_error_mainnet_key">Đây là khóa Mainnet. Vui lòng chuyển sang Mainnet trong cài đặt.</string>

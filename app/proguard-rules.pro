@@ -1,7 +1,3 @@
-# Trust Wallet Core JNI
--keep class wallet.core.jni.** { *; }
--keep class wallet.core.java.** { *; }
-
 # Retrofit / Gson
 -keepattributes Signature
 -keepattributes *Annotation*

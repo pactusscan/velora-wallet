@@ -84,7 +84,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 # NOTE: TWC's Android JNI does NOT expose BLS12-381 across any 4.x release we
 # checked (4.1.19 → 4.6.6); BLS account derivation/signing (pc1z…) would need a
 # separate library, so the wallet currently ships Ed25519-only.
-trustwallet-core = { module = "com.trustwallet:wallet-core", version = "4.1.19" }
+bouncycastle = { module = "org.bouncycastle:bcprov-jdk18on", version = "1.78.1" }
 
 # Browser (Chrome Custom Tabs + WebView)
 browser = { module = "androidx.browser:browser", version = "1.8.0" }

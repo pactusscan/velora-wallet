@@ -490,7 +490,8 @@
     <string name="home_error_refresh">Tidak dapat memperbarui saldo</string>
     <string name="node_error_invalid_input">Input tidak valid (harus alamat validator atau PeerID)</string>
     <string name="node_error_already_added">Node sudah ditambahkan</string>
-    <string name="import_error_bls_soon">Impor akun BLS akan segera hadir</string>
+    <string name="home_add_account_type_hint">Ed25519 adalah bawaan. Pilih BLS atau Secp256k1 untuk memakai alamat pc1z atau pc1y dari dompet GUI atau CLI Pactus dengan frasa pemulihan yang sama.</string>
+    <string name="import_hex_key_type">Kunci hex tidak menyebut jenisnya. Pilih jenis alamat milik kunci ini.</string>
     <string name="import_error_key_unsupported">Jenis kunci ini belum didukung</string>
     <string name="import_error_testnet_key">Ini kunci Testnet. Silakan beralih ke Testnet di pengaturan.</string>
     <string name="import_error_mainnet_key">Ini kunci Mainnet. Silakan beralih ke Mainnet di pengaturan.</string>
